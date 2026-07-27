@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http";
-import { generateChatReply } from "../lib/chat";
+import { generateChatReply } from "../lib/chat.js";
 
 // Vercel's Node.js runtime augments these with parsed `body`/`query` and
 // `status()`/`json()` helpers; typed loosely here to avoid depending on
