@@ -42,12 +42,10 @@ import { loadState, saveState } from './utils/storage';
 // Navigation Components (Patient)
 import { TopBar } from './components/Navigation/TopBar';
 import { BottomNav } from './components/Navigation/BottomNav';
-import { DesktopSidebar } from './components/Navigation/DesktopSidebar';
 
 // Navigation & Views (Doctor / Nurse / Staff)
 import { DoctorTopBar } from './components/Doctor/DoctorTopBar';
 import { DoctorBottomNav } from './components/Doctor/DoctorBottomNav';
-import { DoctorDesktopSidebar } from './components/Doctor/DoctorDesktopSidebar';
 import { DoctorDashboardView } from './components/Doctor/DoctorDashboardView';
 import { DoctorScheduleView } from './components/Doctor/DoctorScheduleView';
 import { DoctorPatientsView } from './components/Doctor/DoctorPatientsView';
@@ -58,7 +56,6 @@ import { DoctorProfileView } from './components/Doctor/DoctorProfileView';
 // Coordinator Components & Views
 import { CoordinatorTopBar } from './components/Coordinator/CoordinatorTopBar';
 import { CoordinatorBottomNav } from './components/Coordinator/CoordinatorBottomNav';
-import { CoordinatorDesktopSidebar } from './components/Coordinator/CoordinatorDesktopSidebar';
 import { CoordinatorDashboardView } from './components/Coordinator/CoordinatorDashboardView';
 import { CoordinatorAppointmentsView } from './components/Coordinator/CoordinatorAppointmentsView';
 import { CoordinatorCheckInView } from './components/Coordinator/CoordinatorCheckInView';
@@ -350,7 +347,7 @@ export function App() {
         <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl h-96 bg-sky-500/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="w-full h-screen sm:h-auto sm:max-w-md my-auto relative z-10 flex flex-col items-center justify-center">
+        <div className="w-full h-screen sm:h-auto max-w-md mx-auto my-auto relative z-10 flex flex-col items-center justify-center">
           <AuthModal
             isOpen={true}
             isScreen={true}
@@ -390,20 +387,7 @@ export function App() {
   if (isStaffRole) {
     if (user.role === 'coordinator') {
       return (
-        <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col md:flex-row antialiased selection:bg-[#4F8EF7] selection:text-white">
-          {/* Coordinator Desktop Sidebar */}
-          <CoordinatorDesktopSidebar
-            activeTab={coordinatorActiveTab}
-            onChangeTab={setCoordinatorActiveTab}
-            user={user}
-            unreadNotificationsCount={staffUnreadCount}
-            onLogout={() => {
-              setIsAuthenticated(false);
-              setShowAuthModal(true);
-            }}
-            onSwitchRole={() => setShowAuthModal(true)}
-          />
-
+        <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col max-w-md mx-auto antialiased selection:bg-[#4F8EF7] selection:text-white">
           {/* Coordinator Main Section */}
           <div className="flex-1 flex flex-col min-w-0">
             {/* Coordinator Top Header */}
@@ -419,7 +403,7 @@ export function App() {
               onStatusChange={handleStaffStatusChange}
             />
 
-            <main className="flex-1 p-3 sm:p-6 pb-28 md:pb-6 max-w-6xl w-full mx-auto">
+            <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
               {/* PWA Installation Banner */}
               <PWAInstallBanner />
 
@@ -520,20 +504,7 @@ export function App() {
     }
 
     return (
-      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col md:flex-row antialiased selection:bg-[#4F8EF7] selection:text-white">
-        {/* Staff Desktop Sidebar */}
-        <DoctorDesktopSidebar
-          activeTab={staffActiveTab}
-          onChangeTab={setStaffActiveTab}
-          user={user}
-          unreadNotificationsCount={staffUnreadCount}
-          onLogout={() => {
-            setIsAuthenticated(false);
-            setShowAuthModal(true);
-          }}
-          onSwitchRole={() => setShowAuthModal(true)}
-        />
-
+      <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col max-w-md mx-auto antialiased selection:bg-[#4F8EF7] selection:text-white">
         {/* Staff Main Section */}
         <div className="flex-1 flex flex-col min-w-0">
           {/* Doctor Top Header */}
@@ -550,7 +521,7 @@ export function App() {
             onMarkAsRead={handleMarkNotifAsRead}
           />
 
-          <main className="flex-1 p-3 sm:p-6 pb-28 md:pb-6 max-w-6xl w-full mx-auto">
+          <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
             {/* PWA Installation Banner */}
             <PWAInstallBanner />
 
@@ -663,22 +634,7 @@ export function App() {
 
   // 4. PATIENT EXPERIENCE INTERFACE
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col md:flex-row antialiased selection:bg-[#4F8EF7] selection:text-white">
-      {/* Desktop Sidebar (hidden on mobile) */}
-      <DesktopSidebar
-        activeTab={patientActiveTab}
-        onChangeTab={setPatientActiveTab}
-        user={user}
-        onOpenLoyalty={() => setIsLoyaltyOpen(true)}
-        onOpenReferral={() => setIsReferralOpen(true)}
-        onOpenGiftCards={() => setIsGiftCardsOpen(true)}
-        onLogout={() => {
-          setIsAuthenticated(false);
-          setShowAuthModal(true);
-        }}
-        upcomingCount={upcomingCount}
-      />
-
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-800 font-sans flex flex-col max-w-md mx-auto antialiased selection:bg-[#4F8EF7] selection:text-white">
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar */}
@@ -694,7 +650,7 @@ export function App() {
           unreadCount={upcomingCount}
         />
 
-        <main className="flex-1 p-3 sm:p-6 pb-28 md:pb-6 max-w-6xl w-full mx-auto">
+        <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
           {/* PWA Installation Banner */}
           <PWAInstallBanner />
 

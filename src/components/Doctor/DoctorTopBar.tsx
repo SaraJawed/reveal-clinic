@@ -153,9 +153,9 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
             </button>
 
             {showNotificationsDropdown && (
-              <div 
+              <div
                 id="doctor-notifications-panel"
-                className="fixed md:absolute right-4 left-4 md:right-0 md:left-auto mt-2 top-14 md:top-auto w-auto md:w-80 bg-white rounded-2xl shadow-xl border border-slate-100 p-3.5 z-50 animate-fade-in"
+                className="fixed left-4 right-4 top-14 max-w-md mx-auto w-auto bg-white rounded-2xl shadow-xl border border-slate-100 p-3.5 z-50 animate-fade-in"
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">

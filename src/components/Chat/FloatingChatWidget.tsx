@@ -55,40 +55,45 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
 
   return (
     <>
-      {/* Floating Chatbot Launcher Button */}
-      <div className="fixed bottom-20 right-4 sm:bottom-6 sm:right-8 z-50">
-        <button
-          type="button"
-          id="floating-chatbot-trigger-btn"
-          onClick={onToggleOpen}
-          className="relative group flex items-center gap-2.5 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-2xl border border-sky-400/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-          title="Open AI Clinic Chatbot"
-        >
-          {/* Pulsing Aura */}
-          <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 opacity-40 blur-xs group-hover:opacity-80 transition duration-300 animate-pulse" />
+      {/* Floating Chatbot Launcher Button (anchored within the phone-width column, not the true viewport edge) */}
+      <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none">
+        <div className="relative max-w-md mx-auto h-0">
+          <div className="absolute bottom-20 right-4 sm:bottom-6 sm:right-8 pointer-events-auto">
+            <button
+              type="button"
+              id="floating-chatbot-trigger-btn"
+              onClick={onToggleOpen}
+              className="relative group flex items-center gap-2.5 bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-3.5 sm:px-4 sm:py-3.5 rounded-full shadow-2xl border border-sky-400/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+              title="Open AI Clinic Chatbot"
+            >
+              {/* Pulsing Aura */}
+              <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 opacity-40 blur-xs group-hover:opacity-80 transition duration-300 animate-pulse" />
 
-          <div className="relative z-10 w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center text-slate-950 font-bold shadow-md">
-            <Bot className="w-5 h-5 text-white" />
+              <div className="relative z-10 w-9 h-9 rounded-full bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center text-slate-950 font-bold shadow-md">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+
+              <div className="relative z-10 text-left hidden sm:block pr-1">
+                <div className="text-xs font-extrabold text-white flex items-center gap-1 leading-tight">
+                  AI Assistant <Sparkles className="w-3 h-3 text-sky-400" />
+                </div>
+                <div className="text-[10px] text-sky-200 font-medium leading-tight">Instant Guidance</div>
+              </div>
+
+              {/* Unread badge / pulse indicator */}
+              <span className="relative z-10 flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 ring-2 ring-slate-900"></span>
+              </span>
+            </button>
           </div>
-
-          <div className="relative z-10 text-left hidden sm:block pr-1">
-            <div className="text-xs font-extrabold text-white flex items-center gap-1 leading-tight">
-              AI Assistant <Sparkles className="w-3 h-3 text-sky-400" />
-            </div>
-            <div className="text-[10px] text-sky-200 font-medium leading-tight">Instant Guidance</div>
-          </div>
-
-          {/* Unread badge / pulse indicator */}
-          <span className="relative z-10 flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500 ring-2 ring-slate-900"></span>
-          </span>
-        </button>
+        </div>
       </div>
 
-      {/* Full-Screen Chatbot Mode */}
+      {/* Full-Screen Chatbot Mode (capped to the same phone-width column) */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-white flex flex-col animate-fade-in text-slate-800">
+        <div className="fixed inset-0 z-50 bg-slate-900/40 flex justify-center animate-fade-in">
+        <div className="w-full max-w-md h-full bg-white flex flex-col text-slate-800">
           {/* Header */}
           <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shrink-0 shadow-md">
             <div className="flex items-center gap-3">
@@ -220,6 +225,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
               </button>
             </form>
           </div>
+        </div>
         </div>
       )}
     </>

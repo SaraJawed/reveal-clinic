@@ -22,7 +22,7 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-100 px-1.5 py-1.5 shadow-lg md:hidden">
+    <nav className="fixed bottom-0 inset-x-0 z-40 max-w-md mx-auto bg-white/95 backdrop-blur-lg border-t border-slate-100 px-1.5 py-1.5 shadow-lg">
       <div className="flex items-center justify-around max-w-lg mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
