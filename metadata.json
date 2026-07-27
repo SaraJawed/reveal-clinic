@@ -1,0 +1,6 @@
+{
+  "name": "Reveal Clinic",
+  "description": "Mobile-first PWA for luxury aesthetic and dermatology clinic management including appointment booking, digital check-in, treatments, packages, payments, medical reports, loyalty, and AI assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
