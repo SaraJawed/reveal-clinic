@@ -56,7 +56,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
   return (
     <>
       {/* Floating Chatbot Launcher Button (anchored within the phone-width column, not the true viewport edge) */}
-      <div className="fixed inset-x-0 bottom-0 z-50 pointer-events-none">
+      <div className="fixed inset-x-0 bottom-0 z-40 pointer-events-none">
         <div className="relative max-w-md mx-auto h-0">
           <div className="absolute bottom-20 right-4 sm:bottom-6 sm:right-8 pointer-events-auto">
             <button
