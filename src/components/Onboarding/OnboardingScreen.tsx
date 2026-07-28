@@ -47,7 +47,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
   return (
     <div className="min-h-screen bg-slate-900 text-white flex flex-col justify-between p-6 max-w-md mx-auto relative overflow-hidden">
       {/* Top Skip button */}
-      <div className="flex items-center justify-between z-10 pt-2">
+      <div className="flex items-center justify-between z-10" style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top))' }}>
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
@@ -104,7 +104,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
       </div>
 
       {/* Bottom Controls */}
-      <div className="space-y-6 pb-4 z-10">
+      <div className="space-y-6 z-10" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
         {/* Pagination Dots */}
         <div className="flex items-center justify-center gap-2">
           {slides.map((_, idx) => (
@@ -124,7 +124,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
           onClick={handleNext}
           className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 text-sm transition"
         >
-          <span>{currentSlide === slides.length - 1 ? 'Get Started Now' : 'Continue'}</span>
+          <span>{currentSlide === slides.length - 1 ? 'Get Started Now' : 'Next'}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

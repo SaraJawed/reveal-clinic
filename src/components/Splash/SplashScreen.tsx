@@ -43,7 +43,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           </div>
         </motion.div>
 
-        <div className="absolute bottom-8 text-[11px] text-slate-500 text-center">
+        <div
+          className="absolute text-[11px] text-slate-500 text-center"
+          style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' }}
+        >
           Powered by Reveal PWA Architecture • Secure & Encrypted
         </div>
       </div>

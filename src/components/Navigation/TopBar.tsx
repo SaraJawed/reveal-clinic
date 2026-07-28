@@ -113,7 +113,10 @@ export const TopBar: React.FC<TopBarProps> = ({
 
   return (
     <>
-      <header className="h-16 sm:h-20 px-3 sm:px-8 md:px-10 flex items-center justify-between border-b border-slate-100/80 bg-white/80 backdrop-blur-md sticky top-0 z-30">
+      <header
+        className="h-16 sm:h-20 px-3 sm:px-8 md:px-10 flex items-center justify-between border-b border-slate-100/80 bg-white/80 backdrop-blur-md sticky top-0 z-30"
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
         <div className="flex items-center gap-3">
           <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">Reveal Clinic</span>
         </div>
@@ -195,7 +198,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex justify-center animate-fade-in">
         <div className="w-full max-w-md h-full bg-slate-50 flex flex-col text-slate-800 overflow-y-auto">
           {/* Header */}
-          <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 shrink-0 shadow-md sticky top-0 z-10">
+          <div
+            className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 shrink-0 shadow-md sticky top-0 z-10"
+            style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+          >
             <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
               <div className="flex items-center gap-2">
                 <button

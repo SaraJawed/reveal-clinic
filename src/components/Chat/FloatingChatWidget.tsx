@@ -95,7 +95,10 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex justify-center animate-fade-in">
         <div className="w-full max-w-md h-full bg-white flex flex-col text-slate-800">
           {/* Header */}
-          <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shrink-0 shadow-md">
+          <div
+            className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white px-6 py-4 flex items-center justify-between border-b border-slate-800 shrink-0 shadow-md"
+            style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}
+          >
             <div className="flex items-center gap-3">
               <button
                 type="button"

@@ -283,7 +283,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                     </div>
                     <p className="text-xs font-bold text-[#4F8EF7] mt-0.5">{item.treatmentName}</p>
                     <p className="text-[11px] text-slate-400 font-medium">
-                      Doctor: Dr. {item.doctorName} • Room: {item.roomNumber}
+                      Doctor: {item.doctorName} • Room: {item.roomNumber}
                     </p>
                   </div>
                 </div>

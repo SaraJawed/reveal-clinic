@@ -90,7 +90,7 @@ export function App() {
   // Application Lifecycle States
   const [showSplash, setShowSplash] = useState(true);
   const [hasOnboarded, setHasOnboarded] = useState<boolean>(() => loadState('reveal_onboarded', false));
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => loadState('reveal_authenticated', true));
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => loadState('reveal_authenticated', false));
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Active Tab for Patient Navigation

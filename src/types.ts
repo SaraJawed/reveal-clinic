@@ -363,6 +363,7 @@ export interface TreatmentSession {
   startTime: string;
   endTime?: string;
   status: 'Scheduled' | 'Checked In' | 'In Progress' | 'Completed' | 'Pending Review' | 'Ready for Procedure';
+  progressPercent?: number;
   machinesUsed: MachineDetails[];
   consumablesUsed: ConsumableItem[];
   itemsIssued: IssuedItem[];

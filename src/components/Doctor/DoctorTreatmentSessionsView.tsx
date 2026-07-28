@@ -121,7 +121,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                         {session.treatmentName}
                       </p>
                       <p className="text-[10px] text-slate-500 truncate mt-0.5">
-                        Attending: {session.attendingStaffName}
+                        Attending: {session.doctorName}
                       </p>
                     </div>
                   </div>
@@ -164,7 +164,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     {selectedSession.treatmentName}
                   </h2>
                   <p className="text-xs font-semibold text-slate-600">
-                    Patient: <strong className="text-slate-900">{selectedSession.patientName}</strong> • Attending: {selectedSession.attendingStaffName}
+                    Patient: <strong className="text-slate-900">{selectedSession.patientName}</strong> • Attending: {selectedSession.doctorName}
                   </p>
                 </div>
 

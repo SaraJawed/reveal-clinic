@@ -128,7 +128,7 @@ export const initialDoctors: Doctor[] = [
     rating: 4.95,
     reviewCount: 189,
     experienceYears: 9,
-    avatarUrl: 'https://images.unsplash.com/photo-1594824813570-8268574a4f8d?auto=format&fit=crop&q=80&w=400',
+    avatarUrl: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400',
     bio: 'Focuses on medical skin health, acne scarring treatments, regenerative micro-needling with exosomes, and glow booster infusions.',
     languages: ['Arabic', 'English'],
     availableDays: ['Sun', 'Tue', 'Wed', 'Thu'],
@@ -179,7 +179,7 @@ export const treatmentServices: TreatmentService[] = [
     fullDescription: 'Utilizing Alexandrite & Nd:YAG dual wavelengths with integrated dynamic cooling to comfortably target hair follicles at the root for long-lasting silky smooth skin.',
     price: 650,
     durationMinutes: 45,
-    imageUrl: 'https://images.unsplash.com/photo-1512290900673-70020721245e?auto=format&fit=crop&q=80&w=600',
+    imageUrl: 'https://images.unsplash.com/photo-1616391182219-e080b4d1043a?auto=format&fit=crop&q=80&w=600',
     benefits: ['Permanent Hair Reduction', 'Dynamic Air Cooling Technology', 'Safe for Sensitive Skin'],
     preCare: 'Shave the treatment area 24 hours before your appointment. Do not wax or bleach.',
     postCare: 'Apply soothing aloe vera gel. Avoid hot baths or friction for 24 hours.',
@@ -251,7 +251,7 @@ export const treatmentPackages: TreatmentPackage[] = [
     price: 3200,
     originalValue: 3900,
     savingsPercentage: 20,
-    imageUrl: 'https://images.unsplash.com/photo-1512290900673-70020721245e?auto=format&fit=crop&q=80&w=600',
+    imageUrl: 'https://images.unsplash.com/photo-1616391182219-e080b4d1043a?auto=format&fit=crop&q=80&w=600',
     includedTreatments: ['6x Laser Sessions (Full Area)', 'Cooling Gel Aftercare', 'Touch-up Assessment'],
     validityMonths: 12,
     description: 'Comprehensive 6-session laser package designed for maximum permanent reduction across body or facial areas.'
@@ -308,7 +308,7 @@ export const initialAppointments: Appointment[] = [
     doctorId: 'doc_3',
     doctorName: 'Dr. Sophia Chen',
     doctorSpecialty: 'HydraFacial MD & Biostimulator Fillers',
-    doctorAvatar: 'https://images.unsplash.com/photo-1594824813570-8268574a4f8d?auto=format&fit=crop&q=80&w=400',
+    doctorAvatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400',
     clinicId: 'clinic_downtown',
     clinicName: 'Reveal Olaya Medical Center (Riyadh)',
     treatmentName: 'Initial Skin Diagnostics & Consultation',
@@ -503,7 +503,7 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     dateOfBirth: '1990-11-05',
     nationality: 'Saudi Arabian',
     preferredClinicId: 'clinic_downtown',
-    avatarUrl: 'https://images.unsplash.com/photo-1594824813566-78a9c0c80c29?auto=format&fit=crop&q=80&w=300',
+    avatarUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=300',
     address: 'King Fahd Road, Olaya District, Riyadh, KSA',
     secondaryContact: '+966 50 334 9988',
     bloodGroup: 'A+',
@@ -861,6 +861,7 @@ export const initialTreatmentSessions: TreatmentSession[] = [
     roomNumber: 'Treatment Suite A',
     startTime: '09:30 AM',
     status: 'In Progress',
+    progressPercent: 55,
     machinesUsed: [
       {
         id: 'mach_hf_01',
@@ -955,6 +956,7 @@ export const initialTreatmentSessions: TreatmentSession[] = [
     roomNumber: 'Waiting Room / Pod 2',
     startTime: '10:30 AM',
     status: 'Ready for Procedure',
+    progressPercent: 0,
     machinesUsed: [],
     consumablesUsed: [
       {
