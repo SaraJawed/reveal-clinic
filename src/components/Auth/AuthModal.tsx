@@ -281,7 +281,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   const cardContent = (
-    <div className="bg-white w-full h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl shadow-none sm:shadow-2xl sm:max-w-md overflow-hidden border-0 sm:border border-slate-100 relative flex flex-col my-auto text-slate-800 animate-fade-in">
+    <div className={`bg-white w-full overflow-hidden relative flex flex-col text-slate-800 animate-fade-in ${
+      isScreen
+        ? 'h-full border-0 shadow-none'
+        : 'h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl shadow-none sm:shadow-2xl sm:max-w-md border-0 sm:border border-slate-100 my-auto'
+    }`}>
       {/* Header */}
       <div className="bg-gradient-to-r from-slate-900 via-blue-900 to-slate-900 text-white p-5 flex items-center justify-between relative shrink-0">
         <div className="flex items-center gap-2.5">
