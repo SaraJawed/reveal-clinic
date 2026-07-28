@@ -50,7 +50,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
   return (
     <div className="space-y-6 pb-20 md:pb-10">
       {/* Header */}
-      <div className="bg-white border border-slate-100 rounded-3xl p-5 md:p-6 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border border-slate-100 rounded-3xl p-5 md:p-6 shadow-2xs flex flex-col justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-3 rounded-2xl bg-purple-50 text-purple-600">
             <Activity className="w-6 h-6" />
@@ -87,7 +87,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
             Active Sessions ({filteredSessions.length})
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             {filteredSessions.map((session) => {
               return (
                 <div
@@ -150,7 +150,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
           <div className="space-y-6">
             {/* Session Summary Card */}
             <div className="bg-white border border-slate-100 rounded-3xl p-5 md:p-6 shadow-md space-y-4">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+              <div className="flex flex-col justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-extrabold uppercase">
