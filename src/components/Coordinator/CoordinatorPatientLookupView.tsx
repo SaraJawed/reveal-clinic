@@ -232,7 +232,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
 
                   <div className="flex items-center gap-3 shrink-0">
                     <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold">
-                      ${appt.paymentIntegrationStatus?.amount || 280} Paid
+                      $280 Paid
                     </span>
                   </div>
                 </div>

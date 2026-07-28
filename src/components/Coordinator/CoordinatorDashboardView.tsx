@@ -58,7 +58,7 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
   // Operational metrics
   const totalToday = schedule.length;
   const checkedInCount = schedule.filter(s => s.status === 'checked_in' || s.status === 'in_consultation').length;
-  const pendingCheckIns = schedule.filter(s => s.status === 'scheduled' || s.status === 'ready_for_procedure');
+  const pendingCheckIns = schedule.filter(s => s.status === 'scheduled');
   const walkInCount = walkInQueue.length;
   const revenueToday = schedule.filter(s => s.paymentStatus === 'Paid').length * 280 + 450;
 

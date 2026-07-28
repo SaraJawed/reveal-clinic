@@ -371,7 +371,7 @@ export function App() {
         {snackbarMessage && (
           <Snackbar
             message={snackbarMessage}
-            onDismiss={() => setSnackbarMessage(null)}
+            onClose={() => setSnackbarMessage(null)}
           />
         )}
       </div>
@@ -491,7 +491,7 @@ export function App() {
           {snackbarMessage && (
             <Snackbar
               message={snackbarMessage}
-              onDismiss={() => setSnackbarMessage(null)}
+              onClose={() => setSnackbarMessage(null)}
             />
           )}
         </div>
@@ -567,7 +567,14 @@ export function App() {
                 onRequestItem={(sessionId, itemName, urgency) => {
                   setTreatmentSessions(prev => prev.map(s => s.id === sessionId ? {
                     ...s,
-                    itemsRequested: [...s.itemsRequested, { name: itemName, status: 'Requested', urgency }]
+                    itemsRequested: [...s.itemsRequested, {
+                      id: `req_${Date.now()}`,
+                      name: itemName,
+                      quantity: 1,
+                      urgency,
+                      requestedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                      status: 'Pending'
+                    }]
                   } : s));
                   triggerToast(`Requested ${itemName} (${urgency} priority)`);
                 }}
@@ -708,7 +715,7 @@ export function App() {
             <MedicalReportsView reports={reports} />
           )}
 
-          {(patientActiveTab === 'chat' || patientActiveTab === 'chatbot') && (
+          {patientActiveTab === 'chat' && (
             <AIChatBot
               messages={chatMessages}
               onSendMessage={handleSendMessageToAI}

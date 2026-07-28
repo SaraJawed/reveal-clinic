@@ -420,9 +420,12 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                       onRequestItem(selectedSession.id, requestItemName.trim(), requestUrgency);
                     } else {
                       selectedSession.itemsRequested.push({
+                        id: `req_${Date.now()}`,
                         name: requestItemName.trim(),
-                        status: 'Requested',
-                        urgency: requestUrgency
+                        quantity: 1,
+                        urgency: requestUrgency,
+                        requestedAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                        status: 'Pending'
                       });
                     }
                     setRequestItemName('');

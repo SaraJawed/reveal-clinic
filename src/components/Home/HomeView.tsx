@@ -34,8 +34,6 @@ interface HomeViewProps {
   onChangeTab: (tab: TabType) => void;
   onOpenCheckIn: () => void;
   onSelectDoctorOrTreatment?: (item: any) => void;
-  onOpenLoyalty: () => void;
-  onOpenReferral: () => void;
   onOpenGiftCards: () => void;
 }
 

@@ -329,7 +329,7 @@ export interface RequestedItem {
   id: string;
   name: string;
   quantity: number;
-  urgency: 'Normal' | 'Urgent';
+  urgency: 'Normal' | 'High' | 'Immediate' | 'Urgent';
   requestedAt: string;
   status: 'Pending' | 'Approved' | 'Delivered';
 }
