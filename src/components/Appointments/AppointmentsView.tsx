@@ -297,11 +297,13 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                       ? 'bg-blue-100 text-blue-800'
                       : appt.status === 'completed'
                       ? 'bg-emerald-100 text-emerald-800'
+                      : appt.status === 'pending'
+                      ? 'bg-amber-100 text-amber-800'
                       : 'bg-slate-100 text-slate-700'
                   }`}>
-                    {appt.status}
+                    {appt.status === 'pending' ? 'Pending Confirmation' : appt.status}
                   </span>
-                  <span className="text-xs font-bold text-slate-900">SAR {appt.fee} (Paid)</span>
+                  <span className="text-xs font-bold text-slate-900">SAR {appt.fee} {appt.paid ? '(Paid)' : '(Pay at Clinic)'}</span>
                 </div>
 
                 <div className="flex items-start gap-3.5">
@@ -324,7 +326,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2 text-xs">
                   <span className="text-[11px] text-slate-500 truncate">📍 {appt.clinicName}</span>
 
-                  {appt.status === 'upcoming' && (
+                  {appt.status !== 'completed' && appt.status !== 'cancelled' && (
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         id={`appointments-cancel-${appt.id}-btn`}
@@ -344,13 +346,15 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                       >
                         <RotateCcw className="w-3.5 h-3.5" /> Reschedule
                       </button>
-                      <button
-                        id={`appointments-checkin-${appt.id}-btn`}
-                        onClick={onOpenCheckIn}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
-                      >
-                        Check-In
-                      </button>
+                      {appt.status === 'upcoming' && (
+                        <button
+                          id={`appointments-checkin-${appt.id}-btn`}
+                          onClick={onOpenCheckIn}
+                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
+                        >
+                          Check-In
+                        </button>
+                      )}
                     </div>
                   )}
 
@@ -366,7 +370,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                           onClick={() => setFeedbackAppt(appt)}
                           className="bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1"
                         >
-                          <MessageSquare className="w-3.5 h-3.5" /> Leave Doctor Feedback
+                          <MessageSquare className="w-3.5 h-3.5" /> Rate Your Visit
                         </button>
                       )}
                     </div>

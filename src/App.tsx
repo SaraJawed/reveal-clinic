@@ -17,6 +17,7 @@ import {
   TreatmentSession,
   StaffNotification,
   ClinicalAppointmentStatus,
+  AppointmentStatus,
   WalkInPatient,
   Doctor
 } from './types';
@@ -85,6 +86,36 @@ import { PaymentModal } from './components/Payments/PaymentModal';
 import { LoyaltyRewardsModal } from './components/Loyalty/LoyaltyRewardsModal';
 import { ReferralModal } from './components/Referral/ReferralModal';
 import { GiftCardModal } from './components/GiftCards/GiftCardModal';
+
+function calculateAge(dateOfBirth: string): number {
+  const dob = new Date(dateOfBirth);
+  if (Number.isNaN(dob.getTime())) return 0;
+  const now = new Date();
+  let age = now.getFullYear() - dob.getFullYear();
+  const hasHadBirthdayThisYear =
+    now.getMonth() > dob.getMonth() || (now.getMonth() === dob.getMonth() && now.getDate() >= dob.getDate());
+  if (!hasHadBirthdayThisYear) age -= 1;
+  return age;
+}
+
+// Maps a staff-side clinical status back to the patient-facing status, so a
+// Coordinator/Doctor updating their side of a booked appointment (the two are
+// linked by sharing the same id) is reflected in the Patient Portal.
+function clinicalStatusToAppointmentStatus(status: ClinicalAppointmentStatus): AppointmentStatus {
+  switch (status) {
+    case 'completed':
+      return 'completed';
+    case 'cancelled':
+      return 'cancelled';
+    case 'in_consultation':
+    case 'procedure':
+      return 'in_progress';
+    case 'scheduled':
+    case 'checked_in':
+    default:
+      return 'upcoming';
+  }
+}
 
 export function App() {
   // Application Lifecycle States
@@ -220,6 +251,34 @@ export function App() {
   // Patient Handlers
   const handleBookAppointment = (newAppt: Appointment) => {
     setAppointments(prev => [newAppt, ...prev]);
+
+    // Mirror the booking into the staff-facing schedule under the same id, so
+    // Coordinator/Doctor can see and manage it, and a later status change on
+    // their side can sync back to this same appointment (see
+    // handleUpdateScheduleStatus below).
+    const scheduleItem: ClinicalScheduleItem = {
+      id: newAppt.id,
+      patientId: user.patientId,
+      patientName: user.fullName,
+      patientAge: calculateAge(user.dateOfBirth),
+      patientGender: user.gender,
+      patientAvatar: user.avatarUrl,
+      doctorId: newAppt.doctorId,
+      doctorName: newAppt.doctorName,
+      treatmentName: newAppt.treatmentName,
+      consultationType: newAppt.consultationType,
+      date: newAppt.date,
+      timeSlot: newAppt.timeSlot,
+      durationMinutes: 30,
+      status: 'scheduled',
+      roomNumber: 'Unassigned',
+      allergyAlerts: user.skinAllergies,
+      visitReason: newAppt.treatmentName,
+      notes: newAppt.notes,
+      paymentStatus: newAppt.paid ? 'Paid' : 'Pending Deposit',
+    };
+    setClinicalSchedule(prev => [scheduleItem, ...prev]);
+
     triggerToast(`Appointment with ${newAppt.doctorName} booked!`);
   };
 
@@ -302,6 +361,13 @@ export function App() {
   // Staff Handlers
   const handleUpdateScheduleStatus = (id: string, status: ClinicalAppointmentStatus) => {
     setClinicalSchedule(prev => prev.map(item => item.id === id ? { ...item, status } : item));
+
+    // If this schedule item came from a patient booking (same id), sync the
+    // status back so the Patient Portal reflects Coordinator/Doctor updates -
+    // e.g. marking a visit Completed unlocks "Rate Your Visit" for the patient.
+    const patientStatus = clinicalStatusToAppointmentStatus(status);
+    setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: patientStatus } : a));
+
     triggerToast(`Schedule status updated to ${status.replace('_', ' ')}`);
   };
 
