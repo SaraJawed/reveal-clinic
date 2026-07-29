@@ -159,3 +159,35 @@ export const getStoredChat = (): ChatMessage[] => {
 export const saveStoredChat = (messages: ChatMessage[]) => {
   localStorage.setItem(KEYS.CHAT_MESSAGES, JSON.stringify(messages));
 };
+
+// ----------------------------------------------------------------------
+// Registered Patient Accounts (mobile number + password -> profile)
+//
+// This app has no real backend, so "accounts" created via the signup flow
+// are kept here so a patient can log back in later with the same mobile
+// number and password they registered with, instead of only ever being
+// reachable through the hardcoded demo credentials.
+// ----------------------------------------------------------------------
+const REGISTERED_PATIENTS_KEY = 'reveal_registered_patients';
+
+interface RegisteredPatientAccount {
+  phone: string; // normalized: digits only
+  password: string;
+  profile: UserProfile;
+}
+
+const normalizePhone = (phone: string): string => phone.replace(/\D/g, '').slice(-9);
+
+export const registerPatientAccount = (phone: string, password: string, profile: UserProfile): void => {
+  const accounts = loadState<RegisteredPatientAccount[]>(REGISTERED_PATIENTS_KEY, []);
+  const normalized = normalizePhone(phone);
+  const withoutExisting = accounts.filter((a) => a.phone !== normalized);
+  saveState(REGISTERED_PATIENTS_KEY, [...withoutExisting, { phone: normalized, password, profile }]);
+};
+
+export const findRegisteredPatientAccount = (phone: string, password: string): UserProfile | null => {
+  const accounts = loadState<RegisteredPatientAccount[]>(REGISTERED_PATIENTS_KEY, []);
+  const normalized = normalizePhone(phone);
+  const match = accounts.find((a) => a.phone === normalized && a.password === password);
+  return match ? match.profile : null;
+};

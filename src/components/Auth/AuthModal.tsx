@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserProfile, UserRole } from '../../types';
 import { mockStaffProfiles, HARDCODED_AVATARS, clinicBranches, initialUserProfile } from '../../data/mockData';
+import { registerPatientAccount, findRegisteredPatientAccount } from '../../utils/storage';
 import { X, Lock, Phone, ShieldCheck, Sparkles, RefreshCw, Stethoscope, HeartPulse, UserCheck, Key, CheckCircle2, Camera, AlertTriangle, MapPin, User, Mail, Plus, Trash2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 interface AuthModalProps {
@@ -163,6 +164,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         return;
       }
 
+      // A patient who registered with this mobile number + password takes
+      // priority over the hardcoded demo patterns below.
+      const registeredProfile = findRegisteredPatientAccount(phone, enteredPwd);
+      if (registeredProfile) {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+          setSuccessToast(`Welcome back, ${registeredProfile.fullName}! Logging into PATIENT Portal...`);
+          setTimeout(() => {
+            handleSuccessCallback(registeredProfile);
+            onClose();
+          }, 600);
+        }, 700);
+        return;
+      }
+
       // Check for Doctor/Patient profile match
       if (digits.includes('1234567') || digits.includes('501234567')) {
         if (enteredPwd === 'RC-99841' || enteredPwd === '••••••••') {
@@ -288,6 +305,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             referralCode: `${fullName.split(' ')[0].toUpperCase()}-GLOW-25`,
             accountCreated: new Date().toISOString().split('T')[0]
           };
+
+      if (newUser.role === 'patient') {
+        registerPatientAccount(phone, password, newUser);
+      }
 
       handleSuccessCallback(newUser);
       onClose();
