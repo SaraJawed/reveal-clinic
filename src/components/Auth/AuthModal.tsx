@@ -229,6 +229,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       } else if (enteredId === 'RC-99841' && (enteredPwd === 'RC-99841' || enteredPwd === '••••••••')) {
         // Both Doctor and Patient! Show portal selection overlay inside login screen.
         setShowDestinationChoice(true);
+      } else if (enteredId === 'PA-94100' && (enteredPwd === 'PA-94100' || enteredPwd === '••••••••')) {
+        // Direct Patient Login
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+          const targetUser: UserProfile = { ...initialUserProfile, role: 'patient' };
+          setSuccessToast(`Welcome back, ${targetUser.fullName}! Logging into PATIENT Portal...`);
+          setTimeout(() => {
+            handleSuccessCallback(targetUser);
+            onClose();
+          }, 600);
+        }, 700);
       } else {
         setErrorMsg('Invalid ID or Password. Check your clinical portal details or register.');
       }
