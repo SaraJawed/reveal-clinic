@@ -150,7 +150,7 @@ export const getStoredChat = (): ChatMessage[] => {
     {
       id: 'msg_welcome',
       sender: 'assistant',
-      text: 'Hello Sophia! Welcome to Reveal Clinic. How may I assist your skin, aesthetic, or appointment needs today?',
+      text: 'Hello Noura! Welcome to Reveal Clinic. How may I assist your skin, aesthetic, or appointment needs today?',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ];

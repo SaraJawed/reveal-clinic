@@ -53,7 +53,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       id: 'notif-1',
       category: 'Appointment Confirmation',
       title: 'Appointment Confirmation',
-      message: 'Your appointment for Laser Skin Resurfacing with Dr. Elena Rostova on Oct 24 at 10:00 AM has been confirmed.',
+      message: 'Your appointment for Laser Skin Resurfacing with Dr. Fatima Al-Zahrani on Oct 24 at 10:00 AM has been confirmed.',
       timestamp: 'Just now',
       read: false,
       icon: Calendar,

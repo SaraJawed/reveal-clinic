@@ -50,7 +50,7 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
   const [showWalkInModal, setShowWalkInModal] = useState(false);
   const [walkInName, setWalkInName] = useState('');
   const [walkInPhone, setWalkInPhone] = useState('');
-  const [walkInDoctor, setWalkInDoctor] = useState('Dr. Sarah Chen');
+  const [walkInDoctor, setWalkInDoctor] = useState('Dr. Sara Al-Ghamdi');
   const [walkInService, setWalkInService] = useState('Aesthetic Consultation & Skin Analysis');
   const [walkInNotes, setWalkInNotes] = useState('');
 
@@ -393,9 +393,9 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
                   onChange={(e) => setWalkInDoctor(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                 >
-                  <option value="Dr. Sarah Chen">Dr. Sarah Chen (Dermatologist)</option>
-                  <option value="Dr. Marcus Vance">Dr. Marcus Vance (Cosmetic Specialist)</option>
-                  <option value="Dr. Elena Rostova">Dr. Elena Rostova (Aesthetic Nurse)</option>
+                  <option value="Dr. Sara Al-Ghamdi">Dr. Sara Al-Ghamdi (Dermatologist)</option>
+                  <option value="Dr. Faisal Al-Dosari">Dr. Faisal Al-Dosari (Cosmetic Specialist)</option>
+                  <option value="Dr. Fatima Al-Zahrani">Dr. Fatima Al-Zahrani (Aesthetic Nurse)</option>
                 </select>
               </div>
 

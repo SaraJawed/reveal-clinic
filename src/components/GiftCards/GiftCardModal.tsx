@@ -156,7 +156,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
                   type="text"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
-                  placeholder="e.g. Jessica Martinez"
+                  placeholder="e.g. Hessa Al-Qahtani"
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
                   required
                 />

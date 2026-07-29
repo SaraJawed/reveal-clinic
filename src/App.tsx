@@ -144,7 +144,7 @@ export function App() {
     {
       id: 'msg_1',
       sender: 'assistant',
-      text: 'Hello Sophia! 👋 Welcome to Reveal Medical & Aesthetic Center. I am your AI Clinic Assistant. How can I assist with your skincare routine, doctor consultations, or treatment bookings today?',
+      text: 'Hello Noura! 👋 Welcome to Reveal Medical & Aesthetic Center. I am your AI Clinic Assistant. How can I assist with your skincare routine, doctor consultations, or treatment bookings today?',
       timestamp: '10:00 AM'
     },
     {
@@ -156,7 +156,7 @@ export function App() {
     {
       id: 'msg_3',
       sender: 'assistant',
-      text: 'Certainly, Sophia! Here are your personalized post-treatment care guidelines:\n\n✨ 1. Moisture Lock: Use a gentle, hyaluronic acid serum morning and night.\n☀️ 2. Sun Defense: Apply SPF 50+ broad-spectrum sunscreen before stepping outdoors.\n🧴 3. Avoid Exfoliants: Hold off on Retinol or AHA/BHA chemical peels for 5 days.\n💧 4. Stay Hydrated: Drink plenty of water to enhance skin radiance and healing.\n\nWould you like me to book your 2-week skin evaluation appointment with Dr. Elena Rostova?',
+      text: 'Certainly, Noura! Here are your personalized post-treatment care guidelines:\n\n✨ 1. Moisture Lock: Use a gentle, hyaluronic acid serum morning and night.\n☀️ 2. Sun Defense: Apply SPF 50+ broad-spectrum sunscreen before stepping outdoors.\n🧴 3. Avoid Exfoliants: Hold off on Retinol or AHA/BHA chemical peels for 5 days.\n💧 4. Stay Hydrated: Drink plenty of water to enhance skin radiance and healing.\n\nWould you like me to book your 2-week skin evaluation appointment with Dr. Fatima Al-Zahrani?',
       timestamp: '10:01 AM'
     },
     {
@@ -168,7 +168,7 @@ export function App() {
     {
       id: 'msg_5',
       sender: 'assistant',
-      text: 'Dr. Elena Rostova has 3 open consultation slots tomorrow at Reveal Olaya Medical Center (Riyadh):\n\n• 🗓️ 10:00 AM (Morning)\n• 🗓️ 02:30 PM (Afternoon)\n• 🗓️ 04:15 PM (Late Afternoon)\n\nTap "Book Doctor" at the top of this chat or reply with your preferred time to confirm!',
+      text: 'Dr. Fatima Al-Zahrani has 3 open consultation slots tomorrow at Reveal Olaya Medical Center (Riyadh):\n\n• 🗓️ 10:00 AM (Morning)\n• 🗓️ 02:30 PM (Afternoon)\n• 🗓️ 04:15 PM (Late Afternoon)\n\nTap "Book Doctor" at the top of this chat or reply with your preferred time to confirm!',
       timestamp: '10:02 AM'
     }
   ]));

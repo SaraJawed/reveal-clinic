@@ -80,7 +80,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
       id: `rcpt_${Date.now().toString().slice(-6)}`,
       appointmentId: 'cs_101',
       treatmentName: 'HydraFacial Elite + LED Therapy',
-      doctorName: 'Dr. Sarah Chen',
+      doctorName: 'Dr. Sara Al-Ghamdi',
       amountPaid: amt,
       paymentDate: new Date().toISOString().split('T')[0],
       paymentMethod: paymentMethod === 'card' ? 'Credit / Debit Card' : paymentMethod === 'cash' ? 'Cash at Desk' : 'Tabby Installments',
@@ -187,7 +187,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                   HydraFacial Elite + LED Therapy
                 </div>
                 <div className="text-xs text-slate-500">
-                  Date: <span className="font-semibold text-slate-700">July 10, 2026</span> • Dr. Sarah Chen
+                  Date: <span className="font-semibold text-slate-700">July 10, 2026</span> • Dr. Sara Al-Ghamdi
                 </div>
               </div>
 

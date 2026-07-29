@@ -30,8 +30,8 @@ export const HARDCODED_AVATARS = [
 export const initialUserProfile: UserProfile = {
   id: 'usr_772183',
   patientId: 'RC-99841',
-  fullName: 'Sophia Martinez',
-  email: 'sophia.martinez@example.com',
+  fullName: 'Noura Al-Qahtani',
+  email: 'noura.alqahtani@example.com',
   phone: '+966 50 123 4567',
   gender: 'female',
   dateOfBirth: '1992-06-14',
@@ -39,13 +39,13 @@ export const initialUserProfile: UserProfile = {
   preferredClinicId: 'clinic_downtown',
   avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400',
   address: 'King Fahd Road, Olaya District, Riyadh 12211, Saudi Arabia',
-  secondaryContact: '+966 55 987 6543 (Husband - David)',
+  secondaryContact: '+966 55 987 6543 (Husband - Faisal)',
   bloodGroup: 'O+',
   skinAllergies: ['Benzoyl Peroxide', 'Fragrance (Severe)', 'Latex (Mild)'],
   medicalNotes: 'Saudi MOH Registered Patient (File #RC-99841). Sensitive skin barrier prone to rosacea flare-ups. Uses gentle non-comedogenic cleansers.',
   loyaltyPoints: 1450,
   loyaltyTier: 'Gold',
-  referralCode: 'SOPHIA-GLOW-50',
+  referralCode: 'NOURA-GLOW-50',
   accountCreated: '2024-01-15',
   favoriteDoctors: []
 };
@@ -86,7 +86,7 @@ export const clinicBranches: ClinicBranch[] = [
 export const initialDoctors: Doctor[] = [
   {
     id: 'doc_1',
-    name: 'Dr. Elena Rostova',
+    name: 'Dr. Fatima Al-Zahrani',
     title: 'MD, Board Certified Dermatologist',
     specialty: 'Anti-Aging & Facial Contouring Specialist',
     clinicId: 'clinic_downtown',
@@ -103,7 +103,7 @@ export const initialDoctors: Doctor[] = [
   },
   {
     id: 'doc_2',
-    name: 'Dr. Marcus Vance',
+    name: 'Dr. Faisal Al-Dosari',
     title: 'MD, Laser & Cosmetic Surgeon',
     specialty: 'Laser Hair Removal & Skin Resurfacing',
     clinicId: 'clinic_marina',
@@ -120,7 +120,7 @@ export const initialDoctors: Doctor[] = [
   },
   {
     id: 'doc_3',
-    name: 'Dr. Sophia Chen',
+    name: 'Dr. Maha Al-Otaibi',
     title: 'MD, Cosmetic Dermatology Specialist',
     specialty: 'HydraFacial MD & Biostimulator Fillers',
     clinicId: 'clinic_downtown',
@@ -267,7 +267,7 @@ export const treatmentPackages: TreatmentPackage[] = [
     imageUrl: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=600',
     includedTreatments: ['1x Botox Anti-Wrinkle Rejuvenation', '2x Exosome Micro-needling Sessions', 'Medical Skincare Kit'],
     validityMonths: 6,
-    description: 'Designed by Dr. Elena Rostova for targeted pore tightening, wrinkle reduction, and cellular collagen renewal.'
+    description: 'Designed by Dr. Fatima Al-Zahrani for targeted pore tightening, wrinkle reduction, and cellular collagen renewal.'
   }
 ];
 
@@ -288,7 +288,7 @@ export const initialAppointments: Appointment[] = [
   {
     id: 'apt_1001',
     doctorId: 'doc_1',
-    doctorName: 'Dr. Elena Rostova',
+    doctorName: 'Dr. Fatima Al-Zahrani',
     doctorSpecialty: 'Anti-Aging & Facial Contouring Specialist',
     doctorAvatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=400',
     clinicId: 'clinic_downtown',
@@ -306,7 +306,7 @@ export const initialAppointments: Appointment[] = [
   {
     id: 'apt_1000',
     doctorId: 'doc_3',
-    doctorName: 'Dr. Sophia Chen',
+    doctorName: 'Dr. Maha Al-Otaibi',
     doctorSpecialty: 'HydraFacial MD & Biostimulator Fillers',
     doctorAvatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400',
     clinicId: 'clinic_downtown',
@@ -320,7 +320,7 @@ export const initialAppointments: Appointment[] = [
     paid: true,
     notes: 'Skin diagnostics revealed early signs of barrier dryness. Recommended HydraGlow pack.',
     feedbackRating: 5,
-    feedbackComment: 'Dr. Sophia was wonderfully attentive and listened carefully to my concerns!'
+    feedbackComment: 'Dr. Maha was wonderfully attentive and listened carefully to my concerns!'
   }
 ];
 
@@ -354,7 +354,7 @@ export const initialMedicalReports: MedicalReport[] = [
     id: 'rep_301',
     title: 'Comprehensive Skin Analysis & Diagnostic Report (MOH Certified)',
     type: 'Lab & Skin Analysis',
-    doctorName: 'Dr. Sophia Chen',
+    doctorName: 'Dr. Maha Al-Otaibi',
     date: '2026-06-12',
     clinicName: 'Reveal Olaya Medical Center (Riyadh)',
     summary: 'VISIA 3D Skin Mapping performed under Saudi MOH guidelines. Epidermal moisture index at 68%. Minor UV hyperpigmentation on forehead. Rosacea vascularity mild on cheeks.',
@@ -362,14 +362,14 @@ export const initialMedicalReports: MedicalReport[] = [
       { medication: 'Reveal Barrier Repair Ceramide Cream', dosage: 'Apply twice daily', instructions: 'Use gently after cleansing morning and night.' },
       { medication: 'Mineral Zinc Sunscreen SPF 50+', dosage: 'Every morning', instructions: 'Reapply if exposed to direct light for >2 hours.' }
     ],
-    downloadPdfName: 'Reveal_Skin_Report_SophiaMartinez.pdf',
+    downloadPdfName: 'Reveal_Skin_Report_NouraAlQahtani.pdf',
     fileSize: '1.4 MB'
   },
   {
     id: 'rep_300',
     title: 'Dermatological Medical Certificate & Treatment Summary',
     type: 'Medical Certificate',
-    doctorName: 'Dr. Elena Rostova',
+    doctorName: 'Dr. Fatima Al-Zahrani',
     date: '2026-04-18',
     clinicName: 'Reveal Olaya Medical Center (Riyadh)',
     summary: 'Ministry of Health certified completion of dermatological procedure. Patient underwent non-ablative laser skin toning with zero post-procedure complications.',
@@ -382,7 +382,7 @@ export const initialNotifications: NotificationItem[] = [
   {
     id: 'notif_1',
     title: 'Upcoming Appointment Reminder',
-    message: 'Your appointment with Dr. Elena Rostova is scheduled for July 28 at 11:00 AM at Reveal Olaya Center (Riyadh). Remember to bring your digital check-in pass.',
+    message: 'Your appointment with Dr. Fatima Al-Zahrani is scheduled for July 28 at 11:00 AM at Reveal Olaya Center (Riyadh). Remember to bring your digital check-in pass.',
     timestamp: '2 hours ago',
     type: 'reminder',
     read: false
@@ -441,9 +441,9 @@ export const giftCardsList: GiftCard[] = [
     code: 'REVEAL-GIFT-9921',
     amount: 1000,
     balance: 1000,
-    recipientName: 'Jessica Martinez',
-    recipientEmail: 'jessica.m@example.com',
-    senderName: 'Sophia Martinez',
+    recipientName: 'Hessa Al-Qahtani',
+    recipientEmail: 'hessa.alqahtani@example.com',
+    senderName: 'Noura Al-Qahtani',
     personalMessage: 'Happy Birthday Sis! Treat yourself to a glowing HydraFacial at Reveal Olaya Center Riyadh!',
     theme: 'rose_glow',
     purchaseDate: '2026-07-01',
@@ -461,14 +461,14 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     role: 'doctor',
     staffId: 'DOC-8820',
     patientId: 'DOC-8820',
-    fullName: 'Dr. Sarah Chen',
+    fullName: 'Dr. Sara Al-Ghamdi',
     title: 'MD, Board-Certified Dermatologist',
     specialty: 'Aesthetic Dermatology & Laser Surgery',
     licenseNumber: 'MOH-KSA-994102',
     department: 'Dermatology & Facial Aesthetics',
     consultationRoom: 'Consultation Room 3 (Main Floor)',
     availabilityStatus: 'In Consultation',
-    email: 'dr.sarah.chen@revealclinic.com',
+    email: 'dr.sara.alghamdi@revealclinic.com',
     phone: '+966 11 480 3251',
     gender: 'female',
     dateOfBirth: '1984-03-22',
@@ -482,7 +482,7 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     medicalNotes: 'Attending physician for injectable aesthetics and high-intensity energy devices. Certified by Saudi MOH.',
     loyaltyPoints: 0,
     loyaltyTier: 'Diamond',
-    referralCode: 'DR-SARAH-REVEAL',
+    referralCode: 'DR-SARA-REVEAL',
     accountCreated: '2022-01-10'
   },
   nurse: {
@@ -490,14 +490,14 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     role: 'nurse',
     staffId: 'NUR-4109',
     patientId: 'NUR-4109',
-    fullName: 'Emma Vance, BSN, RN',
+    fullName: 'Amal Al-Harbi, BSN, RN',
     title: 'Lead Aesthetic Nurse Specialist',
     specialty: 'Medical Facials, Microneedling & Post-Care',
     licenseNumber: 'MOH-KSA-882109',
     department: 'Aesthetic Nursing & Recovery',
     consultationRoom: 'Treatment Suite B',
     availabilityStatus: 'Available',
-    email: 'emma.vance@revealclinic.com',
+    email: 'amal.alharbi@revealclinic.com',
     phone: '+966 11 480 3252',
     gender: 'female',
     dateOfBirth: '1990-11-05',
@@ -511,7 +511,7 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     medicalNotes: 'Specialized in RF Microneedling, Chemical Peels, and pre/post treatment patient care.',
     loyaltyPoints: 0,
     loyaltyTier: 'Diamond',
-    referralCode: 'NURSE-EMMA-REVEAL',
+    referralCode: 'NURSE-AMAL-REVEAL',
     accountCreated: '2023-04-15'
   },
   coordinator: {
@@ -519,14 +519,14 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     role: 'coordinator',
     staffId: 'COORD-102',
     patientId: 'COORD-102',
-    fullName: 'Alex Rivera',
+    fullName: 'Yousef Al-Mutairi',
     title: 'Senior Clinical Coordinator',
     specialty: 'Patient Flow & Treatment Packages',
     licenseNumber: 'MOH-KSA-0012',
     department: 'Clinic Reception & Front Desk',
     consultationRoom: 'Front Desk / Concierge Pod 1',
     availabilityStatus: 'Available',
-    email: 'alex.rivera@revealclinic.com',
+    email: 'yousef.almutairi@revealclinic.com',
     phone: '+966 11 480 3253',
     gender: 'other',
     dateOfBirth: '1988-08-19',
@@ -540,7 +540,7 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     medicalNotes: 'Oversees digital check-ins, package redemption, and daily doctor schedules.',
     loyaltyPoints: 0,
     loyaltyTier: 'Platinum',
-    referralCode: 'COORD-ALEX',
+    referralCode: 'COORD-YOUSEF',
     accountCreated: '2023-09-01'
   }
 };
@@ -549,12 +549,12 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
   {
     id: 'cs_101',
     patientId: 'RC-99841',
-    patientName: 'Sophia Martinez',
+    patientName: 'Noura Al-Qahtani',
     patientAge: 32,
     patientGender: 'female',
     patientAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300',
     doctorId: 'doc_1',
-    doctorName: 'Dr. Sarah Chen',
+    doctorName: 'Dr. Sara Al-Ghamdi',
     treatmentName: 'HydraFacial Elite + LED Therapy',
     consultationType: 'Procedure',
     date: 'Today',
@@ -572,12 +572,12 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
   {
     id: 'cs_102',
     patientId: 'RC-20410',
-    patientName: 'Elena Rostova',
+    patientName: 'Reem Al-Anazi',
     patientAge: 29,
     patientGender: 'female',
     patientAvatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=300',
     doctorId: 'doc_1',
-    doctorName: 'Dr. Sarah Chen',
+    doctorName: 'Dr. Sara Al-Ghamdi',
     treatmentName: 'Botox Cosmetic (Glabellar & Crow\'s Feet)',
     consultationType: 'In-Clinic Consultation',
     date: 'Today',
@@ -595,12 +595,12 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
   {
     id: 'cs_103',
     patientId: 'RC-50219',
-    patientName: 'Marcus Vance',
+    patientName: 'Abdulrahman Al-Suwaidi',
     patientAge: 41,
     patientGender: 'male',
     patientAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300',
     doctorId: 'doc_1',
-    doctorName: 'Dr. Sarah Chen',
+    doctorName: 'Dr. Sara Al-Ghamdi',
     treatmentName: 'Lutronic Clarity II Laser Hair Removal',
     consultationType: 'Procedure',
     date: 'Today',
@@ -618,12 +618,12 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
   {
     id: 'cs_104',
     patientId: 'RV-2094',
-    patientName: 'James Wilson',
+    patientName: 'Omar Al-Harthi',
     patientAge: 38,
     patientGender: 'male',
     patientAvatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300',
     doctorId: 'doc_2',
-    doctorName: 'Dr. Marcus Vance',
+    doctorName: 'Dr. Faisal Al-Dosari',
     treatmentName: 'PRP Hair Restoration & Scalp Microneedling',
     consultationType: 'In-Clinic Consultation',
     date: 'Today',
@@ -634,19 +634,19 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     allergyAlerts: ['Latex Allergy (Use Nitrile Gloves)'],
     visitReason: 'Scalp PRP maintenance session 2/4.',
     vitalSigns: { bp: '124/82', pulse: 75 },
-    notes: 'Centrifuge tube kit prepped by Nurse Emma. Top-up numb cream applied at 1:00 PM.',
+    notes: 'Centrifuge tube kit prepped by Nurse Amal. Top-up numb cream applied at 1:00 PM.',
     paymentStatus: 'Paid',
     queueNumber: 4
   },
   {
     id: 'cs_105',
     patientId: 'RC-88120',
-    patientName: 'Chloe Bennett',
+    patientName: 'Lama Al-Rashidi',
     patientAge: 35,
     patientGender: 'female',
     patientAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300',
     doctorId: 'doc_1',
-    doctorName: 'Dr. Sarah Chen',
+    doctorName: 'Dr. Sara Al-Ghamdi',
     treatmentName: 'Juvederm Voluma Cheek Augmentation',
     consultationType: 'Procedure',
     date: 'Today',
@@ -664,12 +664,12 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
   {
     id: 'cs_106',
     patientId: 'RC-11092',
-    patientName: 'Aria Montgomery',
+    patientName: 'Jana Al-Amri',
     patientAge: 27,
     patientGender: 'female',
     patientAvatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=300',
     doctorId: 'doc_1',
-    doctorName: 'Dr. Sarah Chen',
+    doctorName: 'Dr. Sara Al-Ghamdi',
     treatmentName: 'Post-Laser Follow-Up Check',
     consultationType: 'Follow-up Checkup',
     date: 'Today',
@@ -689,7 +689,7 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
   {
     id: 'patient_rec_1',
     patientId: 'RC-99841',
-    fullName: 'Sophia Martinez',
+    fullName: 'Noura Al-Qahtani',
     age: 32,
     gender: 'female',
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300',
@@ -702,24 +702,24 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
       'Always prefers evening follow-up calls or SMS reminders.',
       'Active user of Reveal Clinic Vitamin C & Niacinamide Serum.'
     ],
-    registeredBranch: 'Reveal Clinic - Beverly Hills',
+    registeredBranch: 'Reveal Olaya Medical Center (Riyadh)',
     activePackagesCount: 2,
     previousVisits: [
       {
         id: 'vis_881',
         date: '2026-05-12',
-        doctorName: 'Dr. Sarah Chen',
-        clinicBranch: 'Beverly Hills Flagship',
+        doctorName: 'Dr. Sara Al-Ghamdi',
+        clinicBranch: 'Olaya Medical Center',
         treatmentName: 'HydraFacial Elite Session',
         clinicalNotes: 'Deep pore extraction and vortex infusion of hyaluronic acid. Zero downtime reported.',
         prescriptions: [],
-        reportPdfUrl: 'Reveal_Skin_Analysis_Sophia_May2026.pdf'
+        reportPdfUrl: 'Reveal_Skin_Analysis_Noura_May2026.pdf'
       },
       {
         id: 'vis_712',
         date: '2026-01-18',
-        doctorName: 'Dr. Sarah Chen',
-        clinicBranch: 'Beverly Hills Flagship',
+        doctorName: 'Dr. Sara Al-Ghamdi',
+        clinicBranch: 'Olaya Medical Center',
         treatmentName: 'Juvederm Ultra Smile (0.55mL Lips)',
         clinicalNotes: 'Subtle vermillion border enhancement. Symmetry achieved using 30G needle.',
         prescriptions: []
@@ -752,11 +752,11 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
         id: 'rep_101',
         title: '3D VISIA Skin Analysis Report',
         type: 'Lab & Skin Analysis',
-        doctorName: 'Dr. Sarah Chen',
+        doctorName: 'Dr. Sara Al-Ghamdi',
         date: '2026-05-12',
-        clinicName: 'Reveal Clinic Beverly Hills',
+        clinicName: 'Reveal Olaya Medical Center (Riyadh)',
         summary: 'Pore score: 88th percentile. UV spot damage score improved by 14% compared to Jan 2026 baseline.',
-        downloadPdfName: 'VISIA_Analysis_Sophia.pdf',
+        downloadPdfName: 'VISIA_Analysis_Noura.pdf',
         fileSize: '2.4 MB'
       }
     ]
@@ -764,7 +764,7 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
   {
     id: 'patient_rec_2',
     patientId: 'RC-20410',
-    fullName: 'Elena Rostova',
+    fullName: 'Reem Al-Anazi',
     age: 29,
     gender: 'female',
     avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=300',
@@ -775,16 +775,16 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
     importantNotes: [
       'STRICT WARNING: Do NOT apply topical Lidocaine numbing cream.',
       'Always utilize ice packs for pre-injection desensitization.',
-      'Prefers Dr. Sarah Chen for all injectable procedures.'
+      'Prefers Dr. Sara Al-Ghamdi for all injectable procedures.'
     ],
-    registeredBranch: 'Reveal Clinic - Beverly Hills',
+    registeredBranch: 'Reveal Olaya Medical Center (Riyadh)',
     activePackagesCount: 1,
     previousVisits: [
       {
         id: 'vis_502',
         date: '2026-03-01',
-        doctorName: 'Dr. Sarah Chen',
-        clinicBranch: 'Beverly Hills Flagship',
+        doctorName: 'Dr. Sara Al-Ghamdi',
+        clinicBranch: 'Olaya Medical Center',
         treatmentName: 'Botox Glabellar (20 Units)',
         clinicalNotes: 'Desensitized with ice pack only. 20 Units Botulinum Toxin Type A injected across 5 points.',
         prescriptions: []
@@ -806,7 +806,7 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
   {
     id: 'patient_rec_3',
     patientId: 'RV-2094',
-    fullName: 'James Wilson',
+    fullName: 'Omar Al-Harthi',
     age: 38,
     gender: 'male',
     avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300',
@@ -818,14 +818,14 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
       'Requires Nitrile gloves during procedures.',
       'Responded very well to PRP treatment cycle 1.'
     ],
-    registeredBranch: 'Reveal Clinic - West Hollywood',
+    registeredBranch: 'Reveal Al Nakheel Aesthetic Hub (Riyadh)',
     activePackagesCount: 1,
     previousVisits: [
       {
         id: 'vis_301',
         date: '2026-04-10',
-        doctorName: 'Dr. Marcus Vance',
-        clinicBranch: 'West Hollywood',
+        doctorName: 'Dr. Faisal Al-Dosari',
+        clinicBranch: 'Al Nakheel Aesthetic Hub',
         treatmentName: 'PRP Scalp Injection Session 1',
         clinicalNotes: '10mL autologous blood drawn. 4mL PRP harvested and injected into frontal hairline at 1.5mm depth.',
         prescriptions: [{ medication: 'Ketoconazole 2% Shampoo', dosage: 'Use 3x weekly', frequency: 'Ongoing' }]
@@ -851,13 +851,13 @@ export const initialTreatmentSessions: TreatmentSession[] = [
     id: 'ts_2026_01',
     appointmentId: 'cs_101',
     patientId: 'RC-99841',
-    patientName: 'Sophia Martinez',
+    patientName: 'Noura Al-Qahtani',
     patientAge: 32,
     patientGender: 'female',
     patientAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300',
     treatmentName: 'HydraFacial Elite + LED Therapy',
-    doctorName: 'Dr. Sarah Chen',
-    nurseName: 'Emma Vance, BSN, RN',
+    doctorName: 'Dr. Sara Al-Ghamdi',
+    nurseName: 'Amal Al-Harbi, BSN, RN',
     roomNumber: 'Treatment Suite A',
     startTime: '09:30 AM',
     status: 'In Progress',
@@ -946,13 +946,13 @@ export const initialTreatmentSessions: TreatmentSession[] = [
     id: 'ts_2026_02',
     appointmentId: 'cs_102',
     patientId: 'RC-20410',
-    patientName: 'Elena Rostova',
+    patientName: 'Reem Al-Anazi',
     patientAge: 29,
     patientGender: 'female',
     patientAvatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=300',
     treatmentName: 'Botox Cosmetic (Glabellar & Crow\'s Feet)',
-    doctorName: 'Dr. Sarah Chen',
-    nurseName: 'Emma Vance, BSN, RN',
+    doctorName: 'Dr. Sara Al-Ghamdi',
+    nurseName: 'Amal Al-Harbi, BSN, RN',
     roomNumber: 'Waiting Room / Pod 2',
     startTime: '10:30 AM',
     status: 'Ready for Procedure',
@@ -1003,11 +1003,11 @@ export const initialStaffNotifications: StaffNotification[] = [
   {
     id: 'staff_notif_1',
     title: 'Patient Checked In',
-    message: 'Elena Rostova (RC-20410) has completed digital check-in for 10:30 AM Botox procedure. Allergy alert: Lidocaine.',
+    message: 'Reem Al-Anazi (RC-20410) has completed digital check-in for 10:30 AM Botox procedure. Allergy alert: Lidocaine.',
     timestamp: '5 mins ago',
     type: 'patient_checked_in',
     read: false,
-    patientName: 'Elena Rostova',
+    patientName: 'Reem Al-Anazi',
     patientAvatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=300',
     appointmentId: 'cs_102',
     urgency: 'high'
@@ -1015,11 +1015,11 @@ export const initialStaffNotifications: StaffNotification[] = [
   {
     id: 'staff_notif_2',
     title: 'Ready for Procedure',
-    message: 'Treatment Suite A is sanitized and ready for Sophia Martinez (HydraFacial + LED Therapy).',
+    message: 'Treatment Suite A is sanitized and ready for Noura Al-Qahtani (HydraFacial + LED Therapy).',
     timestamp: '25 mins ago',
     type: 'patient_ready_for_procedure',
     read: false,
-    patientName: 'Sophia Martinez',
+    patientName: 'Noura Al-Qahtani',
     patientAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300',
     appointmentId: 'cs_101',
     urgency: 'normal'
@@ -1027,28 +1027,28 @@ export const initialStaffNotifications: StaffNotification[] = [
   {
     id: 'staff_notif_3',
     title: 'New Appointment Booked',
-    message: 'Marcus Vance booked Lutronic Clarity II Laser session for Today at 11:15 AM.',
+    message: 'Abdulrahman Al-Suwaidi booked Lutronic Clarity II Laser session for Today at 11:15 AM.',
     timestamp: '1 hour ago',
     type: 'new_appointment',
     read: true,
-    patientName: 'Marcus Vance',
+    patientName: 'Abdulrahman Al-Suwaidi',
     patientAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300',
     appointmentId: 'cs_103'
   },
   {
     id: 'staff_notif_4',
     title: 'Follow-Up Reminder',
-    message: 'Aria Montgomery 7-day post Sciton BBL follow-up scheduled at 03:45 PM.',
+    message: 'Jana Al-Amri 7-day post Sciton BBL follow-up scheduled at 03:45 PM.',
     timestamp: '2 hours ago',
     type: 'followup_reminder',
     read: true,
-    patientName: 'Aria Montgomery',
+    patientName: 'Jana Al-Amri',
     patientAvatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=300'
   },
   {
     id: 'staff_notif_5',
     title: 'Walk-In Patient Registered',
-    message: 'Nadia Mansoor registered as walk-in for Consultation with Dr. Sarah Chen.',
+    message: 'Nadia Mansoor registered as walk-in for Consultation with Dr. Sara Al-Ghamdi.',
     timestamp: '15 mins ago',
     type: 'check_in',
     read: false,
@@ -1058,11 +1058,11 @@ export const initialStaffNotifications: StaffNotification[] = [
   {
     id: 'staff_notif_6',
     title: 'Appointment Cancelled',
-    message: 'Liam O\'Connor cancelled appointment CS-104 due to personal emergency.',
+    message: 'Bandar Al-Subaie cancelled appointment CS-104 due to personal emergency.',
     timestamp: '30 mins ago',
     type: 'rescheduled',
     read: false,
-    patientName: 'Liam O\'Connor',
+    patientName: 'Bandar Al-Subaie',
     urgency: 'normal'
   }
 ];
@@ -1071,9 +1071,9 @@ export const initialWalkInQueue: WalkInPatient[] = [
   {
     id: 'wk_1',
     patientName: 'Nadia Mansoor',
-    patientPhone: '+1 (555) 789-0123',
+    patientPhone: '+966 55 210 4477',
     assignedDoctorId: 'doc_1',
-    assignedDoctorName: 'Dr. Sarah Chen',
+    assignedDoctorName: 'Dr. Sara Al-Ghamdi',
     requestedService: 'Skin Consultation & Analysis',
     arrivalTime: '09:45 AM',
     estimatedWaitMinutes: 15,
@@ -1084,9 +1084,9 @@ export const initialWalkInQueue: WalkInPatient[] = [
   {
     id: 'wk_2',
     patientName: 'Tariq Al-Mansouri',
-    patientPhone: '+1 (555) 654-3210',
+    patientPhone: '+966 54 887 2201',
     assignedDoctorId: 'doc_2',
-    assignedDoctorName: 'Dr. Marcus Vance',
+    assignedDoctorName: 'Dr. Faisal Al-Dosari',
     requestedService: 'Laser Hair Removal Touch-Up',
     arrivalTime: '10:15 AM',
     estimatedWaitMinutes: 25,

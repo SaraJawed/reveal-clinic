@@ -19,7 +19,7 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
 
   const quickPrompts = [
     'What are the clinic working hours?',
-    'How do I book HydraFacial with Dr. Elena Rostova?',
+    'How do I book HydraFacial with Dr. Fatima Al-Zahrani?',
     'What packages are available for skin rejuvenation?',
     'Post-laser care instructions for sensitive skin',
     'How do I earn and redeem loyalty points?'

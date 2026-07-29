@@ -57,7 +57,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   // Reschedule state
   const [rescheduleDate, setRescheduleDate] = useState('Tomorrow');
   const [rescheduleTimeSlot, setRescheduleTimeSlot] = useState('02:30 PM');
-  const [rescheduleDoctor, setRescheduleDoctor] = useState('Dr. Sarah Chen');
+  const [rescheduleDoctor, setRescheduleDoctor] = useState('Dr. Sara Al-Ghamdi');
 
   // New Booking Form states
   const [bookPatientName, setBookPatientName] = useState('');
@@ -367,7 +367,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Jessica Alba"
+                    placeholder="e.g. Lama Al-Rashidi"
                     value={bookPatientName}
                     onChange={(e) => setBookPatientName(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -583,9 +583,9 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                   onChange={(e) => setRescheduleDoctor(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                 >
-                  <option value="Dr. Sarah Chen">Dr. Sarah Chen</option>
-                  <option value="Dr. Marcus Vance">Dr. Marcus Vance</option>
-                  <option value="Dr. Elena Rostova">Dr. Elena Rostova</option>
+                  <option value="Dr. Sara Al-Ghamdi">Dr. Sara Al-Ghamdi</option>
+                  <option value="Dr. Faisal Al-Dosari">Dr. Faisal Al-Dosari</option>
+                  <option value="Dr. Fatima Al-Zahrani">Dr. Fatima Al-Zahrani</option>
                 </select>
               </div>
             </div>

@@ -32,13 +32,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   // Expanded Patient Signup fields
-  const [fullName, setFullName] = useState('Sophia Martinez');
-  const [email, setEmail] = useState('sophia.martinez@example.com');
+  const [fullName, setFullName] = useState('Noura Al-Qahtani');
+  const [email, setEmail] = useState('noura.alqahtani@example.com');
   const [gender, setGender] = useState<UserProfile['gender']>('female');
   const [dob, setDob] = useState('1992-06-14');
   const [nationality, setNationality] = useState('Saudi Arabian');
   const [address, setAddress] = useState('King Fahd Road, Olaya District, Riyadh 12211, Saudi Arabia');
-  const [secondaryContact, setSecondaryContact] = useState('+966 55 987 6543 (Husband - David)');
+  const [secondaryContact, setSecondaryContact] = useState('+966 55 987 6543 (Husband - Faisal)');
   const [bloodGroup, setBloodGroup] = useState('O+');
   const [preferredClinicId, setPreferredClinicId] = useState('clinic_downtown');
   const [avatarUrl, setAvatarUrl] = useState(HARDCODED_AVATARS[0].url);
@@ -84,25 +84,25 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setSelectedRole(role);
     setErrorMsg('');
     if (role === 'doctor') {
-      setPhone('+1 (555) 890-1234');
+      setPhone('+966 50 890 1234');
       setIdNumber('DOC-8820');
-      setFullName('Dr. Sarah Chen');
-      setEmail('dr.sarah.chen@revealclinic.com');
+      setFullName('Dr. Sara Al-Ghamdi');
+      setEmail('dr.sara.alghamdi@revealclinic.com');
     } else if (role === 'nurse') {
-      setPhone('+1 (555) 776-5432');
+      setPhone('+966 50 776 5432');
       setIdNumber('NUR-4109');
-      setFullName('Emma Vance, BSN, RN');
-      setEmail('emma.vance@revealclinic.com');
+      setFullName('Amal Al-Harbi, BSN, RN');
+      setEmail('amal.alharbi@revealclinic.com');
     } else if (role === 'coordinator') {
-      setPhone('+1 (555) 443-2100');
+      setPhone('+966 50 443 2100');
       setIdNumber('COORD-102');
-      setFullName('Alex Rivera');
-      setEmail('alex.rivera@revealclinic.com');
+      setFullName('Yousef Al-Mutairi');
+      setEmail('yousef.almutairi@revealclinic.com');
     } else {
-      setPhone('+1 (555) 234-5678');
+      setPhone('+966 50 234 5678');
       setIdNumber('RC-99841');
-      setFullName('Sophia Martinez');
-      setEmail('sophia.martinez@example.com');
+      setFullName('Noura Al-Qahtani');
+      setEmail('noura.alqahtani@example.com');
     }
   };
 
@@ -119,8 +119,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           ...initialUserProfile,
           ...(isExistingPatient ? user : {} as UserProfile),
           role: 'patient',
-          fullName: isExistingPatient ? (user.fullName || fullName) : (fullName || 'Sophia Martinez'),
-          email: isExistingPatient ? (user.email || email) : (email || 'sophia.martinez@example.com'),
+          fullName: isExistingPatient ? (user.fullName || fullName) : (fullName || 'Noura Al-Qahtani'),
+          email: isExistingPatient ? (user.email || email) : (email || 'noura.alqahtani@example.com'),
           phone: phone || (isExistingPatient ? user.phone : '') || '+966 50 123 4567',
           patientId: 'RC-99841',
           avatarUrl: (isExistingPatient && user.avatarUrl) ? user.avatarUrl : (avatarUrl || HARDCODED_AVATARS[0].url),
@@ -398,7 +398,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         <span className="font-black text-[10px] text-blue-900 uppercase tracking-wide">Doctor Portal</span>
                         <span className="text-[9px] bg-blue-100 text-blue-800 font-extrabold px-2 py-0.5 rounded-full">Authorized</span>
                       </div>
-                      <h5 className="font-bold text-slate-800 text-xs mt-0.5">Dr. Sarah Chen</h5>
+                      <h5 className="font-bold text-slate-800 text-xs mt-0.5">Dr. Sara Al-Ghamdi</h5>
                       <p className="text-[10px] text-slate-500 mt-1">Access clinical charts, schedule slots, and patient histories.</p>
                     </div>
                   </button>
@@ -417,7 +417,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                         <span className="font-black text-[10px] text-emerald-900 uppercase tracking-wide">Patient Portal</span>
                         <span className="text-[9px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">Authorized</span>
                       </div>
-                      <h5 className="font-bold text-slate-800 text-xs mt-0.5">Sophia Martinez</h5>
+                      <h5 className="font-bold text-slate-800 text-xs mt-0.5">Noura Al-Qahtani</h5>
                       <p className="text-[10px] text-slate-500 mt-1">View personal medical reports, loyalty balance, and books.</p>
                     </div>
                   </button>
@@ -711,7 +711,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     type="text"
                     value={secondaryContact}
                     onChange={(e) => setSecondaryContact(e.target.value)}
-                    placeholder="e.g. +1 (555) 987-6543 (Spouse - David)"
+                    placeholder="e.g. +966 55 987 6543 (Spouse - Faisal)"
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
                   />
                 </div>
