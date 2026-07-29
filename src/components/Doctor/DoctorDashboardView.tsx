@@ -228,24 +228,6 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
 
 
 
-              {/* Vitals Summary */}
-              {currentScheduleItem.vitalSigns && (
-                <div className="mt-4 pt-3 border-t border-slate-100 grid grid-cols-3 gap-2 text-center text-xs">
-                  <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold block">Blood Pressure</span>
-                    <span className="font-extrabold text-slate-800">{currentScheduleItem.vitalSigns.bp || '120/80'}</span>
-                  </div>
-                  <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold block">Pulse Rate</span>
-                    <span className="font-extrabold text-slate-800">{currentScheduleItem.vitalSigns.pulse || 72} bpm</span>
-                  </div>
-                  <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                    <span className="text-[10px] text-slate-400 font-bold block">Skin Type</span>
-                    <span className="font-extrabold text-slate-800">{currentScheduleItem.vitalSigns.skinType || 'Fitzpatrick II'}</span>
-                  </div>
-                </div>
-              )}
-
               {/* Status Change Buttons */}
               <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                 <span className="text-slate-500 font-medium">Update Patient Status:</span>
