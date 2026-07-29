@@ -13,7 +13,6 @@ import {
   UserPlus,
   QrCode,
   Search,
-  DollarSign,
   TrendingUp,
   AlertCircle,
   Plus,
@@ -60,7 +59,6 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
   const checkedInCount = schedule.filter(s => s.status === 'checked_in' || s.status === 'in_consultation').length;
   const pendingCheckIns = schedule.filter(s => s.status === 'scheduled');
   const walkInCount = walkInQueue.length;
-  const revenueToday = schedule.filter(s => s.paymentStatus === 'Paid').length * 280 + 450;
 
   const handleRegisterWalkIn = (e: React.FormEvent) => {
     e.preventDefault();
@@ -171,18 +169,6 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
           </div>
           <div className="text-2xl font-black text-slate-900">{walkInCount}</div>
           <p className="text-[10px] font-bold text-purple-600">Unscheduled walk-ins</p>
-        </div>
-
-        {/* Stat 5 */}
-        <div className="col-span-2 lg:col-span-1 p-4 rounded-3xl bg-white border border-slate-100 shadow-2xs space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">Today Collections</span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <DollarSign className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-slate-900">${revenueToday}</div>
-          <p className="text-[10px] font-bold text-slate-500">Desk & Online payments</p>
         </div>
       </div>
 
