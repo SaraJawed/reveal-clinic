@@ -45,7 +45,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<UserProfile>(user);
-  const [language, setLanguage] = useState<'English' | 'Arabic' | 'French'>('English');
+  const [language, setLanguage] = useState<'English' | 'Arabic'>('English');
   const [newAllergy, setNewAllergy] = useState('');
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [subView, setSubView] = useState<'main' | 'payment-history'>('main');
@@ -402,7 +402,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             >
               <option value="English">English</option>
               <option value="Arabic">العربية (Arabic)</option>
-              <option value="French">Français</option>
             </select>
           </div>
 

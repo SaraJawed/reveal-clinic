@@ -29,7 +29,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
   onLogout,
   onTriggerToast
 }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Arabic' | 'Spanish'>('English');
+  const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Arabic'>('English');
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -51,7 +51,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
     setConfirmPassword('');
   };
 
-  const handleLanguageSelect = (lang: 'English' | 'Arabic' | 'Spanish') => {
+  const handleLanguageSelect = (lang: 'English' | 'Arabic') => {
     setSelectedLanguage(lang);
     onTriggerToast(`App language set to ${lang}.`);
   };
@@ -160,7 +160,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
           </div>
 
           <div className="space-y-2">
-            {(['English', 'Arabic', 'Spanish'] as const).map((lang) => (
+            {(['English', 'Arabic'] as const).map((lang) => (
               <button
                 key={lang}
                 onClick={() => handleLanguageSelect(lang)}

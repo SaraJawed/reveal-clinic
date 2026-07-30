@@ -34,7 +34,7 @@ export const DoctorProfileView: React.FC<DoctorProfileViewProps> = ({
 }) => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Arabic' | 'Spanish'>('English');
+  const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Arabic'>('English');
 
   // Password fields
   const [currentPassword, setCurrentPassword] = useState('');
@@ -144,8 +144,8 @@ export const DoctorProfileView: React.FC<DoctorProfileViewProps> = ({
             Select preferred language for medical terminology & clinical interface:
           </p>
 
-          <div className="grid grid-cols-3 gap-2 pt-1">
-            {(['English', 'Arabic', 'Spanish'] as const).map((lang) => (
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            {(['English', 'Arabic'] as const).map((lang) => (
               <button
                 key={lang}
                 type="button"
