@@ -315,46 +315,98 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }, 800);
   };
 
+  const isLoginHero = mode === 'login' && !showDestinationChoice;
+
   const cardContent = (
     <div className={`bg-white w-full overflow-hidden relative flex flex-col text-slate-800 animate-fade-in ${
       isScreen
         ? 'h-full border-0 shadow-none'
         : 'h-full sm:h-auto sm:max-h-[92vh] sm:rounded-3xl shadow-none sm:shadow-2xl sm:max-w-md border-0 sm:border border-slate-100 my-auto'
     }`}>
-      {/* Header */}
-      <div
-        className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white px-5 pb-6 flex items-center justify-between shrink-0"
-        style={{ paddingTop: isScreen ? 'max(1.5rem, env(safe-area-inset-top))' : '1.25rem' }}
-      >
-        {/* Ambient decorative glow, echoing the splash screen's brand treatment */}
-        <div className="absolute -top-12 -right-8 w-36 h-36 bg-sky-500/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -left-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+      {isLoginHero ? (
+        /* Wave Hero (Sign In screen) */
+        <div
+          className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white px-5 shrink-0 h-48 sm:h-52"
+          style={{ paddingTop: isScreen ? 'max(1.25rem, env(safe-area-inset-top))' : '1.25rem' }}
+        >
+          {/* Ambient decorative glow, echoing the splash screen's brand treatment */}
+          <div className="absolute -top-12 -right-8 w-36 h-36 bg-sky-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-4 -left-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400/25 to-blue-600/25 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-lg shadow-blue-950/40">
-            <Sparkles className="w-5 h-5 text-sky-300" />
+          {/* Topographic swirl texture */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none" viewBox="0 0 400 300" preserveAspectRatio="none" fill="none">
+            <path d="M-20,40 C60,10 140,90 220,50 C300,10 380,80 440,40" stroke="white" strokeWidth="2" />
+            <path d="M-20,85 C60,55 140,135 220,95 C300,55 380,125 440,85" stroke="white" strokeWidth="2" />
+            <path d="M-20,130 C60,100 140,180 220,140 C300,100 380,170 440,130" stroke="white" strokeWidth="2" />
+            <path d="M-20,175 C60,145 140,225 220,185 C300,145 380,215 440,175" stroke="white" strokeWidth="2" />
+            <path d="M-20,220 C60,190 140,270 220,230 C300,190 380,260 440,220" stroke="white" strokeWidth="2" />
+          </svg>
+
+          <div className="relative flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400/25 to-blue-600/25 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-lg shadow-blue-950/40">
+              <Sparkles className="w-5 h-5 text-sky-300" />
+            </div>
+            <div>
+              <h3 className="font-black text-lg tracking-wide text-white leading-tight">REVEAL CLINIC</h3>
+              <p className="text-[11px] text-sky-200/90 font-medium">Healthcare Portal Authentication</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-black text-lg tracking-wide text-white leading-tight">REVEAL CLINIC</h3>
-            <p className="text-[11px] text-sky-200/90 font-medium">
-              {mode === 'login' && 'Healthcare Portal Authentication'}
-              {mode === 'signup' && 'Staff & Patient Registration'}
-              {mode === 'otp' && 'Verify Mobile OTP Code'}
-              {mode === 'forgot' && 'Reset Secure Password'}
-              {mode === 'reset_success' && 'Password Changed Successfully'}
-            </p>
-          </div>
-        </div>
-        {!isScreen && (
-          <button
-            id="auth-modal-close-btn"
-            onClick={onClose}
-            className="relative w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition shrink-0"
+
+          {!isScreen && (
+            <button
+              id="auth-modal-close-btn"
+              onClick={onClose}
+              className="absolute top-5 right-5 z-10 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+
+          {/* Wave divider into the white sign-in body */}
+          <svg
+            className="absolute bottom-0 left-0 w-full h-10 sm:h-12"
+            viewBox="0 0 400 60"
+            preserveAspectRatio="none"
           >
-            <X className="w-4 h-4" />
-          </button>
-        )}
-      </div>
+            <path d="M0,38 C90,8 180,58 260,26 C320,4 360,20 400,14 L400,60 L0,60 Z" fill="white" />
+          </svg>
+        </div>
+      ) : (
+        /* Header (all other auth flows) */
+        <div
+          className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 text-white px-5 pb-6 flex items-center justify-between shrink-0"
+          style={{ paddingTop: isScreen ? 'max(1.5rem, env(safe-area-inset-top))' : '1.25rem' }}
+        >
+          {/* Ambient decorative glow, echoing the splash screen's brand treatment */}
+          <div className="absolute -top-12 -right-8 w-36 h-36 bg-sky-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-16 -left-10 w-32 h-32 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative flex items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400/25 to-blue-600/25 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-lg shadow-blue-950/40">
+              <Sparkles className="w-5 h-5 text-sky-300" />
+            </div>
+            <div>
+              <h3 className="font-black text-lg tracking-wide text-white leading-tight">REVEAL CLINIC</h3>
+              <p className="text-[11px] text-sky-200/90 font-medium">
+                {mode === 'login' && 'Multi-Role Verification Required'}
+                {mode === 'signup' && 'Staff & Patient Registration'}
+                {mode === 'otp' && 'Verify Mobile OTP Code'}
+                {mode === 'forgot' && 'Reset Secure Password'}
+                {mode === 'reset_success' && 'Password Changed Successfully'}
+              </p>
+            </div>
+          </div>
+          {!isScreen && (
+            <button
+              id="auth-modal-close-btn"
+              onClick={onClose}
+              className="relative w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition shrink-0"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+      )}
 
         <div className="p-5 overflow-y-auto flex-1 space-y-4">
           {successToast && (
@@ -432,9 +484,11 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleLoginSubmit} className="space-y-4 animate-fade-in">
+              <form onSubmit={handleLoginSubmit} className="space-y-5 animate-fade-in">
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight -mt-1">Sign in</h1>
+
                 {/* Unified Portal Access Tabs */}
-                <div className="flex bg-slate-100 p-1.5 rounded-2xl text-xs font-black text-slate-600 mb-2">
+                <div className="flex bg-slate-100 p-1.5 rounded-2xl text-xs font-black text-slate-600">
                   <button
                     type="button"
                     id="auth-method-phone-btn"
@@ -467,16 +521,16 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                 {loginMethod === 'phone' ? (
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-slate-500 mb-1.5">
                       Saudi Mobile Phone Number
                     </label>
-                    <div className="flex gap-2">
-                      <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-black text-slate-700 select-none shrink-0">
+                    <div className="flex items-end gap-2 border-b-2 border-slate-200 focus-within:border-blue-500 transition-colors">
+                      <div className="flex items-center gap-1 pb-2 text-sm font-black text-slate-700 select-none shrink-0">
                         <span>🇸🇦</span>
                         <span>+966</span>
                       </div>
-                      <div className="relative flex-1">
-                        <Phone className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
+                      <div className="flex items-center gap-2 flex-1 pb-2">
+                        <Phone className="w-4 h-4 text-slate-400 shrink-0" />
                         <input
                           type="tel"
                           value={phone.startsWith('+966') ? phone.replace('+966', '').trim() : phone}
@@ -485,58 +539,45 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                             setPhone(`+966 ${val}`);
                           }}
                           placeholder="50 123 4567"
-                          className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:border-blue-500 outline-hidden"
+                          className="w-full bg-transparent text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium outline-hidden"
                         />
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    <label className="block text-xs font-semibold text-slate-500 mb-1.5">
                       Portal Access ID Number
                     </label>
-                    <div className="relative">
-                      <ShieldCheck className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
+                    <div className="flex items-center gap-2 border-b-2 border-slate-200 focus-within:border-blue-500 transition-colors pb-2">
+                      <ShieldCheck className="w-4 h-4 text-slate-400 shrink-0" />
                       <input
                         type="text"
                         value={idNumber}
                         onChange={(e) => setIdNumber(e.target.value)}
                         placeholder="e.g. RC-99841 or COORD-102"
-                        className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:border-blue-500 outline-hidden"
+                        className="w-full bg-transparent text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium outline-hidden"
                       />
                     </div>
                   </div>
                 )}
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold text-slate-700">Secure Password</label>
-                    <button
-                      type="button"
-                      id="auth-forgot-password-btn"
-                      onClick={() => {
-                        setErrorMsg('');
-                        setMode('forgot');
-                      }}
-                      className="text-[11px] font-bold text-blue-600 hover:underline"
-                    >
-                      Forgot password?
-                    </button>
-                  </div>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
+                  <label className="block text-xs font-semibold text-slate-500 mb-1.5">Password</label>
+                  <div className="flex items-center gap-2 border-b-2 border-slate-200 focus-within:border-blue-500 transition-colors pb-2">
+                    <Lock className="w-4 h-4 text-slate-400 shrink-0" />
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter account password"
-                      className="w-full pl-9 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold focus:bg-white focus:border-blue-500 outline-hidden"
+                      placeholder="Enter your password"
+                      className="w-full bg-transparent text-sm font-semibold text-slate-800 placeholder:text-slate-400 placeholder:font-medium outline-hidden"
                     />
                     <button
                       type="button"
                       id="auth-toggle-password-visibility-btn"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
+                      className="text-slate-400 hover:text-slate-600 shrink-0"
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -544,43 +585,41 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   </div>
                 </div>
 
-                {/* Keep session active */}
-                <div className="flex items-center justify-between text-xs pt-0.5">
-                  <label className="flex items-center gap-2 cursor-pointer font-medium text-slate-600">
+                {/* Remember Me / Forgot Password */}
+                <div className="flex items-center justify-between text-xs">
+                  <label className="flex items-center gap-2 cursor-pointer font-semibold text-slate-600">
                     <input
                       type="checkbox"
                       checked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
                       className="rounded-md border-slate-300 text-blue-600 focus:ring-blue-500"
                     />
-                    <span>Keep session active</span>
+                    <span>Remember Me</span>
                   </label>
+                  <button
+                    type="button"
+                    id="auth-forgot-password-btn"
+                    onClick={() => {
+                      setErrorMsg('');
+                      setMode('forgot');
+                    }}
+                    className="font-bold text-blue-600 hover:underline"
+                  >
+                    Forgot Password?
+                  </button>
                 </div>
 
                 <button
                   type="submit"
                   id="auth-login-submit-btn"
                   disabled={loading}
-                  className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold py-3.5 rounded-2xl text-xs shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 transition disabled:opacity-70"
+                  className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold py-3.5 rounded-full text-sm shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 transition disabled:opacity-70"
                 >
-                  {loading ? (
-                    <RefreshCw className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <>
-                      <span>Secure Log In</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
+                  {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <span>Login</span>}
                 </button>
 
-                {/* Trust signal */}
-                <div className="flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>HIPAA-Compliant &amp; End-to-End Encrypted</span>
-                </div>
-
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                  <span>Need a new account?</span>
+                <div className="text-center text-xs text-slate-500">
+                  Don&apos;t have an Account?{' '}
                   <button
                     type="button"
                     onClick={() => {
@@ -589,8 +628,14 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     }}
                     className="text-blue-600 font-bold hover:underline"
                   >
-                    Register Account
+                    Sign up
                   </button>
+                </div>
+
+                {/* Trust signal */}
+                <div className="flex items-center justify-center gap-1.5 text-[10px] font-semibold text-slate-400">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>HIPAA-Compliant &amp; End-to-End Encrypted</span>
                 </div>
               </form>
             )
