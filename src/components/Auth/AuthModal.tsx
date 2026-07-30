@@ -315,7 +315,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }, 800);
   };
 
-  const isLoginHero = mode === 'login' && !showDestinationChoice;
+  const isLoginHero = (mode === 'login' && !showDestinationChoice) || mode === 'signup';
 
   const cardContent = (
     <div className={`bg-white w-full overflow-hidden relative flex flex-col text-slate-800 animate-fade-in ${
@@ -348,7 +348,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
             <div>
               <h3 className="font-black text-lg tracking-wide text-white leading-tight">REVEAL CLINIC</h3>
-              <p className="text-[11px] text-sky-200/90 font-medium">Healthcare Portal Authentication</p>
+              <p className="text-[11px] text-sky-200/90 font-medium">
+                {mode === 'signup' ? 'Staff & Patient Registration' : 'Healthcare Portal Authentication'}
+              </p>
             </div>
           </div>
 
@@ -362,7 +364,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </button>
           )}
 
-          {/* Wave divider into the white sign-in body */}
+          {/* Wave divider into the white body below */}
           <svg
             className="absolute bottom-0 left-0 w-full h-10 sm:h-12"
             viewBox="0 0 400 60"
@@ -389,7 +391,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <h3 className="font-black text-lg tracking-wide text-white leading-tight">REVEAL CLINIC</h3>
               <p className="text-[11px] text-sky-200/90 font-medium">
                 {mode === 'login' && 'Multi-Role Verification Required'}
-                {mode === 'signup' && 'Staff & Patient Registration'}
                 {mode === 'otp' && 'Verify Mobile OTP Code'}
                 {mode === 'forgot' && 'Reset Secure Password'}
                 {mode === 'reset_success' && 'Password Changed Successfully'}
@@ -643,14 +644,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           {/* EXPANDED PATIENT REGISTRATION SIGNUP MODE */}
           {mode === 'signup' && (
-            <form onSubmit={handleSignupSubmit} className="space-y-4">
+            <form onSubmit={handleSignupSubmit} className="space-y-5">
+              <div className="-mt-1">
+                <h1 className="text-3xl font-black text-slate-900 tracking-tight">Create Account</h1>
+                <p className="text-xs text-slate-500 font-medium mt-1">
+                  Register your patient profile to book appointments and track your care.
+                </p>
+              </div>
+
               {/* 1. PROFILE PICTURE / AVATAR SELECTION */}
-              <div className="space-y-2">
-                <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <Camera className="w-4 h-4 text-blue-600" /> Select Profile Picture / Avatar
-                </label>
-                
-                <div className="flex items-center gap-3 bg-slate-50 p-2.5 rounded-2xl border border-slate-200/80">
+              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <Camera className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-800">Profile Picture</h4>
+                </div>
+
+                <div className="flex items-center gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/80">
                   <img
                     src={avatarUrl}
                     alt="Selected avatar"
@@ -694,34 +705,39 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={avatarUrl}
                     onChange={(e) => setAvatarUrl(e.target.value)}
                     placeholder="https://example.com/avatar.jpg"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                   />
                 )}
               </div>
 
               {/* 2. CONTACT INFORMATION */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Contact & Personal Details</h4>
-                
+              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <User className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-800">Contact & Personal Details</h4>
+                </div>
+
                 <div>
                   <label className="block text-[11px] font-bold text-slate-700 mb-1">Full Name</label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-[11px] font-bold text-slate-700 mb-1">Email Address</label>
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                       required
                     />
                   </div>
@@ -731,7 +747,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                       type="text"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                       required
                     />
                   </div>
@@ -744,7 +760,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Street address, Villa / Apt No, City"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                   />
                 </div>
 
@@ -757,88 +773,100 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={secondaryContact}
                     onChange={(e) => setSecondaryContact(e.target.value)}
                     placeholder="e.g. +966 55 987 6543 (Spouse - Faisal)"
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                   />
                 </div>
               </div>
 
               {/* 3. DEMOGRAPHICS & CLINIC */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-2 border-t border-slate-100">
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Gender</label>
-                  <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value as any)}
-                    className="w-full px-2 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
-                  >
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                    <option value="other">Other</option>
-                    <option value="prefer_not_to_say">Prefer not to say</option>
-                  </select>
+              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-800">Demographics & Preferred Clinic</h4>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Date of Birth</label>
-                  <input
-                    type="date"
-                    value={dob}
-                    onChange={(e) => setDob(e.target.value)}
-                    className="w-full px-1.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
-                  />
-                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Gender</label>
+                    <select
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value as any)}
+                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    >
+                      <option value="female">Female</option>
+                      <option value="male">Male</option>
+                      <option value="other">Other</option>
+                      <option value="prefer_not_to_say">Prefer not to say</option>
+                    </select>
+                  </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Blood Group</label>
-                  <select
-                    value={bloodGroup}
-                    onChange={(e) => setBloodGroup(e.target.value)}
-                    className="w-full px-2 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
-                  >
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                  </select>
-                </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Date of Birth</label>
+                    <input
+                      type="date"
+                      value={dob}
+                      onChange={(e) => setDob(e.target.value)}
+                      className="w-full px-1.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    />
+                  </div>
 
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Nationality</label>
-                  <input
-                    type="text"
-                    value={nationality}
-                    onChange={(e) => setNationality(e.target.value)}
-                    placeholder="e.g. American, Emirati"
-                    className="w-full px-2 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
-                  />
-                </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Blood Group</label>
+                    <select
+                      value={bloodGroup}
+                      onChange={(e) => setBloodGroup(e.target.value)}
+                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    >
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                    </select>
+                  </div>
 
-                <div className="col-span-2">
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Preferred Clinic Location</label>
-                  <select
-                    value={preferredClinicId}
-                    onChange={(e) => setPreferredClinicId(e.target.value)}
-                    className="w-full px-2 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
-                  >
-                    {clinicBranches.map((b) => (
-                      <option key={b.id} value={b.id}>
-                        {b.name} ({b.city})
-                      </option>
-                    ))}
-                  </select>
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Nationality</label>
+                    <input
+                      type="text"
+                      value={nationality}
+                      onChange={(e) => setNationality(e.target.value)}
+                      placeholder="e.g. Saudi, Emirati"
+                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    />
+                  </div>
+
+                  <div className="col-span-2">
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Preferred Clinic Location</label>
+                    <select
+                      value={preferredClinicId}
+                      onChange={(e) => setPreferredClinicId(e.target.value)}
+                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    >
+                      {clinicBranches.map((b) => (
+                        <option key={b.id} value={b.id}>
+                          {b.name} ({b.city})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
 
               {/* 4. MEDICAL INFORMATION */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <label className="block text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" /> Skin Allergies & Sensitivity
-                </label>
-                
+              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
+                    <AlertTriangle className="w-4 h-4" />
+                  </div>
+                  <h4 className="text-xs font-bold text-slate-800">Skin Allergies & Sensitivity</h4>
+                </div>
+
                 <div className="flex flex-wrap gap-1.5">
                   {skinAllergies.map((allergy, idx) => (
                     <span
@@ -863,12 +891,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     value={newAllergyInput}
                     onChange={(e) => setNewAllergyInput(e.target.value)}
                     placeholder="Add allergy e.g. Benzoyl Peroxide..."
-                    className="flex-1 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                    className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                   />
                   <button
                     type="button"
                     onClick={handleAddAllergy}
-                    className="bg-slate-800 text-white font-bold px-3 py-1.5 rounded-xl text-xs hover:bg-slate-900 transition"
+                    className="bg-slate-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs hover:bg-slate-900 transition shrink-0"
                   >
                     Add
                   </button>
@@ -883,29 +911,33 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     onChange={(e) => setMedicalNotes(e.target.value)}
                     rows={2}
                     placeholder="Record skin sensitivity, past treatments, or medical remarks..."
-                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                   />
                 </div>
               </div>
 
               {/* 5. PASSWORD & TERMS */}
-              <div className="space-y-2 pt-2 border-t border-slate-100">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Set Account Password</label>
-                  <div className="relative">
-                    <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                    <input
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Create a strong password"
-                      className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
-                      required
-                    />
+              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                    <Lock className="w-4 h-4" />
                   </div>
+                  <h4 className="text-xs font-bold text-slate-800">Set Account Password</h4>
                 </div>
 
-                <div className="flex items-start gap-2 text-[11px] text-slate-600">
+                <div className="relative">
+                  <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Create a strong password"
+                    className="w-full pl-9 pr-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                    required
+                  />
+                </div>
+
+                <label className="flex items-start gap-2 text-[11px] text-slate-600 cursor-pointer">
                   <input
                     type="checkbox"
                     id="auth-signup-terms-checkbox"
@@ -925,23 +957,33 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     </button>
                     .
                   </span>
-                </div>
+                </label>
               </div>
 
               <button
                 type="submit"
                 id="auth-signup-submit-btn"
                 disabled={loading}
-                className="w-full bg-[#4F8EF7] hover:bg-blue-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 transition"
+                className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold py-3.5 rounded-full text-sm shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 transition disabled:opacity-70"
               >
-                {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'Register Patient Profile & Send OTP Code'}
+                {loading ? (
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                ) : (
+                  <>
+                    <span>Register Profile & Send OTP</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
               </button>
 
-              <div className="text-center text-xs text-slate-500 pt-1">
+              <div className="text-center text-xs text-slate-500">
                 Already registered?{' '}
                 <button
                   type="button"
-                  onClick={() => setMode('login')}
+                  onClick={() => {
+                    setErrorMsg('');
+                    setMode('login');
+                  }}
                   className="text-blue-600 font-bold hover:underline"
                 >
                   Log In
