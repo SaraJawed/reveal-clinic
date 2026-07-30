@@ -85,8 +85,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     if (role === 'doctor') {
       setPhone('+966 50 890 1234');
       setIdNumber('DOC-8820');
-      setFullName('Dr. Sara Al-Ghamdi');
-      setEmail('dr.sara.alghamdi@revealclinic.com');
+      setFullName('Dr. Fatima Al-Zahrani');
+      setEmail('dr.fatima.alzahrani@revealclinic.com');
     } else if (role === 'nurse') {
       setPhone('+966 50 776 5432');
       setIdNumber('NUR-4109');
