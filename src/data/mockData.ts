@@ -457,7 +457,7 @@ export const giftCardsList: GiftCard[] = [
 
 export const mockStaffProfiles: Record<string, UserProfile> = {
   doctor: {
-    id: 'user_doc_sarah',
+    id: 'user_doc_sara',
     role: 'doctor',
     staffId: 'DOC-8820',
     patientId: 'DOC-8820',
@@ -486,7 +486,7 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     accountCreated: '2022-01-10'
   },
   nurse: {
-    id: 'user_nurse_emma',
+    id: 'user_nurse_amal',
     role: 'nurse',
     staffId: 'NUR-4109',
     patientId: 'NUR-4109',
@@ -515,7 +515,7 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     accountCreated: '2023-04-15'
   },
   coordinator: {
-    id: 'user_coord_alex',
+    id: 'user_coord_yousef',
     role: 'coordinator',
     staffId: 'COORD-102',
     patientId: 'COORD-102',

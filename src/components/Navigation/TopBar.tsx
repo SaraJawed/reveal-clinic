@@ -8,12 +8,11 @@ import {
   HeartPulse,
   CreditCard,
   Tag,
-  CheckCircle2,
   X,
-  Sparkles,
   ArrowLeft
 } from 'lucide-react';
 import { ClinicBranch, UserProfile, TabType } from '../../types';
+import { NotificationCenter, NotificationCenterCategory } from '../Notifications/NotificationCenter';
 
 interface TopBarProps {
   user: UserProfile;
@@ -38,6 +37,15 @@ interface PatientNotification {
   badgeColor: string;
 }
 
+const categories: NotificationCenterCategory<PatientNotification>[] = [
+  { id: 'all', label: 'All Alerts', match: () => true },
+  { id: 'Appointment Confirmation', label: 'Appointment Confirmations', match: (n) => n.category === 'Appointment Confirmation' },
+  { id: 'Appointment Reminder', label: 'Appointment Reminders', match: (n) => n.category === 'Appointment Reminder' },
+  { id: 'Follow-Up Reminder', label: 'Follow-Ups', match: (n) => n.category === 'Follow-Up Reminder' },
+  { id: 'Payment Confirmation', label: 'Payments', match: (n) => n.category === 'Payment Confirmation' },
+  { id: 'Promotional Campaigns', label: 'Offers', match: (n) => n.category === 'Promotional Campaigns' }
+];
+
 export const TopBar: React.FC<TopBarProps> = ({
   user,
   branches,
@@ -45,6 +53,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   onSelectBranch,
 }) => {
   const [showBranchMenu, setShowBranchMenu] = useState(false);
+  const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const [showNotificationsPage, setShowNotificationsPage] = useState(false);
 
   // 5 Patient Notification Items
@@ -107,8 +116,8 @@ export const TopBar: React.FC<TopBarProps> = ({
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   };
 
-  const toggleRead = (id: string) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: !n.read } : n));
+  const markAsRead = (id: string) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   };
 
   return (
@@ -129,7 +138,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               id="topbar-branch-selector-btn"
               onClick={() => {
                 setShowBranchMenu(!showBranchMenu);
-                setShowNotificationsPage(false);
+                setShowNotificationsDropdown(false);
               }}
               className="flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 active:scale-95 px-2.5 py-1.5 rounded-full text-xs font-medium text-slate-700 transition border border-slate-200/80 min-h-[36px] cursor-pointer"
               title="Switch Clinic Location"
@@ -170,161 +179,134 @@ export const TopBar: React.FC<TopBarProps> = ({
             )}
           </div>
 
-          {/* Notification Bell */}
+          {/* Notifications Button (matches Doctor/Coordinator portal styling) */}
           <div className="relative">
             <button
               type="button"
               id="topbar-notifications-btn"
               onClick={() => {
-                setShowNotificationsPage(true);
+                setShowNotificationsDropdown(!showNotificationsDropdown);
                 setShowBranchMenu(false);
               }}
-              className="relative p-2 text-slate-500 hover:text-[#4F8EF7] hover:bg-slate-100/80 active:scale-95 transition-colors rounded-full cursor-pointer"
+              className="relative w-9 h-9 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition"
               title="Notifications"
             >
-              <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Bell className="w-4 h-4" />
               {activeUnread > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full ring-2 ring-white animate-pulse" />
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white">
+                  {activeUnread}
+                </span>
               )}
             </button>
+
+            {showNotificationsDropdown && (
+              <div
+                id="topbar-notifications-panel"
+                className="fixed left-4 right-4 top-14 max-w-md mx-auto w-auto bg-white rounded-2xl shadow-xl border border-slate-100 p-3.5 z-50 animate-fade-in"
+              >
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    Recent Alerts
+                  </span>
+                  <button
+                    onClick={() => setShowNotificationsDropdown(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
+                  {notifications.length === 0 ? (
+                    <p className="text-center text-slate-400 text-[11px] py-4">No recent notifications</p>
+                  ) : (
+                    notifications.slice(0, 5).map((notif) => (
+                      <div
+                        key={notif.id}
+                        className={`p-2 rounded-xl border text-[11px] transition-colors cursor-pointer text-left ${
+                          !notif.read ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50/50 border-transparent'
+                        }`}
+                        onClick={() => markAsRead(notif.id)}
+                      >
+                        <div className="flex justify-between font-bold text-slate-800">
+                          <span className="truncate max-w-[150px]">{notif.title}</span>
+                          <span className="text-[9px] text-slate-400 font-semibold">{notif.timestamp}</span>
+                        </div>
+                        <p className="text-slate-500 line-clamp-1 mt-0.5 font-medium">{notif.message}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="border-t border-slate-100 pt-2 mt-2 flex justify-between items-center text-[10px]">
+                  <button
+                    onClick={() => {
+                      setShowNotificationsPage(true);
+                      setShowNotificationsDropdown(false);
+                    }}
+                    className="text-[#4F8EF7] font-bold hover:underline"
+                  >
+                    Open View Center
+                  </button>
+                  <button
+                    onClick={() => setShowNotificationsDropdown(false)}
+                    className="text-slate-500 hover:underline font-semibold"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-
-
         </div>
       </header>
 
-      {/* Full-Screen Notifications Page (capped to the same phone-width column as the rest of the app) */}
+      {/* Full-Screen Notification Center (capped to the same phone-width column as the rest of the app) */}
       {showNotificationsPage && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 flex justify-center animate-fade-in">
-        <div className="w-full max-w-md h-full bg-slate-50 flex flex-col text-slate-800 overflow-y-auto">
-          {/* Header */}
-          <div
-            className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 shrink-0 shadow-md sticky top-0 z-10"
-            style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
-          >
-            <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  id="notifications-back-btn"
-                  onClick={() => setShowNotificationsPage(false)}
-                  className="p-1.5 sm:p-2 bg-slate-800/80 hover:bg-slate-700 text-white rounded-xl sm:rounded-2xl transition font-bold text-xs flex items-center gap-1 border border-slate-700 cursor-pointer shrink-0"
-                  title="Return to Previous Screen"
-                >
-                  <ArrowLeft className="w-4 h-4" /> <span>Back</span>
-                </button>
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-sky-400 shrink-0 hidden xs:block" />
-                  <h3 className="font-extrabold text-sm sm:text-lg truncate">Notifications</h3>
-                  {activeUnread > 0 && (
-                    <span className="bg-sky-500/30 text-sky-200 text-[10px] sm:text-xs font-extrabold px-2 py-0.5 rounded-full border border-sky-400/30 shrink-0">
-                      {activeUnread} new
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Mark all read / close for mobile inline */}
-              <div className="flex items-center gap-2 sm:hidden">
-                {activeUnread > 0 && (
-                  <button
-                    type="button"
-                    id="notifications-mark-all-read-mobile-btn"
-                    onClick={markAllRead}
-                    className="text-xs text-sky-300 hover:text-white underline font-semibold transition cursor-pointer"
-                  >
-                    Mark all read
-                  </button>
-                )}
-                <button
-                  type="button"
-                  id="notifications-close-mobile-btn"
-                  onClick={() => setShowNotificationsPage(false)}
-                  className="p-1.5 text-slate-300 hover:text-white rounded-xl hover:bg-slate-800 transition cursor-pointer"
-                  title="Close Notifications"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Desktop only right controls */}
-            <div className="hidden sm:flex items-center gap-3">
-              {activeUnread > 0 && (
-                <button
-                  type="button"
-                  id="notifications-mark-all-read-btn"
-                  onClick={markAllRead}
-                  className="text-xs text-sky-300 hover:text-white underline font-semibold transition cursor-pointer"
-                >
-                  Mark all read
-                </button>
-              )}
+          <div className="w-full max-w-md h-full bg-[#F8FAFC] flex flex-col text-slate-800 overflow-y-auto">
+            {/* Header */}
+            <div
+              className="bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-2xs px-4 py-3 flex items-center gap-2 shrink-0 sticky top-0 z-10"
+              style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+            >
+              <button
+                type="button"
+                id="notifications-back-btn"
+                onClick={() => setShowNotificationsPage(false)}
+                className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 transition"
+                title="Return to Previous Screen"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+              <h3 className="font-extrabold text-sm text-slate-900 flex-1">Notifications</h3>
               <button
                 type="button"
                 id="notifications-close-btn"
                 onClick={() => setShowNotificationsPage(false)}
-                className="p-2 text-slate-300 hover:text-white rounded-2xl hover:bg-slate-800 transition cursor-pointer"
+                className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 transition"
                 title="Close Notifications"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
-          </div>
 
-          {/* Content container */}
-          <div className="max-w-4xl mx-auto w-full p-3 sm:p-8 space-y-4 flex-1">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">All Clinic Alerts & Updates</span>
-              <span className="text-xs text-slate-400">{notifications.length} total</span>
-            </div>
-
-            <div className="space-y-2.5">
-              {notifications.map((n) => {
-                const Icon = n.icon;
-                return (
-                  <div
-                    key={n.id}
-                    onClick={() => toggleRead(n.id)}
-                    className={`p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl transition cursor-pointer flex items-start gap-3 sm:gap-4 shadow-xs border ${
-                      !n.read ? 'bg-blue-50/70 hover:bg-blue-50 border-blue-200' : 'bg-white hover:bg-slate-50 border-slate-200/80 opacity-90'
-                    }`}
-                  >
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-white shadow-xs border border-slate-200/80 flex items-center justify-center shrink-0 mt-0.5">
-                      <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
-                    </div>
-
-                    <div className="flex-1 min-w-0 space-y-1 sm:space-y-1.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className={`text-[10px] sm:text-[11px] font-bold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border ${n.badgeColor}`}>
-                          {n.category}
-                        </span>
-                        <span className="text-[10px] sm:text-xs text-slate-400 font-medium shrink-0">{n.timestamp}</span>
-                      </div>
-
-                      <p className="text-xs sm:text-base font-bold text-slate-900 leading-snug">{n.title}</p>
-                      <p className="text-[11px] sm:text-sm text-slate-600 leading-relaxed">{n.message}</p>
-                    </div>
-
-                    {!n.read && (
-                      <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-blue-600 shrink-0 self-center" />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Footer */}
-            <div className="p-4 bg-white rounded-2xl border border-slate-200/80 text-center shadow-xs mt-6">
-              <p className="text-xs text-slate-500 font-medium flex items-center justify-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-500" /> Reveal Patient Portal Alerts Active • Securely encrypted
-              </p>
+            {/* Content container */}
+            <div className="w-full p-3 sm:p-6 flex-1">
+              <NotificationCenter
+                title="Patient Notification Center"
+                subtitle="Appointment confirmations, reminders, payments, and clinic offers"
+                items={notifications}
+                categories={categories}
+                getBadge={(n) => ({ icon: n.icon, className: n.badgeColor })}
+                getDetailLabel={(n) => n.category.toUpperCase()}
+                onMarkAsRead={markAsRead}
+                onMarkAllAsRead={markAllRead}
+              />
             </div>
           </div>
-        </div>
         </div>
       )}
     </>
   );
 };
-

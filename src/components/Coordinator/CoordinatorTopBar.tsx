@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { UserProfile, ClinicBranch } from '../../types';
-import { UserCheck, Bell, RefreshCw, ChevronDown, CheckCircle, MapPin, Search } from 'lucide-react';
+import { UserProfile, ClinicBranch, StaffNotification } from '../../types';
+import { UserCheck, Bell, RefreshCw, ChevronDown, CheckCircle, MapPin, Search, X } from 'lucide-react';
 
 interface CoordinatorTopBarProps {
   user: UserProfile;
@@ -12,6 +12,8 @@ interface CoordinatorTopBarProps {
   onSwitchRole: () => void;
   onQuickSearchClick?: () => void;
   onStatusChange?: (status: 'Available' | 'In Consultation' | 'In Procedure' | 'On Break' | 'Off Duty') => void;
+  notifications?: StaffNotification[];
+  onMarkAsRead?: (id: string) => void;
 }
 
 export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
@@ -23,10 +25,13 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
   onOpenNotifications,
   onSwitchRole,
   onQuickSearchClick,
-  onStatusChange
+  onStatusChange,
+  notifications = [],
+  onMarkAsRead
 }) => {
   const [showBranchDropdown, setShowBranchDropdown] = useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
+  const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
 
   const statusColors = {
     'Available': 'bg-emerald-500 text-white',
@@ -97,19 +102,84 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
             )}
           </div>
 
-          {/* Notifications button */}
-          <button
-            onClick={onOpenNotifications}
-            className="relative p-2 rounded-2xl hover:bg-slate-100 text-slate-600 transition-colors"
-            title="Notifications"
-          >
-            <Bell className="w-5 h-5" />
-            {unreadNotificationsCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-black rounded-full flex items-center justify-center animate-bounce">
-                {unreadNotificationsCount}
-              </span>
+          {/* Notifications Button */}
+          <div className="relative">
+            <button
+              type="button"
+              id="coordinator-notifications-btn"
+              onClick={() => setShowNotificationsDropdown(!showNotificationsDropdown)}
+              className="relative w-9 h-9 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition"
+              title="Notifications"
+            >
+              <Bell className="w-4 h-4" />
+              {unreadNotificationsCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-white">
+                  {unreadNotificationsCount}
+                </span>
+              )}
+            </button>
+
+            {showNotificationsDropdown && (
+              <div
+                id="coordinator-notifications-panel"
+                className="fixed left-4 right-4 top-14 max-w-md mx-auto w-auto bg-white rounded-2xl shadow-xl border border-slate-100 p-3.5 z-50 animate-fade-in"
+              >
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
+                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                    Recent Alerts
+                  </span>
+                  <button
+                    onClick={() => setShowNotificationsDropdown(false)}
+                    className="text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
+                  {(!notifications || notifications.length === 0) ? (
+                    <p className="text-center text-slate-400 text-[11px] py-4">No recent notifications</p>
+                  ) : (
+                    notifications.slice(0, 5).map((notif) => (
+                      <div
+                        key={notif.id}
+                        className={`p-2 rounded-xl border text-[11px] transition-colors cursor-pointer text-left ${
+                          !notif.read ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50/50 border-transparent'
+                        }`}
+                        onClick={() => {
+                          if (onMarkAsRead) onMarkAsRead(notif.id);
+                        }}
+                      >
+                        <div className="flex justify-between font-bold text-slate-800">
+                          <span className="truncate max-w-[150px]">{notif.title}</span>
+                          <span className="text-[9px] text-slate-400 font-semibold">{notif.timestamp}</span>
+                        </div>
+                        <p className="text-slate-500 line-clamp-1 mt-0.5 font-medium">{notif.message}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+
+                <div className="border-t border-slate-100 pt-2 mt-2 flex justify-between items-center text-[10px]">
+                  <button
+                    onClick={() => {
+                      onOpenNotifications();
+                      setShowNotificationsDropdown(false);
+                    }}
+                    className="text-[#4F8EF7] font-bold hover:underline"
+                  >
+                    Open View Center
+                  </button>
+                  <button
+                    onClick={() => setShowNotificationsDropdown(false)}
+                    className="text-slate-500 hover:underline font-semibold"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </div>
             )}
-          </button>
+          </div>
         </div>
       </div>
     </header>

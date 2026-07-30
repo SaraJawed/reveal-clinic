@@ -958,7 +958,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <input
                   type="text"
                   defaultValue={phone}
-                  placeholder="+1 (555) 000-0000 or email@domain.com"
+                  placeholder="+966 5X XXX XXXX or email@domain.com"
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
                 />
               </div>

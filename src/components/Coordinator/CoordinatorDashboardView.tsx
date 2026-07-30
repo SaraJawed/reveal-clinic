@@ -379,7 +379,7 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
                 <input
                   type="tel"
                   required
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="+966 5X XXX XXXX"
                   value={walkInPhone}
                   onChange={(e) => setWalkInPhone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"

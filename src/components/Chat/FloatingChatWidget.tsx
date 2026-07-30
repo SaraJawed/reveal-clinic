@@ -23,7 +23,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
 
   const quickPrompts = [
     'What are the clinic working hours?',
-    'Book HydraFacial with Dr. Elena',
+    'Book HydraFacial with Dr. Maha Al-Otaibi',
     'Post-laser care instructions',
     'Redeem rewards & special offers'
   ];

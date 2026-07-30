@@ -62,7 +62,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   // New Booking Form states
   const [bookPatientName, setBookPatientName] = useState('');
   const [bookPatientFileNo, setBookPatientFileNo] = useState('RC-88120');
-  const [bookPatientPhone, setBookPatientPhone] = useState('+1 (555) 345-6789');
+  const [bookPatientPhone, setBookPatientPhone] = useState('+966 55 345 6789');
   const [bookDoctorId, setBookDoctorId] = useState('doc_1');
   const [bookServiceId, setBookServiceId] = useState(treatmentServices[0].id);
   const [bookDate, setBookDate] = useState('Today');
@@ -389,7 +389,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                 <label className="block text-xs font-bold text-slate-700 mb-1">Mobile Contact</label>
                 <input
                   type="tel"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="+966 5X XXX XXXX"
                   value={bookPatientPhone}
                   onChange={(e) => setBookPatientPhone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"

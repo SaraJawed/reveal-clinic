@@ -462,6 +462,8 @@ export function App() {
               onSwitchRole={() => setShowAuthModal(true)}
               onQuickSearchClick={() => setCoordinatorActiveTab('patients')}
               onStatusChange={handleStaffStatusChange}
+              notifications={staffNotifications}
+              onMarkAsRead={handleMarkNotifAsRead}
             />
 
             <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
