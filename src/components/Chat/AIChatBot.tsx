@@ -1,20 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatMessage, TabType } from '../../types';
+import { ChatMessage, TabType, Doctor, ClinicBranch, Appointment } from '../../types';
 import { Bot, Send, Sparkles, User, RefreshCw, ChevronRight } from 'lucide-react';
+import { ChatBookingCard } from './ChatBookingCard';
+import { findDoctorInLatestExchange } from '../../utils/chatDoctorMatch';
 
 interface AIChatBotProps {
   messages: ChatMessage[];
   onSendMessage: (text: string) => Promise<void>;
   onChangeTab: (tab: TabType) => void;
+  doctors: Doctor[];
+  selectedBranch: ClinicBranch;
+  onBookAppointment: (appt: Appointment) => void;
 }
 
 export const AIChatBot: React.FC<AIChatBotProps> = ({
   messages,
   onSendMessage,
-  onChangeTab
+  onChangeTab,
+  doctors,
+  selectedBranch,
+  onBookAppointment
 }) => {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [bookingCardDoctor, setBookingCardDoctor] = useState<Doctor | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickPrompts = [
@@ -31,7 +40,14 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, loading]);
+  }, [messages, loading, bookingCardDoctor]);
+
+  useEffect(() => {
+    const match = findDoctorInLatestExchange(messages, doctors);
+    if (match) {
+      setBookingCardDoctor(match);
+    }
+  }, [messages, doctors]);
 
   const handleSend = async (textToSend?: string) => {
     const text = textToSend || inputText;
@@ -127,6 +143,21 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
               <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
               <span>Reveal AI is generating response...</span>
             </div>
+          </div>
+        )}
+
+        {bookingCardDoctor && (
+          <div className="flex items-start gap-2.5 justify-start">
+            <div className="w-8 h-8 rounded-xl bg-slate-900 text-sky-400 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+              <Bot className="w-4 h-4" />
+            </div>
+            <ChatBookingCard
+              key={bookingCardDoctor.id}
+              doctor={bookingCardDoctor}
+              selectedBranch={selectedBranch}
+              onBookAppointment={onBookAppointment}
+              onDismiss={() => setBookingCardDoctor(null)}
+            />
           </div>
         )}
 

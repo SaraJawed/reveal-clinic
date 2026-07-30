@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChatMessage, TabType } from '../../types';
+import { ChatMessage, TabType, Doctor, ClinicBranch, Appointment } from '../../types';
 import { Bot, Send, Sparkles, X, RefreshCw, MessageSquare, ArrowLeft } from 'lucide-react';
+import { ChatBookingCard } from './ChatBookingCard';
+import { findDoctorInLatestExchange } from '../../utils/chatDoctorMatch';
 
 interface FloatingChatWidgetProps {
   messages: ChatMessage[];
@@ -8,6 +10,9 @@ interface FloatingChatWidgetProps {
   onChangeTab: (tab: TabType) => void;
   isOpen: boolean;
   onToggleOpen: () => void;
+  doctors: Doctor[];
+  selectedBranch: ClinicBranch;
+  onBookAppointment: (appt: Appointment) => void;
 }
 
 export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
@@ -15,10 +20,14 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
   onSendMessage,
   onChangeTab,
   isOpen,
-  onToggleOpen
+  onToggleOpen,
+  doctors,
+  selectedBranch,
+  onBookAppointment
 }) => {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [bookingCardDoctor, setBookingCardDoctor] = useState<Doctor | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickPrompts = [
@@ -36,7 +45,14 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
     if (isOpen) {
       scrollToBottom();
     }
-  }, [isOpen, messages, loading]);
+  }, [isOpen, messages, loading, bookingCardDoctor]);
+
+  useEffect(() => {
+    const match = findDoctorInLatestExchange(messages, doctors);
+    if (match) {
+      setBookingCardDoctor(match);
+    }
+  }, [messages, doctors]);
 
   const handleSend = async (textToSend?: string) => {
     const text = textToSend || inputText;
@@ -58,7 +74,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
       {/* Floating Chatbot Launcher Button (anchored within the phone-width column, not the true viewport edge) */}
       <div className="fixed inset-x-0 bottom-0 z-40 pointer-events-none">
         <div className="relative max-w-md mx-auto h-0">
-          <div className="absolute bottom-20 right-4 sm:bottom-6 sm:right-8 pointer-events-auto">
+          <div className="absolute bottom-20 right-4 pointer-events-auto">
             <button
               type="button"
               id="floating-chatbot-trigger-btn"
@@ -195,6 +211,21 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
                   <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
                   <span>Generating response...</span>
                 </div>
+              </div>
+            )}
+
+            {bookingCardDoctor && (
+              <div className="flex items-start gap-3 justify-start">
+                <div className="w-8 h-8 rounded-2xl bg-slate-900 text-sky-400 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <ChatBookingCard
+                  key={bookingCardDoctor.id}
+                  doctor={bookingCardDoctor}
+                  selectedBranch={selectedBranch}
+                  onBookAppointment={onBookAppointment}
+                  onDismiss={() => setBookingCardDoctor(null)}
+                />
               </div>
             )}
 

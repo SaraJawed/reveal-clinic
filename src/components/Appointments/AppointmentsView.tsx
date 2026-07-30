@@ -20,12 +20,7 @@ import {
   X
 } from 'lucide-react';
 import { BottomSheet } from '../PWA/BottomSheet';
-
-const APPOINTMENT_VOUCHERS: Record<string, { type: 'percent' | 'flat'; value: number }> = {
-  GLOW10: { type: 'percent', value: 10 },
-  REVEAL50: { type: 'flat', value: 50 },
-  WELCOME100: { type: 'flat', value: 100 }
-};
+import { calculateVoucherDiscount } from '../../utils/vouchers';
 
 interface AppointmentsViewProps {
   doctors: Doctor[];
@@ -114,14 +109,12 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const handleApplyVoucher = () => {
     const code = voucherInput.trim().toUpperCase();
     if (!code) return;
-    const voucher = APPOINTMENT_VOUCHERS[code];
-    if (!voucher) {
+    const discount = calculateVoucherDiscount(code, getAppointmentFee());
+    if (discount === null) {
       setVoucherError('Invalid or expired voucher code.');
       setAppliedVoucher(null);
       return;
     }
-    const baseFee = getAppointmentFee();
-    const discount = voucher.type === 'percent' ? Math.round((baseFee * voucher.value) / 100) : voucher.value;
     setAppliedVoucher({ code, discount });
     setVoucherError('');
   };

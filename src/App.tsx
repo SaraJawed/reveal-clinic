@@ -837,6 +837,9 @@ export function App() {
               messages={chatMessages}
               onSendMessage={handleSendMessageToAI}
               onChangeTab={setPatientActiveTab}
+              doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
+              selectedBranch={selectedBranch}
+              onBookAppointment={handleBookAppointment}
             />
           )}
 
@@ -920,6 +923,9 @@ export function App() {
         onChangeTab={setPatientActiveTab}
         isOpen={isFloatingChatOpen}
         onToggleOpen={() => setIsFloatingChatOpen(prev => !prev)}
+        doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
+        selectedBranch={selectedBranch}
+        onBookAppointment={handleBookAppointment}
       />
 
       {/* Toast Notification Snackbar */}
