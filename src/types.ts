@@ -150,6 +150,8 @@ export interface Appointment {
   fee: number;
   paid: boolean;
   paymentMethod?: 'Pay at Clinic' | 'Pay Half Now' | 'Pay Online' | 'Buy Now Pay Later';
+  voucherCode?: string;
+  discountAmount?: number;
   notes?: string;
   feedbackRating?: number;
   feedbackComment?: string;

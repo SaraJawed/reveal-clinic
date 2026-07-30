@@ -15,9 +15,17 @@ import {
   ChevronRight,
   MessageSquare,
   Sparkles,
-  Award
+  Award,
+  Tag,
+  X
 } from 'lucide-react';
 import { BottomSheet } from '../PWA/BottomSheet';
+
+const APPOINTMENT_VOUCHERS: Record<string, { type: 'percent' | 'flat'; value: number }> = {
+  GLOW10: { type: 'percent', value: 10 },
+  REVEAL50: { type: 'flat', value: 50 },
+  WELCOME100: { type: 'flat', value: 100 }
+};
 
 interface AppointmentsViewProps {
   doctors: Doctor[];
@@ -58,6 +66,10 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const [bookingStep, setBookingStep] = useState<'form' | 'summary'>('form');
   const [bookingSuccess, setBookingSuccess] = useState<Appointment | null>(null);
   const [customSuccessMessage, setCustomSuccessMessage] = useState<string>('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Appointment['paymentMethod'] | null>(null);
+  const [voucherInput, setVoucherInput] = useState('');
+  const [appliedVoucher, setAppliedVoucher] = useState<{ code: string; discount: number } | null>(null);
+  const [voucherError, setVoucherError] = useState('');
 
   // Reschedule / Feedback Modals
   const [rescheduleAppt, setRescheduleAppt] = useState<Appointment | null>(null);
@@ -84,9 +96,46 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     return 400;
   };
 
-  const handleConfirmPayment = (method: NonNullable<Appointment['paymentMethod']>) => {
-    if (!selectedDoctor) return;
-    const fee = getAppointmentFee();
+  const getDiscountedFee = () => {
+    const baseFee = getAppointmentFee();
+    if (!appliedVoucher) return baseFee;
+    return Math.max(0, baseFee - appliedVoucher.discount);
+  };
+
+  const resetBookingFlowState = () => {
+    setSelectedDoctor(null);
+    setBookingStep('form');
+    setSelectedPaymentMethod(null);
+    setVoucherInput('');
+    setAppliedVoucher(null);
+    setVoucherError('');
+  };
+
+  const handleApplyVoucher = () => {
+    const code = voucherInput.trim().toUpperCase();
+    if (!code) return;
+    const voucher = APPOINTMENT_VOUCHERS[code];
+    if (!voucher) {
+      setVoucherError('Invalid or expired voucher code.');
+      setAppliedVoucher(null);
+      return;
+    }
+    const baseFee = getAppointmentFee();
+    const discount = voucher.type === 'percent' ? Math.round((baseFee * voucher.value) / 100) : voucher.value;
+    setAppliedVoucher({ code, discount });
+    setVoucherError('');
+  };
+
+  const handleRemoveVoucher = () => {
+    setAppliedVoucher(null);
+    setVoucherInput('');
+    setVoucherError('');
+  };
+
+  const handleConfirmPayment = () => {
+    if (!selectedDoctor || !selectedPaymentMethod) return;
+    const method = selectedPaymentMethod;
+    const fee = getDiscountedFee();
     const paid = method === 'Pay Online' || method === 'Buy Now Pay Later';
     const status: AppointmentStatus = method === 'Pay at Clinic' ? 'pending' : 'upcoming';
 
@@ -106,6 +155,8 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       fee,
       paid,
       paymentMethod: method,
+      voucherCode: appliedVoucher?.code,
+      discountAmount: appliedVoucher?.discount,
       notes,
       checkInStatus: 'pending'
     };
@@ -120,8 +171,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     onBookAppointment(newAppt);
     setBookingSuccess(newAppt);
     setCustomSuccessMessage(successMessages[method]);
-    setSelectedDoctor(null);
-    setBookingStep('form');
+    resetBookingFlowState();
   };
 
   const handleConfirmReschedule = () => {
@@ -290,6 +340,13 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   </span>
                 </div>
 
+                {appt.voucherCode && (
+                  <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
+                    <Tag className="w-3 h-3" />
+                    <span>Voucher {appt.voucherCode} applied (-SAR {appt.discountAmount})</span>
+                  </div>
+                )}
+
                 <div className="flex items-start gap-3.5">
                   <img
                     src={appt.doctorAvatar}
@@ -369,10 +426,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       {/* BOOKING STEP BOTTOM SHEET */}
       <BottomSheet
         isOpen={!!selectedDoctor}
-        onClose={() => {
-          setSelectedDoctor(null);
-          setBookingStep('form');
-        }}
+        onClose={resetBookingFlowState}
         title={selectedDoctor ? `Book Appointment - ${selectedDoctor.name}` : ''}
         subtitle={bookingStep === 'form' ? "Select consultation type, date & time slot." : "Review booking summary & select payment option."}
       >
@@ -516,75 +570,193 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 <span className="text-slate-500">Date & Time:</span>
                 <span className="font-bold text-slate-900">{selectedDate} at {selectedSlot}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Subtotal:</span>
+                <span className="font-bold text-slate-900">SAR {getAppointmentFee()}</span>
+              </div>
+              {appliedVoucher && (
+                <div className="flex justify-between text-emerald-600">
+                  <span>Voucher ({appliedVoucher.code}):</span>
+                  <span className="font-bold">-SAR {appliedVoucher.discount}</span>
+                </div>
+              )}
               <div className="flex justify-between pt-2 border-t border-slate-200 font-extrabold text-sm text-slate-900">
                 <span>Total Due:</span>
-                <span className="text-blue-600">SAR {getAppointmentFee()}</span>
+                <span className="text-blue-600">SAR {getDiscountedFee()}</span>
               </div>
+            </div>
+
+            {/* Voucher Code */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-3.5 space-y-2">
+              <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <Tag className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Have a Voucher Code?</span>
+              </div>
+              {appliedVoucher ? (
+                <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
+                  <span className="text-xs font-bold text-emerald-800">
+                    {appliedVoucher.code} applied — -SAR {appliedVoucher.discount}
+                  </span>
+                  <button
+                    type="button"
+                    id="appointments-remove-voucher-btn"
+                    onClick={handleRemoveVoucher}
+                    className="text-emerald-700 hover:text-rose-600 transition"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    id="appointments-voucher-input"
+                    value={voucherInput}
+                    onChange={(e) => {
+                      setVoucherInput(e.target.value);
+                      setVoucherError('');
+                    }}
+                    placeholder="e.g. GLOW10"
+                    className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:bg-white focus:border-blue-500"
+                  />
+                  <button
+                    type="button"
+                    id="appointments-apply-voucher-btn"
+                    onClick={handleApplyVoucher}
+                    className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition shrink-0"
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
+              {voucherError && <p className="text-[11px] text-rose-600 font-semibold">{voucherError}</p>}
             </div>
 
             <div className="space-y-2.5 pt-2">
               <div className="text-xs font-bold text-slate-700">Select Payment Option</div>
 
               <button
+                type="button"
                 id="appointments-pay-clinic-btn"
-                onClick={() => handleConfirmPayment('Pay at Clinic')}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md flex items-center justify-between transition"
+                onClick={() => setSelectedPaymentMethod('Pay at Clinic')}
+                className={`w-full font-bold py-3.5 px-4 rounded-2xl text-xs flex items-center justify-between transition ${
+                  selectedPaymentMethod === 'Pay at Clinic'
+                    ? 'bg-slate-900 text-white shadow-md ring-2 ring-offset-2 ring-slate-900'
+                    : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300'
+                }`}
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">🏥</span>
                   <div className="text-left">
                     <div className="font-bold">Pay at Clinic</div>
-                    <div className="text-[10px] text-slate-300 font-normal">Pay cash or card upon arrival at the clinic counter</div>
+                    <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Pay at Clinic' ? 'text-slate-300' : 'text-slate-500'}`}>
+                      Pay cash or card upon arrival at the clinic counter
+                    </div>
                   </div>
                 </div>
-                <span className="text-xs bg-slate-800 px-2.5 py-1 rounded-xl">SAR {getAppointmentFee()}</span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {selectedPaymentMethod === 'Pay at Clinic' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                  <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay at Clinic' ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                    SAR {getDiscountedFee()}
+                  </span>
+                </div>
               </button>
 
               <button
+                type="button"
                 id="appointments-pay-half-btn"
-                onClick={() => handleConfirmPayment('Pay Half Now')}
-                className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md shadow-teal-500/25 flex items-center justify-between transition"
+                onClick={() => setSelectedPaymentMethod('Pay Half Now')}
+                className={`w-full font-bold py-3.5 px-4 rounded-2xl text-xs flex items-center justify-between transition ${
+                  selectedPaymentMethod === 'Pay Half Now'
+                    ? 'bg-teal-600 text-white shadow-md shadow-teal-500/25 ring-2 ring-offset-2 ring-teal-600'
+                    : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300'
+                }`}
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">💰</span>
                   <div className="text-left">
                     <div className="font-bold">Pay Half Now & Pay Remaining at Clinic</div>
-                    <div className="text-[10px] text-teal-100 font-normal">Pay 50% now online, settle the rest at the clinic counter</div>
+                    <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Pay Half Now' ? 'text-teal-100' : 'text-slate-500'}`}>
+                      Pay 50% now online, settle the rest at the clinic counter
+                    </div>
                   </div>
                 </div>
-                <span className="text-xs bg-teal-700 px-2.5 py-1 rounded-xl">SAR {Math.round(getAppointmentFee() / 2)}</span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {selectedPaymentMethod === 'Pay Half Now' && <CheckCircle2 className="w-4 h-4 text-white" />}
+                  <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay Half Now' ? 'bg-teal-700' : 'bg-slate-100'}`}>
+                    SAR {Math.round(getDiscountedFee() / 2)}
+                  </span>
+                </div>
               </button>
 
               <button
+                type="button"
                 id="appointments-pay-online-btn"
-                onClick={() => handleConfirmPayment('Pay Online')}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md shadow-blue-500/25 flex items-center justify-between transition"
+                onClick={() => setSelectedPaymentMethod('Pay Online')}
+                className={`w-full font-bold py-3.5 px-4 rounded-2xl text-xs flex items-center justify-between transition ${
+                  selectedPaymentMethod === 'Pay Online'
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/25 ring-2 ring-offset-2 ring-blue-600'
+                    : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300'
+                }`}
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">💳</span>
                   <div className="text-left">
                     <div className="font-bold">Pay Online (Mada / Apple Pay / Visa)</div>
-                    <div className="text-[10px] text-blue-100 font-normal">Instant secure online payment & immediate confirmation</div>
+                    <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Pay Online' ? 'text-blue-100' : 'text-slate-500'}`}>
+                      Instant secure online payment & immediate confirmation
+                    </div>
                   </div>
                 </div>
-                <span className="text-xs bg-blue-700 px-2.5 py-1 rounded-xl">SAR {getAppointmentFee()}</span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {selectedPaymentMethod === 'Pay Online' && <CheckCircle2 className="w-4 h-4 text-white" />}
+                  <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay Online' ? 'bg-blue-700' : 'bg-slate-100'}`}>
+                    SAR {getDiscountedFee()}
+                  </span>
+                </div>
               </button>
 
               <button
+                type="button"
                 id="appointments-pay-bnpl-btn"
-                onClick={() => handleConfirmPayment('Buy Now Pay Later')}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md shadow-purple-500/25 flex items-center justify-between transition"
+                onClick={() => setSelectedPaymentMethod('Buy Now Pay Later')}
+                className={`w-full font-bold py-3.5 px-4 rounded-2xl text-xs flex items-center justify-between transition ${
+                  selectedPaymentMethod === 'Buy Now Pay Later'
+                    ? 'bg-purple-600 text-white shadow-md shadow-purple-500/25 ring-2 ring-offset-2 ring-purple-600'
+                    : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300'
+                }`}
               >
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">🛍️</span>
                   <div className="text-left">
                     <div className="font-bold">Buy Now, Pay Later (BNPL)</div>
-                    <div className="text-[10px] text-purple-100 font-normal">Split into installments with Tabby — approved instantly, nothing due today</div>
+                    <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Buy Now Pay Later' ? 'text-purple-100' : 'text-slate-500'}`}>
+                      Split into installments with Tabby — approved instantly, nothing due today
+                    </div>
                   </div>
                 </div>
-                <span className="text-xs bg-purple-700 px-2.5 py-1 rounded-xl">SAR {getAppointmentFee()}</span>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  {selectedPaymentMethod === 'Buy Now Pay Later' && <CheckCircle2 className="w-4 h-4 text-white" />}
+                  <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Buy Now Pay Later' ? 'bg-purple-700' : 'bg-slate-100'}`}>
+                    SAR {getDiscountedFee()}
+                  </span>
+                </div>
               </button>
             </div>
+
+            <button
+              type="button"
+              id="appointments-confirm-booking-btn"
+              disabled={!selectedPaymentMethod}
+              onClick={handleConfirmPayment}
+              className={`w-full font-bold py-3.5 rounded-2xl text-xs shadow-md transition ${
+                selectedPaymentMethod
+                  ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white shadow-blue-500/30'
+                  : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
+              }`}
+            >
+              {selectedPaymentMethod ? `Confirm Booking — SAR ${selectedPaymentMethod === 'Pay Half Now' ? Math.round(getDiscountedFee() / 2) : getDiscountedFee()}` : 'Select a Payment Option to Continue'}
+            </button>
 
             <button
               type="button"
@@ -613,6 +785,9 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
               <div>🗓️ <strong>Date:</strong> {bookingSuccess.date} at {bookingSuccess.timeSlot}</div>
               <div>📍 <strong>Location:</strong> {bookingSuccess.clinicName}</div>
               <div>💳 <strong>Fee / Status:</strong> SAR {bookingSuccess.fee} ({bookingSuccess.paymentMethod || (bookingSuccess.paid ? 'Paid Online' : 'Pay at Clinic')})</div>
+              {bookingSuccess.voucherCode && (
+                <div>🏷️ <strong>Voucher:</strong> {bookingSuccess.voucherCode} (-SAR {bookingSuccess.discountAmount})</div>
+              )}
             </div>
             <button
               id="appointments-success-close-btn"
