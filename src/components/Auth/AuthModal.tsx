@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { UserProfile, UserRole } from '../../types';
 import { mockStaffProfiles, HARDCODED_AVATARS, clinicBranches, initialUserProfile } from '../../data/mockData';
 import { registerPatientAccount, findRegisteredPatientAccount } from '../../utils/storage';
-import { X, Lock, Phone, ShieldCheck, Sparkles, RefreshCw, Stethoscope, HeartPulse, UserCheck, Key, CheckCircle2, Camera, AlertTriangle, MapPin, User, Mail, Plus, Trash2, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { X, Lock, Phone, ShieldCheck, Sparkles, RefreshCw, HeartPulse, UserCheck, Key, CheckCircle2, Camera, AlertTriangle, MapPin, User, Mail, Plus, Trash2, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -28,7 +28,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [idNumber, setIdNumber] = useState('RC-99841');
   const [password, setPassword] = useState('RC-99841');
   const [rememberMe, setRememberMe] = useState(true);
-  const [showDestinationChoice, setShowDestinationChoice] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // Expanded Patient Signup fields
@@ -108,7 +107,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleProceedWithRole = (role: UserRole) => {
     setLoading(true);
-    setShowDestinationChoice(false);
     setTimeout(() => {
       setLoading(false);
       let targetUser: UserProfile;
@@ -180,10 +178,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         return;
       }
 
-      // Check for Doctor/Patient profile match
+      // Check for Doctor profile match
       if (digits.includes('1234567') || digits.includes('501234567')) {
         if (enteredPwd === 'RC-99841' || enteredPwd === '••••••••') {
-          setShowDestinationChoice(true);
+          handleProceedWithRole('doctor');
         } else {
           setErrorMsg('Invalid password for this mobile number.');
         }
@@ -205,9 +203,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         }
       } else {
         // Fallback or automatic registration mockup for user convenience so testing doesn't block:
-        // Assume any other valid mobile number with password RC-99841 is the doctor/patient
+        // Assume any other valid mobile number with password RC-99841 is the doctor
         if (enteredPwd === 'RC-99841' || enteredPwd === '••••••••') {
-          setShowDestinationChoice(true);
+          handleProceedWithRole('doctor');
         } else if (enteredPwd === 'COORD-102') {
           setLoading(true);
           setTimeout(() => {
@@ -244,8 +242,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           }, 600);
         }, 700);
       } else if (enteredId === 'RC-99841' && (enteredPwd === 'RC-99841' || enteredPwd === '••••••••')) {
-        // Both Doctor and Patient! Show portal selection overlay inside login screen.
-        setShowDestinationChoice(true);
+        // Direct Doctor Login
+        handleProceedWithRole('doctor');
       } else if (enteredId === 'PA-94100' && (enteredPwd === 'PA-94100' || enteredPwd === '••••••••')) {
         // Direct Patient Login
         setLoading(true);
@@ -315,7 +313,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }, 800);
   };
 
-  const isLoginHero = (mode === 'login' && !showDestinationChoice) || mode === 'signup';
+  const isLoginHero = mode === 'login' || mode === 'signup';
 
   const cardContent = (
     <div className={`bg-white w-full overflow-hidden relative flex flex-col text-slate-800 animate-fade-in ${
@@ -390,7 +388,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div>
               <h3 className="font-black text-lg tracking-wide text-white leading-tight">REVEAL CLINIC</h3>
               <p className="text-[11px] text-sky-200/90 font-medium">
-                {mode === 'login' && 'Multi-Role Verification Required'}
                 {mode === 'otp' && 'Verify Mobile OTP Code'}
                 {mode === 'forgot' && 'Reset Secure Password'}
                 {mode === 'reset_success' && 'Password Changed Successfully'}
@@ -425,66 +422,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
           {/* LOGIN MODE */}
           {mode === 'login' && (
-            showDestinationChoice ? (
-              <div className="space-y-4 py-2 animate-fade-in">
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center">
-                  <h4 className="font-extrabold text-slate-800 text-xs uppercase tracking-wider mb-1">
-                    Multi-Role Verification Required
-                  </h4>
-                  <p className="text-[11px] text-slate-500 leading-normal">
-                    This account is associated with both clinical and patient portal accounts. Please select your destination:
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {/* Doctor Card Option */}
-                  <button
-                    type="button"
-                    onClick={() => handleProceedWithRole('doctor')}
-                    className="w-full p-4 rounded-2xl bg-blue-50/50 hover:bg-blue-50 border border-blue-100/80 text-left transition-all hover:scale-[1.01] hover:shadow-xs group flex items-start gap-3"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
-                      <Stethoscope className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-[10px] text-blue-900 uppercase tracking-wide">Doctor Portal</span>
-                        <span className="text-[9px] bg-blue-100 text-blue-800 font-extrabold px-2 py-0.5 rounded-full">Authorized</span>
-                      </div>
-                      <h5 className="font-bold text-slate-800 text-xs mt-0.5">Dr. Sara Al-Ghamdi</h5>
-                      <p className="text-[10px] text-slate-500 mt-1">Access clinical charts, schedule slots, and patient histories.</p>
-                    </div>
-                  </button>
-
-                  {/* Patient Card Option */}
-                  <button
-                    type="button"
-                    onClick={() => handleProceedWithRole('patient')}
-                    className="w-full p-4 rounded-2xl bg-emerald-50/50 hover:bg-emerald-50 border border-emerald-100/80 text-left transition-all hover:scale-[1.01] hover:shadow-xs group flex items-start gap-3"
-                  >
-                    <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                      <Sparkles className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="font-black text-[10px] text-emerald-900 uppercase tracking-wide">Patient Portal</span>
-                        <span className="text-[9px] bg-emerald-100 text-emerald-800 font-extrabold px-2 py-0.5 rounded-full">Authorized</span>
-                      </div>
-                      <h5 className="font-bold text-slate-800 text-xs mt-0.5">Noura Al-Qahtani</h5>
-                      <p className="text-[10px] text-slate-500 mt-1">View personal medical reports, loyalty balance, and books.</p>
-                    </div>
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setShowDestinationChoice(false)}
-                  className="w-full text-center text-xs font-bold text-slate-500 hover:text-slate-800 py-2"
-                >
-                  Back to Sign In
-                </button>
-              </div>
-            ) : (
               <form onSubmit={handleLoginSubmit} className="space-y-5 animate-fade-in">
                 <h1 className="text-3xl font-black text-slate-900 tracking-tight -mt-1">Sign in</h1>
 
@@ -639,7 +576,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <span>HIPAA-Compliant &amp; End-to-End Encrypted</span>
                 </div>
               </form>
-            )
           )}
 
           {/* EXPANDED PATIENT REGISTRATION SIGNUP MODE */}

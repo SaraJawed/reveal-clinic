@@ -35,6 +35,47 @@ const KEYS = {
   OFFLINE_SIMULATION: 'reveal_offline_sim'
 };
 
+// ----------------------------------------------------------------------
+// Seed data versioning
+//
+// App.tsx seeds most of its state from localStorage if present, falling
+// back to the mock arrays in data/mockData.ts otherwise. That means once
+// a browser has ever run the app, its cached localStorage values win over
+// any later changes to the mock data (e.g. the Riyadh/KSA name
+// localization) forever, since nothing here previously invalidated the
+// cache. Bump SEED_DATA_VERSION whenever data/mockData.ts's seed content
+// changes in a way that should reach browsers with old cached data.
+// ----------------------------------------------------------------------
+const SEED_DATA_VERSION = 'v2-ksa-names';
+const SEED_DATA_VERSION_KEY = 'reveal_seed_data_version';
+const SEED_DERIVED_KEYS = [
+  'reveal_user',
+  'reveal_branch',
+  'reveal_appointments',
+  'reveal_active_packages',
+  'reveal_payments',
+  'reveal_chat',
+  'reveal_giftcards',
+  'reveal_clinical_schedule',
+  'reveal_clinical_patients',
+  'reveal_treatment_sessions',
+  'reveal_staff_notifications',
+  'reveal_walkin_queue',
+  'reveal_authenticated'
+];
+
+function resetStaleSeedDataIfNeeded(): void {
+  try {
+    if (localStorage.getItem(SEED_DATA_VERSION_KEY) === SEED_DATA_VERSION) return;
+    SEED_DERIVED_KEYS.forEach((key) => localStorage.removeItem(key));
+    localStorage.setItem(SEED_DATA_VERSION_KEY, SEED_DATA_VERSION);
+  } catch {
+    // localStorage unavailable (e.g. private browsing) - nothing to reset
+  }
+}
+
+resetStaleSeedDataIfNeeded();
+
 export function loadState<T>(key: string, defaultValue: T): T {
   try {
     const data = localStorage.getItem(key);
