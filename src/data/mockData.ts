@@ -468,6 +468,8 @@ export const mockStaffProfiles: Record<string, UserProfile> = {
     department: 'Dermatology & Facial Aesthetics',
     consultationRoom: 'Consultation Room 3 (Main Floor)',
     availabilityStatus: 'In Consultation',
+    rating: 4.9,
+    reviewCount: 214,
     email: 'dr.sara.alghamdi@revealclinic.com',
     phone: '+966 11 480 3251',
     gender: 'female',

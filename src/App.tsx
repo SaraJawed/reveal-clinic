@@ -244,8 +244,41 @@ export function App() {
     setStaffNotifications(prev => [newNotif, ...prev]);
   };
 
-  const handleAddScheduleItem = (item: ClinicalScheduleItem) => {
+  const handleAddScheduleItem = (item: ClinicalScheduleItem, appointment?: Appointment) => {
     setClinicalSchedule(prev => [item, ...prev]);
+
+    // A Coordinator-created booking is the same single-source-of-truth record
+    // as a patient-initiated one -- mirror it into the patient-facing
+    // appointments list (same id) so it shows up under "My Visits" too.
+    if (appointment) {
+      setAppointments(prev => [appointment, ...prev]);
+    }
+  };
+
+  const handleRescheduleScheduleItem = (
+    id: string,
+    newDate: string,
+    newTimeSlot: string,
+    newDoctorId: string,
+    newDoctorName: string
+  ) => {
+    setClinicalSchedule(prev => prev.map(item => item.id === id ? {
+      ...item,
+      date: newDate,
+      timeSlot: newTimeSlot,
+      doctorId: newDoctorId,
+      doctorName: newDoctorName,
+      status: 'scheduled'
+    } : item));
+    setAppointments(prev => prev.map(a => a.id === id ? {
+      ...a,
+      date: newDate,
+      timeSlot: newTimeSlot,
+      doctorId: newDoctorId,
+      doctorName: newDoctorName,
+      status: 'upcoming'
+    } : a));
+    triggerToast(`Rescheduled to ${newDate} at ${newTimeSlot} with ${newDoctorName}.`);
   };
 
   // Patient Handlers
@@ -275,20 +308,35 @@ export function App() {
       allergyAlerts: user.skinAllergies,
       visitReason: newAppt.treatmentName,
       notes: newAppt.notes,
-      paymentStatus: newAppt.paid ? 'Paid' : 'Pending Deposit',
+      paymentStatus: newAppt.paymentMethod === 'Pay Half Now' ? 'Partial Payment' : newAppt.paid ? 'Paid' : 'Pending Deposit',
     };
     setClinicalSchedule(prev => [scheduleItem, ...prev]);
+
+    const newNotif: StaffNotification = {
+      id: `notif_${Date.now()}`,
+      type: 'new_appointment',
+      title: 'New Appointment Booked',
+      message: `${user.fullName} booked ${newAppt.treatmentName} with ${newAppt.doctorName} on ${newAppt.date} at ${newAppt.timeSlot}.`,
+      timestamp: 'Just now',
+      read: false,
+      patientName: user.fullName,
+      patientAvatar: user.avatarUrl,
+      appointmentId: newAppt.id
+    };
+    setStaffNotifications(prev => [newNotif, ...prev]);
 
     triggerToast(`Appointment with ${newAppt.doctorName} booked!`);
   };
 
   const handleCancelAppointment = (id: string) => {
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: 'cancelled' } : a));
+    setClinicalSchedule(prev => prev.map(item => item.id === id ? { ...item, status: 'cancelled' } : item));
     triggerToast("Appointment cancelled.");
   };
 
   const handleRescheduleAppointment = (id: string, newDate: string, newSlot: string) => {
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, date: newDate, timeSlot: newSlot } : a));
+    setClinicalSchedule(prev => prev.map(item => item.id === id ? { ...item, date: newDate, timeSlot: newSlot } : item));
     triggerToast(`Rescheduled to ${newDate} at ${newSlot}`);
   };
 
@@ -489,6 +537,7 @@ export function App() {
                   schedule={clinicalSchedule}
                   onUpdateStatus={handleUpdateScheduleStatus}
                   onAddScheduleItem={handleAddScheduleItem}
+                  onRescheduleScheduleItem={handleRescheduleScheduleItem}
                   onTriggerToast={triggerToast}
                 />
               )}

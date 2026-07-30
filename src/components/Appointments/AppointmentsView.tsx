@@ -84,9 +84,12 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     return 400;
   };
 
-  const handlePayAtClinic = () => {
+  const handleConfirmPayment = (method: NonNullable<Appointment['paymentMethod']>) => {
     if (!selectedDoctor) return;
     const fee = getAppointmentFee();
+    const paid = method === 'Pay Online' || method === 'Buy Now Pay Later';
+    const status: AppointmentStatus = method === 'Pay at Clinic' ? 'pending' : 'upcoming';
+
     const newAppt: Appointment = {
       id: `apt_${Date.now()}`,
       doctorId: selectedDoctor.id,
@@ -99,45 +102,24 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       consultationType,
       date: selectedDate,
       timeSlot: selectedSlot,
-      status: 'pending',
+      status,
       fee,
-      paid: false,
+      paid,
+      paymentMethod: method,
       notes,
       checkInStatus: 'pending'
     };
 
-    onBookAppointment(newAppt);
-    setBookingSuccess(newAppt);
-    setCustomSuccessMessage("Your appointment slot has been reserved. Your booking will be confirmed once the payment is completed at the clinic.");
-    setSelectedDoctor(null);
-    setBookingStep('form');
-  };
-
-  const handlePayOnline = () => {
-    if (!selectedDoctor) return;
-    const fee = getAppointmentFee();
-    const newAppt: Appointment = {
-      id: `apt_${Date.now()}`,
-      doctorId: selectedDoctor.id,
-      doctorName: selectedDoctor.name,
-      doctorSpecialty: selectedDoctor.specialty,
-      doctorAvatar: selectedDoctor.avatarUrl,
-      clinicId: selectedBranch.id,
-      clinicName: selectedBranch.name,
-      treatmentName: consultationType === 'Procedure' && selectedTreatment ? selectedTreatment.name : consultationType,
-      consultationType,
-      date: selectedDate,
-      timeSlot: selectedSlot,
-      status: 'upcoming',
-      fee,
-      paid: true,
-      notes,
-      checkInStatus: 'pending'
+    const successMessages: Record<NonNullable<Appointment['paymentMethod']>, string> = {
+      'Pay at Clinic': "Your appointment slot has been reserved. Your booking will be confirmed once the payment is completed at the clinic.",
+      'Pay Half Now': "Your appointment is confirmed! You've paid 50% now — the remaining balance is due at the clinic.",
+      'Pay Online': "Your appointment has been successfully booked and your payment has been received. A confirmation has been sent to you.",
+      'Buy Now Pay Later': "Your appointment is confirmed! Your Buy Now, Pay Later plan has been set up — nothing is due today."
     };
 
     onBookAppointment(newAppt);
     setBookingSuccess(newAppt);
-    setCustomSuccessMessage("Your appointment has been successfully booked and your payment has been received. A confirmation has been sent to you.");
+    setCustomSuccessMessage(successMessages[method]);
     setSelectedDoctor(null);
     setBookingStep('form');
   };
@@ -243,7 +225,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     <div className="flex items-center justify-between gap-1">
                       <h3 className="font-bold text-slate-900 text-sm truncate">{doc.name}</h3>
                       <span className="flex items-center gap-1 bg-amber-50 text-amber-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-amber-200 shrink-0">
-                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> {doc.rating} ({doc.reviewCount})
+                        {doc.rating} <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> ({doc.reviewCount} Reviews)
                       </span>
                     </div>
                     <div className="text-xs font-bold text-blue-600 truncate">{doc.title}</div>
@@ -303,7 +285,9 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   }`}>
                     {appt.status === 'pending' ? 'Pending Confirmation' : appt.status}
                   </span>
-                  <span className="text-xs font-bold text-slate-900">SAR {appt.fee} {appt.paid ? '(Paid)' : '(Pay at Clinic)'}</span>
+                  <span className="text-xs font-bold text-slate-900">
+                    SAR {appt.fee} ({appt.paymentMethod || (appt.paid ? 'Paid' : 'Pay at Clinic')})
+                  </span>
                 </div>
 
                 <div className="flex items-start gap-3.5">
@@ -540,10 +524,10 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
 
             <div className="space-y-2.5 pt-2">
               <div className="text-xs font-bold text-slate-700">Select Payment Option</div>
-              
+
               <button
                 id="appointments-pay-clinic-btn"
-                onClick={handlePayAtClinic}
+                onClick={() => handleConfirmPayment('Pay at Clinic')}
                 className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md flex items-center justify-between transition"
               >
                 <div className="flex items-center gap-2.5">
@@ -557,8 +541,23 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
               </button>
 
               <button
+                id="appointments-pay-half-btn"
+                onClick={() => handleConfirmPayment('Pay Half Now')}
+                className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md shadow-teal-500/25 flex items-center justify-between transition"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base">💰</span>
+                  <div className="text-left">
+                    <div className="font-bold">Pay Half Now & Pay Remaining at Clinic</div>
+                    <div className="text-[10px] text-teal-100 font-normal">Pay 50% now online, settle the rest at the clinic counter</div>
+                  </div>
+                </div>
+                <span className="text-xs bg-teal-700 px-2.5 py-1 rounded-xl">SAR {Math.round(getAppointmentFee() / 2)}</span>
+              </button>
+
+              <button
                 id="appointments-pay-online-btn"
-                onClick={handlePayOnline}
+                onClick={() => handleConfirmPayment('Pay Online')}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md shadow-blue-500/25 flex items-center justify-between transition"
               >
                 <div className="flex items-center gap-2.5">
@@ -569,6 +568,21 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   </div>
                 </div>
                 <span className="text-xs bg-blue-700 px-2.5 py-1 rounded-xl">SAR {getAppointmentFee()}</span>
+              </button>
+
+              <button
+                id="appointments-pay-bnpl-btn"
+                onClick={() => handleConfirmPayment('Buy Now Pay Later')}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3.5 px-4 rounded-2xl text-xs shadow-md shadow-purple-500/25 flex items-center justify-between transition"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="text-base">🛍️</span>
+                  <div className="text-left">
+                    <div className="font-bold">Buy Now, Pay Later (BNPL)</div>
+                    <div className="text-[10px] text-purple-100 font-normal">Split into installments with Tabby — approved instantly, nothing due today</div>
+                  </div>
+                </div>
+                <span className="text-xs bg-purple-700 px-2.5 py-1 rounded-xl">SAR {getAppointmentFee()}</span>
               </button>
             </div>
 
@@ -598,7 +612,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
               <div>👨‍⚕️ <strong>Doctor:</strong> {bookingSuccess.doctorName}</div>
               <div>🗓️ <strong>Date:</strong> {bookingSuccess.date} at {bookingSuccess.timeSlot}</div>
               <div>📍 <strong>Location:</strong> {bookingSuccess.clinicName}</div>
-              <div>💳 <strong>Fee / Status:</strong> SAR {bookingSuccess.fee} ({bookingSuccess.paid ? 'Paid Online' : 'Pay at Clinic'})</div>
+              <div>💳 <strong>Fee / Status:</strong> SAR {bookingSuccess.fee} ({bookingSuccess.paymentMethod || (bookingSuccess.paid ? 'Paid Online' : 'Pay at Clinic')})</div>
             </div>
             <button
               id="appointments-success-close-btn"

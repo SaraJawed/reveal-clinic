@@ -13,7 +13,8 @@ import {
   KeyRound,
   Trash2,
   Building2,
-  Stethoscope
+  Stethoscope,
+  Star
 } from 'lucide-react';
 
 interface DoctorProfileViewProps {
@@ -84,6 +85,11 @@ export const DoctorProfileView: React.FC<DoctorProfileViewProps> = ({
               <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#4F8EF7] text-xs font-extrabold uppercase border border-blue-100">
                 {user.role?.toUpperCase() || 'PHYSICIAN'}
               </span>
+              {typeof user.rating === 'number' && (
+                <span className="flex items-center gap-1 bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-0.5 rounded-full border border-amber-200">
+                  {user.rating} <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> ({user.reviewCount ?? 0} Reviews)
+                </span>
+              )}
             </div>
             <p className="text-xs font-semibold text-slate-600">
               {user.specialty || 'Aesthetic Dermatologist'} • License #{user.licenseNumber || 'MED-DERM-99420'}

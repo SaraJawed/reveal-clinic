@@ -3,7 +3,8 @@ import {
   ClinicalScheduleItem,
   ClinicalAppointmentStatus,
   Doctor,
-  TreatmentService
+  TreatmentService,
+  Appointment
 } from '../../types';
 import {
   Calendar,
@@ -29,7 +30,8 @@ import { initialDoctors, treatmentServices } from '../../data/mockData';
 interface CoordinatorAppointmentsViewProps {
   schedule: ClinicalScheduleItem[];
   onUpdateStatus: (id: string, newStatus: ClinicalAppointmentStatus) => void;
-  onAddScheduleItem: (item: ClinicalScheduleItem) => void;
+  onAddScheduleItem: (item: ClinicalScheduleItem, appointment?: Appointment) => void;
+  onRescheduleScheduleItem: (id: string, newDate: string, newTimeSlot: string, newDoctorId: string, newDoctorName: string) => void;
   onTriggerToast: (msg: string) => void;
 }
 
@@ -37,6 +39,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   schedule,
   onUpdateStatus,
   onAddScheduleItem,
+  onRescheduleScheduleItem,
   onTriggerToast
 }) => {
   // Filtering & Search states
@@ -57,7 +60,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   // Reschedule state
   const [rescheduleDate, setRescheduleDate] = useState('Tomorrow');
   const [rescheduleTimeSlot, setRescheduleTimeSlot] = useState('02:30 PM');
-  const [rescheduleDoctor, setRescheduleDoctor] = useState('Dr. Sara Al-Ghamdi');
+  const [rescheduleDoctorId, setRescheduleDoctorId] = useState(initialDoctors[0].id);
 
   // New Booking Form states
   const [bookPatientName, setBookPatientName] = useState('');
@@ -137,8 +140,8 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
 
   const handleConfirmReschedule = () => {
     if (!showRescheduleModal) return;
-    onUpdateStatus(showRescheduleModal.id, 'scheduled');
-    onTriggerToast(`Appointment rescheduled to ${rescheduleDate} at ${rescheduleTimeSlot} with ${rescheduleDoctor}.`);
+    const newDoctor = initialDoctors.find(d => d.id === rescheduleDoctorId) || initialDoctors[0];
+    onRescheduleScheduleItem(showRescheduleModal.id, rescheduleDate, rescheduleTimeSlot, newDoctor.id, newDoctor.name);
     setShowRescheduleModal(null);
   };
 
@@ -148,9 +151,10 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
 
     const selectedDoc = initialDoctors.find(d => d.id === bookDoctorId) || initialDoctors[0];
     const selectedService = treatmentServices.find(s => s.id === bookServiceId) || treatmentServices[0];
+    const sharedId = `cs_${Date.now().toString().slice(-4)}`;
 
     const newItem: ClinicalScheduleItem = {
-      id: `cs_${Date.now().toString().slice(-4)}`,
+      id: sharedId,
       patientId: bookPatientFileNo || `RC-${Math.floor(10000 + Math.random() * 90000)}`,
       patientName: bookPatientName,
       patientAge: 30,
@@ -173,7 +177,29 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
       queueNumber: Math.floor(10 + Math.random() * 20)
     };
 
-    onAddScheduleItem(newItem);
+    // Mirrored into the shared appointments list (same id) so this booking
+    // is also visible under the patient's own "My Visits" tab.
+    const newAppointment: Appointment = {
+      id: sharedId,
+      doctorId: selectedDoc.id,
+      doctorName: selectedDoc.name,
+      doctorSpecialty: selectedDoc.specialty,
+      doctorAvatar: selectedDoc.avatarUrl,
+      clinicId: selectedDoc.clinicId,
+      clinicName: selectedDoc.clinicName,
+      treatmentName: selectedService.name,
+      consultationType: 'In-Clinic Consultation',
+      date: bookDate,
+      timeSlot: bookTimeSlot,
+      status: 'upcoming',
+      fee: selectedService.price,
+      paid: true,
+      paymentMethod: 'Pay at Clinic',
+      notes: bookNotes,
+      checkInStatus: 'pending'
+    };
+
+    onAddScheduleItem(newItem, newAppointment);
     onTriggerToast(`New appointment booked for ${bookPatientName}!`);
     setShowBookModal(false);
     setBookPatientName('');
@@ -319,7 +345,12 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
 
                   {item.status !== 'cancelled' && item.status !== 'completed' && (
                     <button
-                      onClick={() => setShowRescheduleModal(item)}
+                      onClick={() => {
+                        setShowRescheduleModal(item);
+                        setRescheduleDate(item.date);
+                        setRescheduleTimeSlot(item.timeSlot);
+                        setRescheduleDoctorId(item.doctorId);
+                      }}
                       className="px-3 py-1.5 rounded-xl bg-blue-50 text-[#4F8EF7] hover:bg-blue-100 text-xs font-bold flex items-center gap-1 border border-blue-100"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
@@ -579,13 +610,15 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Assigned Doctor</label>
                 <select
-                  value={rescheduleDoctor}
-                  onChange={(e) => setRescheduleDoctor(e.target.value)}
+                  value={rescheduleDoctorId}
+                  onChange={(e) => setRescheduleDoctorId(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                 >
-                  <option value="Dr. Sara Al-Ghamdi">Dr. Sara Al-Ghamdi</option>
-                  <option value="Dr. Faisal Al-Dosari">Dr. Faisal Al-Dosari</option>
-                  <option value="Dr. Fatima Al-Zahrani">Dr. Fatima Al-Zahrani</option>
+                  {initialDoctors.map((doc) => (
+                    <option key={doc.id} value={doc.id}>
+                      {doc.name} ({doc.specialty})
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

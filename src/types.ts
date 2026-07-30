@@ -50,6 +50,8 @@ export interface UserProfile {
   department?: string;
   consultationRoom?: string;
   availabilityStatus?: 'Available' | 'In Consultation' | 'In Procedure' | 'On Break' | 'Off Duty';
+  rating?: number;
+  reviewCount?: number;
 }
 
 export interface ClinicBranch {
@@ -147,6 +149,7 @@ export interface Appointment {
   status: AppointmentStatus;
   fee: number;
   paid: boolean;
+  paymentMethod?: 'Pay at Clinic' | 'Pay Half Now' | 'Pay Online' | 'Buy Now Pay Later';
   notes?: string;
   feedbackRating?: number;
   feedbackComment?: string;
@@ -258,7 +261,7 @@ export interface ClinicalScheduleItem {
     skinType?: string;
   };
   notes?: string;
-  paymentStatus?: 'Paid' | 'Pending Deposit' | 'Covered by Package';
+  paymentStatus?: 'Paid' | 'Pending Deposit' | 'Partial Payment' | 'Covered by Package';
   queueNumber?: number;
 }
 
