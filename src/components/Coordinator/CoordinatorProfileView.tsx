@@ -7,7 +7,10 @@ import {
   Building2,
   Mail,
   Phone,
-  Sparkles
+  Sparkles,
+  Lock,
+  Key,
+  X
 } from 'lucide-react';
 
 interface CoordinatorProfileViewProps {
@@ -25,6 +28,25 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
 }) => {
   const { t } = useTranslation('coordinator');
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+
+  // Password fields
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const handleChangePassword = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newPassword || newPassword !== confirmPassword) {
+      onTriggerToast(t('profile.passwordModal.toastMismatch'));
+      return;
+    }
+    onTriggerToast(t('profile.passwordModal.toastSuccess'));
+    setShowPasswordModal(false);
+    setOldPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
+  };
 
   return (
     <div className="space-y-6 pb-12">
@@ -79,6 +101,31 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
         </div>
       </div>
 
+      {/* Change Password */}
+      <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-2xs space-y-3">
+        <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+          <Lock className="w-5 h-5 text-[#4F8EF7]" />
+          {t('profile.passwordModal.title')}
+        </h3>
+        <button
+          type="button"
+          id="coordinator-profile-change-pass-btn"
+          onClick={() => setShowPasswordModal(true)}
+          className="w-full p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-100 flex items-center justify-between text-xs transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#4F8EF7] flex items-center justify-center">
+              <Lock className="w-4 h-4" />
+            </div>
+            <div className="text-left">
+              <div className="font-extrabold text-slate-900">{t('profile.security.changePassword')}</div>
+              <div className="text-[10px] text-slate-400">{t('profile.security.changePasswordNote')}</div>
+            </div>
+          </div>
+          <Key className="w-4 h-4 text-slate-400" />
+        </button>
+      </div>
+
       {/* Logout Action */}
       <div className="pt-4">
         <button
@@ -89,6 +136,80 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
           <span>{t('profile.logout.button')}</span>
         </button>
       </div>
+
+      {/* Change Password Modal */}
+      {showPasswordModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <Lock className="w-5 h-5 text-[#4F8EF7]" />
+                <h3 className="font-black text-slate-900 text-base">{t('profile.passwordModal.title')}</h3>
+              </div>
+              <button
+                onClick={() => setShowPasswordModal(false)}
+                className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleChangePassword} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.currentPassword')}</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  value={oldPassword}
+                  onChange={(e) => setOldPassword(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.newPassword')}</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.confirmPassword')}</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPasswordModal(false)}
+                  className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
+                >
+                  {t('common:buttons.cancel')}
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md shadow-blue-500/20"
+                >
+                  {t('profile.passwordModal.update')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (

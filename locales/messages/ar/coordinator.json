@@ -241,6 +241,19 @@
       "paidAmount": "المبلغ المدفوع:",
       "method": "طريقة الدفع:",
       "close": "إغلاق الإيصال"
+    },
+    "detailModal": {
+      "title": "تفاصيل المريض",
+      "ageGender": "{{age}} سنة • {{gender}}",
+      "latestVisit": "آخر زيارة",
+      "doctorTreatment": "{{treatmentName}} مع {{doctorName}}",
+      "bloodGroup": "فصيلة الدم",
+      "skinType": "نوع البشرة",
+      "allergies": "الحساسية",
+      "noAllergies": "لا توجد حساسية معروفة",
+      "medicalNotes": "ملاحظات السجل الطبي",
+      "previousVisits": "الزيارات السابقة",
+      "noAdditionalRecord": "لا يوجد ملف طبي موسّع مسجَّل لهذا المريض بعد."
     }
   },
   "notifications": {

@@ -241,6 +241,19 @@
       "paidAmount": "Paid Amount:",
       "method": "Method:",
       "close": "Close Receipt"
+    },
+    "detailModal": {
+      "title": "Patient Details",
+      "ageGender": "{{age}}y • {{gender}}",
+      "latestVisit": "Latest Visit",
+      "doctorTreatment": "{{treatmentName}} with {{doctorName}}",
+      "bloodGroup": "Blood Group",
+      "skinType": "Skin Type",
+      "allergies": "Allergies",
+      "noAllergies": "No known allergies",
+      "medicalNotes": "Medical History Notes",
+      "previousVisits": "Previous Visits",
+      "noAdditionalRecord": "No extended medical file on record for this patient yet."
     }
   },
   "notifications": {
