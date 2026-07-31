@@ -19,7 +19,10 @@ import {
   Share2,
   ChevronRight,
   Clock,
-  Sparkles
+  Sparkles,
+  Calendar,
+  MapPin,
+  CheckCircle2
 } from 'lucide-react';
 
 interface HomeViewProps {
@@ -52,17 +55,22 @@ export const HomeView: React.FC<HomeViewProps> = ({
   return (
     <div className="space-y-8 pb-20 md:pb-8">
       {/* Welcome Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              Good day, {user.fullName}
-            </h1>
+      <div className="flex items-center gap-3.5 sm:gap-4 pb-2">
+        <img
+          src={user.avatarUrl}
+          alt={user.fullName}
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover ring-2 ring-blue-100 shadow-xs shrink-0"
+        />
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight truncate">
+            Good day, {user.fullName}
+          </h1>
+          <div className="flex flex-wrap items-center gap-2 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500">Welcome back to Reveal Clinic.</p>
             <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full whitespace-nowrap">
               File ID: {user.patientId}
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500">Welcome back to Reveal Clinic.</p>
         </div>
       </div>
 
@@ -70,12 +78,17 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <button
         id="home-action-book-btn"
         onClick={() => onChangeTab('appointments')}
-        className="w-full bg-[#4F8EF7] text-white p-5 sm:p-6 rounded-3xl flex items-center justify-center gap-3 shadow-lg shadow-blue-100 hover:opacity-90 transition-opacity cursor-pointer"
+        className="relative w-full overflow-hidden bg-gradient-to-r from-blue-600 to-sky-500 text-white p-5 sm:p-6 rounded-3xl flex items-center gap-4 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
       >
-        <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
+        <div className="absolute -top-10 -right-6 w-32 h-32 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="relative w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
           <Plus className="w-6 h-6 text-white" />
         </div>
-        <span className="font-semibold text-base">Book Appointment</span>
+        <div className="relative text-left min-w-0">
+          <span className="font-bold text-base block">Book Appointment</span>
+          <span className="text-xs text-blue-100 font-medium">Schedule your next visit in seconds</span>
+        </div>
+        <ChevronRight className="relative w-5 h-5 text-white/70 ml-auto shrink-0" />
       </button>
 
       {/* 2. Main Grid Layout */}
@@ -96,22 +109,35 @@ export const HomeView: React.FC<HomeViewProps> = ({
             </div>
 
             {nextAppt ? (
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 p-4 sm:p-5 bg-slate-50 rounded-2xl border border-slate-100/80">
-                <div className="flex-1">
-                  <p className="font-bold text-slate-800 text-base">{nextAppt.treatmentName}</p>
-                  <p className="text-sm text-slate-500">{nextAppt.date} • {nextAppt.timeSlot} • {nextAppt.doctorName}</p>
-                  <p className="text-xs text-slate-400 mt-1">📍 {selectedBranch.name}</p>
+              <div className="p-4 sm:p-5 bg-gradient-to-br from-blue-50/70 via-white to-sky-50/40 rounded-2xl border border-blue-100/60">
+                <div className="flex items-start gap-3.5 sm:gap-4">
+                  <img
+                    src={nextAppt.doctorAvatar}
+                    alt={nextAppt.doctorName}
+                    className="w-14 h-14 rounded-2xl object-cover ring-2 ring-white shadow-xs shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-bold text-slate-800 text-base leading-tight">{nextAppt.treatmentName}</p>
+                      <span className="shrink-0 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase rounded-full tracking-wider flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3" /> Confirmed
+                      </span>
+                    </div>
+                    <p className="text-sm text-slate-600 font-semibold mt-0.5 truncate">{nextAppt.doctorName}</p>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-slate-500">
+                      <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5 text-blue-500" /> {nextAppt.date}</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-blue-500" /> {nextAppt.timeSlot}</span>
+                      <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-blue-500" /> {selectedBranch.name}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-row sm:flex-col items-center sm:items-end gap-2 w-full sm:w-auto justify-between sm:justify-start">
-                  <span className="px-3 py-1 bg-green-100 text-green-600 text-[10px] font-bold uppercase rounded-full tracking-wider">
-                    Confirmed
-                  </span>
+                <div className="pt-3 mt-3 border-t border-blue-100/60 flex justify-end">
                   <button
                     id="home-appt-checkin-btn"
                     onClick={onOpenCheckIn}
-                    className="text-xs text-[#4F8EF7] font-semibold underline hover:text-blue-700 cursor-pointer"
+                    className="px-4 py-2 bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer"
                   >
-                    Check In
+                    Check In Now
                   </button>
                 </div>
               </div>
@@ -147,20 +173,29 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 activePackages.slice(0, 1).map((pack) => {
                   const initial = pack.packageName.charAt(0);
                   const sessionsUsed = pack.totalSessions - pack.remainingSessions;
+                  const progressPercent = Math.min(100, Math.round((sessionsUsed / pack.totalSessions) * 100));
                   return (
-                    <div key={pack.id} className="p-4 border border-blue-100/80 bg-gradient-to-r from-blue-50/60 via-sky-50/40 to-indigo-50/20 rounded-2xl flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-2xl bg-[#4F8EF7] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
-                          {initial}
+                    <div key={pack.id} className="p-4 border border-blue-100/80 bg-gradient-to-r from-blue-50/60 via-sky-50/40 to-indigo-50/20 rounded-2xl space-y-3">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-2xl bg-[#4F8EF7] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
+                            {initial}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
+                            <p className="text-sm font-bold text-slate-800 truncate">{pack.packageName}</p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
-                          <p className="text-sm font-bold text-slate-800 truncate">{pack.packageName}</p>
-                        </div>
+                        <span className="text-xs font-black text-[#4F8EF7] bg-white px-2.5 py-1 rounded-xl shrink-0 border border-blue-100">
+                          {sessionsUsed}/{pack.totalSessions}
+                        </span>
                       </div>
-                      <span className="text-xs font-black text-[#4F8EF7] bg-white px-2.5 py-1 rounded-xl shrink-0 border border-blue-100">
-                        {sessionsUsed}/{pack.totalSessions}
-                      </span>
+                      <div className="w-full h-1.5 bg-white rounded-full overflow-hidden border border-blue-100/60">
+                        <div
+                          className="h-full bg-[#4F8EF7] rounded-full transition-all"
+                          style={{ width: `${progressPercent}%` }}
+                        />
+                      </div>
                     </div>
                   );
                 })
