@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   UserProfile,
   ClinicBranch,
@@ -53,6 +54,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   onViewMyVisits,
   onOpenGiftCards
 }) => {
+  const { t } = useTranslation('home');
   const nextAppt = upcomingAppointments[0];
   const [selectedActivePackage, setSelectedActivePackage] = useState<ActiveUserPackage | null>(null);
 
@@ -67,12 +69,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
         />
         <div className="min-w-0">
           <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight truncate">
-            Good day, {user.fullName}
+            {t('welcome.greeting', { name: user.fullName })}
           </h1>
           <div className="flex flex-wrap items-center gap-2 mt-1">
-            <p className="text-xs sm:text-sm text-slate-500">Welcome back to Reveal Clinic.</p>
+            <p className="text-xs sm:text-sm text-slate-500">{t('welcome.subtitle')}</p>
             <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full whitespace-nowrap">
-              File ID: {user.patientId}
+              {t('welcome.fileId', { id: user.patientId })}
             </span>
           </div>
         </div>
@@ -89,8 +91,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <Plus className="w-6 h-6 text-white" />
         </div>
         <div className="relative text-left min-w-0">
-          <span className="font-bold text-base block">Book Appointment</span>
-          <span className="text-xs text-blue-100 font-medium">Schedule your next visit in seconds</span>
+          <span className="font-bold text-base block">{t('quickAction.bookAppointment')}</span>
+          <span className="text-xs text-blue-100 font-medium">{t('quickAction.subtitle')}</span>
         </div>
         <ChevronRight className="relative w-5 h-5 text-white/70 ml-auto shrink-0" />
       </button>
@@ -102,13 +104,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {/* Next Appointment Card */}
           <div className="bg-white rounded-[32px] p-6 sm:p-8 shadow-xs flex flex-col gap-6 border border-slate-100">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-slate-800">Next Appointment</h2>
+              <h2 className="text-lg font-bold text-slate-800">{t('nextAppointment.title')}</h2>
               <button
                 id="home-view-calendar-btn"
                 onClick={onViewMyVisits}
                 className="text-[#4F8EF7] text-sm font-semibold cursor-pointer hover:underline"
               >
-                My Visits
+                {t('nextAppointment.myVisits')}
               </button>
             </div>
 
@@ -124,7 +126,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     <div className="flex items-start justify-between gap-2">
                       <p className="font-bold text-slate-800 text-base leading-tight">{nextAppt.treatmentName}</p>
                       <span className="shrink-0 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase rounded-full tracking-wider flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Confirmed
+                        <CheckCircle2 className="w-3 h-3" /> {t('nextAppointment.confirmed')}
                       </span>
                     </div>
                     <p className="text-sm text-slate-600 font-semibold mt-0.5 truncate">{nextAppt.doctorName}</p>
@@ -138,13 +140,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
               </div>
             ) : (
               <div className="p-6 bg-slate-50 rounded-2xl text-center">
-                <p className="text-sm text-slate-500 mb-3">No upcoming appointments scheduled.</p>
+                <p className="text-sm text-slate-500 mb-3">{t('nextAppointment.noAppointments')}</p>
                 <button
                   id="home-schedule-first-btn"
                   onClick={() => onChangeTab('appointments')}
                   className="px-4 py-2 bg-[#4F8EF7] text-white rounded-2xl text-xs font-semibold cursor-pointer"
                 >
-                  Schedule Appointment
+                  {t('nextAppointment.scheduleAppointment')}
                 </button>
               </div>
             )}
@@ -153,7 +155,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {/* Active Treatment Package */}
           <div className="bg-white rounded-[32px] p-6 sm:p-8 shadow-xs border border-slate-100">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-800">My Packages</h2>
+              <h2 className="text-lg font-bold text-slate-800">{t('myPackages.title')}</h2>
             </div>
 
             <div className="space-y-4">
@@ -176,7 +178,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                             {initial}
                           </div>
                           <div className="min-w-0">
-                            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
+                            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">{t('myPackages.currentlyTaking')}</span>
                             <p className="text-sm font-bold text-slate-800 truncate">{pack.packageName}</p>
                           </div>
                         </div>
@@ -195,7 +197,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                 })
               ) : (
                 <div className="p-4 border border-dashed border-slate-200 rounded-2xl text-center text-xs text-slate-500">
-                  No Active Package
+                  {t('myPackages.noActivePackage')}
                 </div>
               )}
             </div>
@@ -208,13 +210,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {/* Recent Reports */}
           <div className="bg-white rounded-[32px] p-6 sm:p-8 shadow-xs border border-slate-100">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-800">Recent Reports</h2>
+              <h2 className="text-lg font-bold text-slate-800">{t('recentReports.title')}</h2>
               <button
                 id="home-all-reports-btn"
                 onClick={() => onChangeTab('reports')}
                 className="text-xs text-[#4F8EF7] font-semibold hover:underline"
               >
-                View All
+                {t('recentReports.viewAll')}
               </button>
             </div>
             <div className="space-y-4">
@@ -224,13 +226,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-semibold text-slate-700">{rep.title}</p>
-                      <p className="text-[11px] text-slate-400">Date: {rep.date}</p>
+                      <p className="text-[11px] text-slate-400">{t('recentReports.dateLabel', { date: rep.date })}</p>
                     </div>
                     <button
                       id={`home-view-pdf-${rep.id}`}
                       onClick={() => onChangeTab('reports')}
                       className="p-2 hover:bg-slate-50 rounded-xl transition-colors text-[#4F8EF7]"
-                      title="View Report PDF"
+                      title={t('recentReports.viewReportPdf')}
                     >
                       <Download className="w-5 h-5" />
                     </button>
@@ -246,15 +248,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
       <div className="pt-4">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-slate-800">Featured Aesthetic Treatments</h2>
-            <p className="text-xs text-slate-500">Curated skin care and cosmetic dermatological services</p>
+            <h2 className="text-xl font-bold text-slate-800">{t('popularTreatments.title')}</h2>
+            <p className="text-xs text-slate-500">{t('popularTreatments.subtitle')}</p>
           </div>
           <button
             id="home-explore-treatments-btn"
             onClick={() => onChangeTab('services')}
             className="text-xs font-bold text-[#4F8EF7] hover:underline flex items-center gap-1"
           >
-            Explore All <ChevronRight className="w-4 h-4" />
+            {t('popularTreatments.exploreAll')} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -288,14 +290,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                   <span className="text-slate-400 font-medium flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" /> {treat.durationMinutes} mins
+                    <Clock className="w-3.5 h-3.5 text-slate-400" /> {t('popularTreatments.durationMinutes', { minutes: treat.durationMinutes })}
                   </span>
                   <button
                     id={`home-book-${treat.id}`}
                     onClick={() => onChangeTab('appointments')}
                     className="px-3.5 py-1.5 bg-blue-50 text-[#4F8EF7] font-semibold rounded-xl text-xs hover:bg-[#4F8EF7] hover:text-white transition-colors"
                   >
-                    Book Now
+                    {t('popularTreatments.bookNow')}
                   </button>
                 </div>
               </div>
@@ -322,7 +324,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <div className="p-5 space-y-4 overflow-y-auto flex-1">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
+                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">{t('packageDetail.currentlyTaking')}</span>
                     <h3 className="font-extrabold text-slate-900 text-base leading-tight">{selectedActivePackage.packageName}</h3>
                   </div>
                   <button
@@ -340,7 +342,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 <div>
                   <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
-                    <span>Sessions Used</span>
+                    <span>{t('packageDetail.sessionsUsed')}</span>
                     <span className="text-[#4F8EF7]">{sessionsUsed}/{selectedActivePackage.totalSessions}</span>
                   </div>
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
@@ -350,28 +352,28 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Purchased On</span>
+                    <span className="block text-[10px] text-slate-400 font-bold uppercase">{t('packageDetail.purchasedOn')}</span>
                     <span className="font-bold text-slate-800">{selectedActivePackage.purchaseDate}</span>
                   </div>
                   <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Valid Until</span>
+                    <span className="block text-[10px] text-slate-400 font-bold uppercase">{t('packageDetail.validUntil')}</span>
                     <span className="font-bold text-slate-800">{selectedActivePackage.expiryDate}</span>
                   </div>
                 </div>
 
                 {fullPackage?.includedTreatments && fullPackage.includedTreatments.length > 0 && (
                   <div className="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-100 space-y-1.5">
-                    <h4 className="font-bold text-blue-900 text-xs">Included in this Package</h4>
-                    {fullPackage.includedTreatments.map((t, i) => (
+                    <h4 className="font-bold text-blue-900 text-xs">{t('packageDetail.includedInPackage')}</h4>
+                    {fullPackage.includedTreatments.map((treatmentName, i) => (
                       <div key={i} className="flex items-center gap-2 text-xs text-slate-700">
-                        <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> {t}
+                        <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> {treatmentName}
                       </div>
                     ))}
                   </div>
                 )}
 
                 <div className="bg-slate-900 p-3.5 rounded-2xl text-center">
-                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">QR Check-In Code</span>
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">{t('packageDetail.qrCheckInCode')}</span>
                   <span className="font-mono font-bold text-sky-300 text-sm">{selectedActivePackage.qrCodeValue}</span>
                 </div>
 
@@ -383,7 +385,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   }}
                   className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition"
                 >
-                  Browse More Packages
+                  {t('packageDetail.browseMorePackages')}
                 </button>
               </div>
             </div>

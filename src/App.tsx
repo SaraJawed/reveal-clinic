@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { Locale, DEFAULT_LOCALE, isSupportedLocale, getLocaleDirection, persistLocale } from './i18n/locales';
 import {
   UserProfile,
   ClinicBranch,
@@ -124,28 +127,60 @@ export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => loadState('reveal_authenticated', false));
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Active Tab for Patient Navigation
-  const [patientActiveTab, setPatientActiveTab] = useState<TabType>('home');
-  const [appointmentsSubTab, setAppointmentsSubTab] = useState<'book' | 'history'>('book');
+  // ---- Locale, derived from the /:locale route segment (see main.tsx) ----
+  const { locale: rawLocale } = useParams<{ locale: string }>();
+  const locale: Locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { t, i18n } = useTranslation('common');
+  const localeBase = `/${locale}`;
+
+  useEffect(() => {
+    if (rawLocale !== locale) {
+      // Unknown/missing locale segment (e.g. "/", "/fr/services") -- redirect
+      // to the same path under a supported locale instead of 404-ing.
+      const rest = rawLocale ? location.pathname.replace(new RegExp(`^/${rawLocale}`), '') : location.pathname;
+      navigate(`${localeBase}${rest}${location.search}`, { replace: true });
+      return;
+    }
+    i18n.changeLanguage(locale);
+    document.documentElement.lang = locale;
+    document.documentElement.dir = getLocaleDirection(locale);
+    persistLocale(locale);
+  }, [locale, rawLocale]);
+
+  // Active Tab for Patient Navigation -- derived from the URL so tabs are
+  // real, deep-linkable/bookmarkable routes under /:locale/*.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const routeTabSegment = location.pathname.slice(localeBase.length).replace(/^\//, '').split('/')[0];
+  const PATIENT_TABS: TabType[] = ['appointments', 'services', 'checkin', 'reports', 'chat', 'profile'];
+  const patientActiveTab: TabType = (PATIENT_TABS as string[]).includes(routeTabSegment) ? (routeTabSegment as TabType) : 'home';
+  const appointmentsSubTab: 'book' | 'history' = searchParams.get('tab') === 'history' ? 'history' : 'book';
 
   // Switching to the Appointments tab through the normal nav path always
   // lands on "Book New"; only the dedicated "My Visits" links jump straight
   // to the history sub-tab (see handleViewMyVisits below).
   const handleChangeTab = (tab: TabType) => {
-    if (tab === 'appointments') setAppointmentsSubTab('book');
-    setPatientActiveTab(tab);
+    navigate(tab === 'home' ? localeBase : `${localeBase}/${tab}`);
   };
 
   const handleViewMyVisits = () => {
-    setAppointmentsSubTab('history');
-    setPatientActiveTab('appointments');
+    navigate(`${localeBase}/appointments?tab=history`);
   };
 
-  // Active Tab for Doctor / Nurse / Staff Navigation
-  const [staffActiveTab, setStaffActiveTab] = useState<StaffTabType>('dashboard');
+  const handleChangeAppointmentsSubTab = (tab: 'book' | 'history') => {
+    setSearchParams(tab === 'history' ? { tab: 'history' } : {});
+  };
 
-  // Active Tab for Coordinator Navigation
-  const [coordinatorActiveTab, setCoordinatorActiveTab] = useState<CoordinatorTabType>('dashboard');
+  // Active Tab for Doctor / Nurse / Staff Navigation -- derived from the URL
+  const STAFF_TABS: StaffTabType[] = ['schedule', 'patients', 'sessions', 'notifications', 'profile'];
+  const staffActiveTab: StaffTabType = (STAFF_TABS as string[]).includes(routeTabSegment) ? (routeTabSegment as StaffTabType) : 'dashboard';
+  const setStaffActiveTab = (tab: StaffTabType) => navigate(tab === 'dashboard' ? localeBase : `${localeBase}/${tab}`);
+
+  // Active Tab for Coordinator Navigation -- derived from the URL
+  const COORDINATOR_TABS: CoordinatorTabType[] = ['appointments', 'checkin', 'patients', 'notifications', 'profile'];
+  const coordinatorActiveTab: CoordinatorTabType = (COORDINATOR_TABS as string[]).includes(routeTabSegment) ? (routeTabSegment as CoordinatorTabType) : 'dashboard';
+  const setCoordinatorActiveTab = (tab: CoordinatorTabType) => navigate(tab === 'dashboard' ? localeBase : `${localeBase}/${tab}`);
 
   // Core Data Persistent States
   const [user, setUser] = useState<UserProfile>(() => loadState('reveal_user', { ...initialUserProfile, favoriteDoctors: initialDoctors }));
@@ -291,7 +326,7 @@ export function App() {
       doctorName: newDoctorName,
       status: 'upcoming'
     } : a));
-    triggerToast(`Rescheduled to ${newDate} at ${newTimeSlot} with ${newDoctorName}.`);
+    triggerToast(t('toasts.scheduleRescheduled', { date: newDate, timeSlot: newTimeSlot, doctorName: newDoctorName }));
   };
 
   // Patient Handlers
@@ -338,24 +373,24 @@ export function App() {
     };
     setStaffNotifications(prev => [newNotif, ...prev]);
 
-    triggerToast(`Appointment with ${newAppt.doctorName} booked!`);
+    triggerToast(t('toasts.appointmentBooked', { doctorName: newAppt.doctorName }));
   };
 
   const handleCancelAppointment = (id: string) => {
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: 'cancelled' } : a));
     setClinicalSchedule(prev => prev.map(item => item.id === id ? { ...item, status: 'cancelled' } : item));
-    triggerToast("Appointment cancelled.");
+    triggerToast(t('toasts.appointmentCancelled'));
   };
 
   const handleRescheduleAppointment = (id: string, newDate: string, newSlot: string) => {
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, date: newDate, timeSlot: newSlot } : a));
     setClinicalSchedule(prev => prev.map(item => item.id === id ? { ...item, date: newDate, timeSlot: newSlot } : item));
-    triggerToast(`Rescheduled to ${newDate} at ${newSlot}`);
+    triggerToast(t('toasts.appointmentRescheduled', { date: newDate, timeSlot: newSlot }));
   };
 
   const handleSubmitFeedback = (id: string, rating: number, comment: string) => {
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, feedbackRating: rating, feedbackComment: comment } : a));
-    triggerToast("Thank you for rating your doctor!");
+    triggerToast(t('toasts.feedbackThanks'));
   };
 
   const mapToPaymentRecordMethod = (
@@ -430,13 +465,13 @@ export function App() {
       setUser(prev => ({ ...prev, loyaltyPoints: prev.loyaltyPoints + Math.floor(finalPrice / 10) }));
     }
 
-    triggerToast(`Package "${pack.name}" purchased! First session booked with ${doctor.name} on ${date} at ${timeSlot}.`);
+    triggerToast(t('toasts.packagePurchased', { packageName: pack.name, doctorName: doctor.name, date, timeSlot }));
   };
 
   const handlePaymentSuccess = (newPayment: PaymentRecord) => {
     setPayments(prev => [newPayment, ...prev]);
     setUser(prev => ({ ...prev, loyaltyPoints: prev.loyaltyPoints + Math.floor(newPayment.amount / 10) }));
-    triggerToast(`Payment of $${newPayment.amount} confirmed! Earned loyalty points.`);
+    triggerToast(t('toasts.paymentConfirmed', { amount: newPayment.amount }));
   };
 
   const handleSendMessageToAI = async (text: string) => {
@@ -475,12 +510,12 @@ export function App() {
 
   const handlePurchaseGiftCard = (card: GiftCard) => {
     setGiftCards(prev => [card, ...prev]);
-    triggerToast(`Gift card sent to ${card.recipientEmail}`);
+    triggerToast(t('toasts.giftCardSent', { email: card.recipientEmail }));
   };
 
   const handleRedeemGiftCardCode = (code: string) => {
     setUser(prev => ({ ...prev, loyaltyPoints: prev.loyaltyPoints + 150 }));
-    triggerToast(`Gift voucher ${code} applied to patient account!`);
+    triggerToast(t('toasts.giftVoucherApplied', { code }));
   };
 
   // Staff Handlers
@@ -493,7 +528,7 @@ export function App() {
     const patientStatus = clinicalStatusToAppointmentStatus(status);
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: patientStatus } : a));
 
-    triggerToast(`Schedule status updated to ${status.replace('_', ' ')}`);
+    triggerToast(t('toasts.scheduleStatusUpdated', { status: status.replace('_', ' ') }));
   };
 
   const handleUpdateSessionStatus = (sessionId: string, newStatus: TreatmentSession['status']) => {
@@ -502,7 +537,7 @@ export function App() {
       status: newStatus,
       progressPercent: newStatus === 'Completed' ? 100 : newStatus === 'In Progress' ? 50 : 0
     } : s));
-    triggerToast(`Session #${sessionId} status updated to ${newStatus}`);
+    triggerToast(t('toasts.sessionStatusUpdated', { sessionId, status: newStatus }));
   };
 
   const handleMarkNotifAsRead = (id: string) => {
@@ -511,12 +546,12 @@ export function App() {
 
   const handleMarkAllNotifsAsRead = () => {
     setStaffNotifications(prev => prev.map(n => ({ ...n, read: true })));
-    triggerToast("All staff alerts marked as read.");
+    triggerToast(t('toasts.allAlertsRead'));
   };
 
   const handleStaffStatusChange = (newStatus: 'Available' | 'In Consultation' | 'In Procedure' | 'On Break' | 'Off Duty') => {
     setUser(prev => ({ ...prev, availabilityStatus: newStatus }));
-    triggerToast(`Status set to ${newStatus}`);
+    triggerToast(t('toasts.statusSet', { status: newStatus }));
   };
 
   // 1. Splash Screen Lifecycle
@@ -548,13 +583,13 @@ export function App() {
               if (loggedInUser) setUser(loggedInUser);
               setIsAuthenticated(true);
               setShowAuthModal(false);
-              triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'} (${loggedInUser?.role || 'patient'})`);
+              triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
             }}
             onSuccess={(loggedInUser) => {
               if (loggedInUser) setUser(loggedInUser);
               setIsAuthenticated(true);
               setShowAuthModal(false);
-              triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'} (${loggedInUser?.role || 'patient'})`);
+              triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
             }}
           />
         </div>
@@ -672,12 +707,12 @@ export function App() {
             onLoginSuccess={(loggedInUser) => {
               if (loggedInUser) setUser(loggedInUser);
               setIsAuthenticated(true);
-              triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'} (${loggedInUser?.role || 'patient'})`);
+              triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
             }}
             onSuccess={(loggedInUser) => {
               if (loggedInUser) setUser(loggedInUser);
               setIsAuthenticated(true);
-              triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'} (${loggedInUser?.role || 'patient'})`);
+              triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
             }}
           />
 
@@ -748,7 +783,7 @@ export function App() {
                       ? `${p.medicalHistoryNotes}\n\n[${new Date().toLocaleDateString()}] ${note}`
                       : `[${new Date().toLocaleDateString()}] ${note}`
                   } : p));
-                  triggerToast("Clinical note added to Medical Notes.");
+                  triggerToast(t('toasts.clinicalNoteAdded'));
                 }}
               />
             )}
@@ -770,7 +805,7 @@ export function App() {
                       status: 'Pending'
                     }]
                   } : s));
-                  triggerToast(`Requested ${itemName} (${urgency} priority)`);
+                  triggerToast(t('toasts.itemRequested', { itemName, urgency }));
                 }}
               />
             )}
@@ -813,12 +848,12 @@ export function App() {
           onLoginSuccess={(loggedInUser) => {
             if (loggedInUser) setUser(loggedInUser);
             setIsAuthenticated(true);
-            triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'} (${loggedInUser?.role || 'patient'})`);
+            triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
           }}
           onSuccess={(loggedInUser) => {
             if (loggedInUser) setUser(loggedInUser);
             setIsAuthenticated(true);
-            triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'} (${loggedInUser?.role || 'patient'})`);
+            triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
           }}
         />
 
@@ -878,7 +913,7 @@ export function App() {
               onRescheduleAppointment={handleRescheduleAppointment}
               onSubmitFeedback={handleSubmitFeedback}
               activeSubTab={appointmentsSubTab}
-              onChangeSubTab={setAppointmentsSubTab}
+              onChangeSubTab={handleChangeAppointmentsSubTab}
             />
           )}
 
@@ -948,12 +983,12 @@ export function App() {
         onLoginSuccess={(loggedInUser) => {
           if (loggedInUser) setUser(loggedInUser);
           setIsAuthenticated(true);
-          triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'}`);
+          triggerToast(t('toasts.loggedIn', { name: loggedInUser?.fullName || 'User' }));
         }}
         onSuccess={(loggedInUser) => {
           if (loggedInUser) setUser(loggedInUser);
           setIsAuthenticated(true);
-          triggerToast(`Logged in as ${loggedInUser?.fullName || 'User'}`);
+          triggerToast(t('toasts.loggedIn', { name: loggedInUser?.fullName || 'User' }));
         }}
       />
 

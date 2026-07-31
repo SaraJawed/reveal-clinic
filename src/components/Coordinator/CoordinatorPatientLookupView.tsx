@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ClinicalPatientRecord, ClinicalScheduleItem, PaymentRecord } from '../../types';
 import {
   Search,
@@ -42,6 +43,8 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
   schedule,
   onTriggerToast
 }) => {
+  const { t } = useTranslation('coordinator');
+
   const [searchQuery, setSearchQuery] = useState('RC-99841');
   const [selectedPatient, setSelectedPatient] = useState<ClinicalPatientRecord | null>(initialClinicalPatients[0]);
 
@@ -66,9 +69,9 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
 
     if (found) {
       setSelectedPatient(found);
-      onTriggerToast(`Patient file loaded for ${found.fullName}.`);
+      onTriggerToast(t('patientLookup.search.toastFound', { name: found.fullName }));
     } else {
-      onTriggerToast(`No patient found matching "${searchQuery}".`);
+      onTriggerToast(t('patientLookup.search.toastNotFound', { query: searchQuery }));
     }
   };
 
@@ -83,7 +86,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
       doctorName: 'Dr. Fatima Al-Zahrani',
       amountPaid: amt,
       paymentDate: new Date().toISOString().split('T')[0],
-      paymentMethod: paymentMethod === 'card' ? 'Credit / Debit Card' : paymentMethod === 'cash' ? 'Cash at Desk' : 'Tabby Installments',
+      paymentMethod: paymentMethod === 'card' ? t('patientLookup.paymentMethodLabels.card') : paymentMethod === 'cash' ? t('patientLookup.paymentMethodLabels.cash') : t('patientLookup.paymentMethodLabels.tabby'),
       status: 'completed',
       receiptUrl: '#',
       transactionRef: `tx_rc_${Math.floor(100000 + Math.random() * 900000)}`
@@ -91,7 +94,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
 
     setPaymentSuccessReceipt(newReceipt);
     setShowPaymentModal(false);
-    onTriggerToast(`Payment of $${amt} processed for ${selectedPatient.fullName}!`);
+    onTriggerToast(t('patientLookup.paymentModal.toastProcessed', { amount: amt, name: selectedPatient.fullName }));
   };
 
   const cashChange = (parseFloat(cashTendered) || 0) - (parseFloat(paymentAmount) || 0);
@@ -102,10 +105,10 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
       <div>
         <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
           <Search className="w-6 h-6 text-[#4F8EF7]" />
-          Patient File & Desk Payments
+          {t('patientLookup.header.title')}
         </h1>
         <p className="text-xs text-slate-500 font-medium">
-          Lookup patient files by File Number, Phone, or Name. Process desk payments and issue receipts.
+          {t('patientLookup.header.subtitle')}
         </p>
       </div>
 
@@ -116,7 +119,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search by File Number (e.g. RC-99841), Mobile Number, or Full Name..."
+              placeholder={t('patientLookup.search.placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -126,7 +129,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
             type="submit"
             className="px-6 py-2.5 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white font-extrabold text-xs transition-all shadow-md shadow-blue-500/20 shrink-0"
           >
-            Lookup Patient
+            {t('patientLookup.search.button')}
           </button>
         </form>
       </div>
@@ -171,7 +174,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                   className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 flex items-center gap-2"
                 >
                   <DollarSign className="w-4 h-4" />
-                  <span>Receive Desk Payment</span>
+                  <span>{t('patientLookup.receivePayment')}</span>
                 </button>
               </div>
             </div>
@@ -181,27 +184,27 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
               {/* Last Treatment Summary */}
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-[#4F8EF7]" /> Last Treatment
+                  <Clock className="w-3.5 h-3.5 text-[#4F8EF7]" /> {t('patientLookup.lastTreatment.label')}
                 </div>
                 <div className="font-extrabold text-slate-900 text-sm">
                   HydraFacial Elite + LED Therapy
                 </div>
                 <div className="text-xs text-slate-500">
-                  Date: <span className="font-semibold text-slate-700">July 10, 2026</span> • Dr. Fatima Al-Zahrani
+                  {t('patientLookup.lastTreatment.dateDoctor', { date: 'July 10, 2026', doctorName: 'Dr. Fatima Al-Zahrani' })}
                 </div>
               </div>
 
               {/* Outstanding Balance */}
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
                 <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                  <CreditCard className="w-3.5 h-3.5 text-emerald-600" /> Account Financial Status
+                  <CreditCard className="w-3.5 h-3.5 text-emerald-600" /> {t('patientLookup.financial.label')}
                 </div>
                 <div className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-                  <span>Outstanding Balance:</span>
-                  <span className="text-emerald-600">$0.00 (Fully Settled)</span>
+                  <span>{t('patientLookup.financial.outstandingBalance')}</span>
+                  <span className="text-emerald-600">{t('patientLookup.financial.fullySettled')}</span>
                 </div>
                 <div className="text-xs text-slate-500">
-                  Total Loyalty Points: <span className="font-bold text-[#4F8EF7]">1,450 pts (Gold Tier)</span>
+                  {t('patientLookup.financial.loyaltyPointsLabel')} <span className="font-bold text-[#4F8EF7]">{t('patientLookup.financial.loyaltyPointsValue')}</span>
                 </div>
               </div>
             </div>
@@ -211,7 +214,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
           <div className="bg-white rounded-3xl border border-slate-100 p-5 sm:p-6 shadow-2xs space-y-4">
             <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
               <Calendar className="w-5 h-5 text-[#4F8EF7]" />
-              Appointment & Billing History
+              {t('patientLookup.history.title')}
             </h3>
 
             <div className="space-y-3">
@@ -227,12 +230,12 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                         {appt.date} • {appt.timeSlot}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5">Dr. {appt.doctorName} • {appt.roomNumber}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{t('patientLookup.history.doctorRoom', { doctorName: appt.doctorName, roomNumber: appt.roomNumber })}</p>
                   </div>
 
                   <div className="flex items-center gap-3 shrink-0">
                     <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold">
-                      $280 Paid
+                      {t('patientLookup.history.paid')}
                     </span>
                   </div>
                 </div>
@@ -249,7 +252,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-black text-slate-900 text-base">Receive Desk Payment</h3>
+                <h3 className="font-black text-slate-900 text-base">{t('patientLookup.paymentModal.title')}</h3>
               </div>
               <button
                 onClick={() => setShowPaymentModal(false)}
@@ -263,13 +266,13 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
               <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
                 <div>
                   <span className="font-bold text-slate-900 block">{selectedPatient.fullName}</span>
-                  <span className="text-[10px] text-slate-400">File #: {selectedPatient.id}</span>
+                  <span className="text-[10px] text-slate-400">{t('patientLookup.paymentModal.fileNo', { id: selectedPatient.id })}</span>
                 </div>
-                <span className="font-black text-[#4F8EF7]">Today's Visit</span>
+                <span className="font-black text-[#4F8EF7]">{t('patientLookup.paymentModal.todaysVisit')}</span>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Payment Amount ($) *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('patientLookup.paymentModal.amountLabel')}</label>
                 <input
                   type="number"
                   value={paymentAmount}
@@ -279,7 +282,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Select Payment Method</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('patientLookup.paymentModal.methodLabel')}</label>
                 <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
@@ -290,7 +293,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                         : 'border-slate-200 text-slate-600'
                     }`}
                   >
-                    Credit Card
+                    {t('patientLookup.paymentModal.creditCard')}
                   </button>
                   <button
                     type="button"
@@ -301,7 +304,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                         : 'border-slate-200 text-slate-600'
                     }`}
                   >
-                    Cash
+                    {t('patientLookup.paymentModal.cash')}
                   </button>
                   <button
                     type="button"
@@ -312,14 +315,14 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                         : 'border-slate-200 text-slate-600'
                     }`}
                   >
-                    Tabby
+                    {t('patientLookup.paymentModal.tabby')}
                   </button>
                 </div>
               </div>
 
               {paymentMethod === 'cash' && (
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Cash Tendered ($)</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('patientLookup.paymentModal.cashTendered')}</label>
                   <input
                     type="number"
                     value={cashTendered}
@@ -327,7 +330,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                     className="w-full px-3.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-900 focus:outline-none"
                   />
                   <div className="text-xs font-bold text-slate-600 mt-1 flex justify-between">
-                    <span>Change Due:</span>
+                    <span>{t('patientLookup.paymentModal.changeDue')}</span>
                     <span className="text-emerald-600 font-black">${cashChange > 0 ? cashChange.toFixed(2) : '0.00'}</span>
                   </div>
                 </div>
@@ -339,13 +342,13 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                 onClick={() => setShowPaymentModal(false)}
                 className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
               >
-                Cancel
+                {t('common:buttons.cancel')}
               </button>
               <button
                 onClick={handleProcessPayment}
                 className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-md shadow-emerald-500/20"
               >
-                Confirm Payment & Issue Receipt
+                {t('patientLookup.paymentModal.confirm')}
               </button>
             </div>
           </div>
@@ -360,24 +363,24 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
               <Receipt className="w-6 h-6" />
             </div>
 
-            <h3 className="font-black text-slate-900 text-lg">Payment Complete!</h3>
-            <p className="text-xs text-slate-500 font-medium">Digital receipt issued and saved to patient account.</p>
+            <h3 className="font-black text-slate-900 text-lg">{t('patientLookup.receiptModal.title')}</h3>
+            <p className="text-xs text-slate-500 font-medium">{t('patientLookup.receiptModal.subtitle')}</p>
 
             <div className="bg-slate-50 rounded-2xl border border-slate-100 p-4 text-left space-y-2 text-xs">
               <div className="flex justify-between text-slate-500 text-[10px] uppercase font-extrabold">
-                <span>Receipt Ref</span>
+                <span>{t('patientLookup.receiptModal.receiptRef')}</span>
                 <span className="text-slate-800">{paymentSuccessReceipt.transactionRef}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Item:</span>
+                <span className="text-slate-500">{t('patientLookup.receiptModal.item')}</span>
                 <span className="font-bold text-slate-800">{paymentSuccessReceipt.treatmentName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Paid Amount:</span>
+                <span className="text-slate-500">{t('patientLookup.receiptModal.paidAmount')}</span>
                 <span className="font-black text-emerald-600">${paymentSuccessReceipt.amountPaid}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Method:</span>
+                <span className="text-slate-500">{t('patientLookup.receiptModal.method')}</span>
                 <span className="font-semibold text-slate-700">{paymentSuccessReceipt.paymentMethod}</span>
               </div>
             </div>
@@ -387,7 +390,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                 onClick={() => setPaymentSuccessReceipt(null)}
                 className="w-full py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-extrabold"
               >
-                Close Receipt
+                {t('patientLookup.receiptModal.close')}
               </button>
             </div>
           </div>

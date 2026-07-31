@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ClinicalScheduleItem,
   ClinicalAppointmentStatus,
@@ -42,6 +43,8 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   onRescheduleScheduleItem,
   onTriggerToast
 }) => {
+  const { t } = useTranslation('coordinator');
+
   // Filtering & Search states
   const [activeFilter, setActiveFilter] = useState<'all' | 'scheduled' | 'checked_in' | 'completed' | 'cancelled'>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -98,28 +101,28 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
         return (
           <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center gap-1">
             <UserCheck className="w-3 h-3 text-emerald-600" />
-            Checked In
+            {t('appointments.status.checkedIn')}
           </span>
         );
       case 'scheduled':
         return (
           <span className="px-2.5 py-1 rounded-full bg-blue-100 text-[#4F8EF7] text-[10px] font-black flex items-center gap-1">
             <Clock className="w-3 h-3 text-[#4F8EF7]" />
-            Scheduled
+            {t('appointments.status.scheduled')}
           </span>
         );
       case 'completed':
         return (
           <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black flex items-center gap-1">
             <CheckCircle2 className="w-3 h-3 text-slate-500" />
-            Completed
+            {t('appointments.status.completed')}
           </span>
         );
       case 'cancelled':
         return (
           <span className="px-2.5 py-1 rounded-full bg-red-100 text-red-700 text-[10px] font-black flex items-center gap-1">
             <XCircle className="w-3 h-3 text-red-600" />
-            Cancelled
+            {t('appointments.status.cancelled')}
           </span>
         );
       default:
@@ -134,7 +137,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   const handleConfirmCancel = () => {
     if (!showCancelModal) return;
     onUpdateStatus(showCancelModal.id, 'cancelled');
-    onTriggerToast(`Appointment for ${showCancelModal.patientName} cancelled (${cancelReason}).`);
+    onTriggerToast(t('appointments.cancelModal.toastCancelled', { name: showCancelModal.patientName, reason: cancelReason }));
     setShowCancelModal(null);
   };
 
@@ -200,7 +203,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
     };
 
     onAddScheduleItem(newItem, newAppointment);
-    onTriggerToast(`New appointment booked for ${bookPatientName}!`);
+    onTriggerToast(t('appointments.bookModal.toastBooked', { name: bookPatientName }));
     setShowBookModal(false);
     setBookPatientName('');
     setBookNotes('');
@@ -213,10 +216,10 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
             <Calendar className="w-6 h-6 text-[#4F8EF7]" />
-            Appointment Management
+            {t('appointments.header.title')}
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Search, schedule, reschedule, or check-in clinic appointments.
+            {t('appointments.header.subtitle')}
           </p>
         </div>
 
@@ -225,7 +228,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
           className="px-4 py-2.5 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white font-extrabold text-xs transition-all shadow-md shadow-blue-500/20 flex items-center justify-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          <span>Book New Appointment</span>
+          <span>{t('appointments.header.bookNew')}</span>
         </button>
       </div>
 
@@ -236,7 +239,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search by Patient Name, File # (e.g. RC-99841), Service, or Doctor..."
+            placeholder={t('appointments.search.placeholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -246,7 +249,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 font-bold"
             >
-              Clear
+              {t('appointments.search.clear')}
             </button>
           )}
         </div>
@@ -255,11 +258,11 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
         <div className="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
           {(
             [
-              { id: 'all', label: 'All Appointments' },
-              { id: 'scheduled', label: 'Scheduled' },
-              { id: 'checked_in', label: 'Checked In / Active' },
-              { id: 'completed', label: 'Completed' },
-              { id: 'cancelled', label: 'Cancelled' }
+              { id: 'all', label: t('appointments.filters.all') },
+              { id: 'scheduled', label: t('appointments.filters.scheduled') },
+              { id: 'checked_in', label: t('appointments.filters.checkedIn') },
+              { id: 'completed', label: t('appointments.filters.completed') },
+              { id: 'cancelled', label: t('appointments.filters.cancelled') }
             ] as const
           ).map((tab) => (
             <button
@@ -282,8 +285,8 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
         {filteredSchedule.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-3xl border border-slate-100 p-6 space-y-2">
             <Calendar className="w-10 h-10 text-slate-300 mx-auto" />
-            <h3 className="font-extrabold text-slate-800 text-sm">No matching appointments found</h3>
-            <p className="text-xs text-slate-400">Try adjusting your search terms or status filters.</p>
+            <h3 className="font-extrabold text-slate-800 text-sm">{t('appointments.empty.title')}</h3>
+            <p className="text-xs text-slate-400">{t('appointments.empty.subtitle')}</p>
           </div>
         ) : (
           filteredSchedule.map((item) => (
@@ -309,7 +312,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                     </div>
                     <p className="text-xs font-bold text-[#4F8EF7] mt-0.5">{item.treatmentName}</p>
                     <p className="text-[11px] text-slate-400 font-medium">
-                      Doctor: {item.doctorName} • Room: {item.roomNumber}
+                      {t('appointments.card.doctorRoom', { doctorName: item.doctorName, roomNumber: item.roomNumber })}
                     </p>
                   </div>
                 </div>
@@ -326,7 +329,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               {/* Action Toolbar */}
               <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
                 <div className="text-[11px] text-slate-500 font-medium truncate max-w-md">
-                  Reason: <span className="font-semibold text-slate-700">{item.visitReason}</span>
+                  {t('appointments.card.reason')} <span className="font-semibold text-slate-700">{item.visitReason}</span>
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
@@ -334,12 +337,12 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                     <button
                       onClick={() => {
                         onUpdateStatus(item.id, 'checked_in');
-                        onTriggerToast(`${item.patientName} marked as Arrived & Checked In!`);
+                        onTriggerToast(t('appointments.card.toastCheckedIn', { patientName: item.patientName }));
                       }}
                       className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-xs flex items-center gap-1"
                     >
                       <UserCheck className="w-3.5 h-3.5" />
-                      <span>Confirm Arrival</span>
+                      <span>{t('appointments.card.confirmArrival')}</span>
                     </button>
                   )}
 
@@ -354,7 +357,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                       className="px-3 py-1.5 rounded-xl bg-blue-50 text-[#4F8EF7] hover:bg-blue-100 text-xs font-bold flex items-center gap-1 border border-blue-100"
                     >
                       <RefreshCw className="w-3.5 h-3.5" />
-                      <span>Reschedule</span>
+                      <span>{t('appointments.card.reschedule')}</span>
                     </button>
                   )}
 
@@ -364,7 +367,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                       className="px-3 py-1.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold flex items-center gap-1 border border-red-100"
                     >
                       <XCircle className="w-3.5 h-3.5" />
-                      <span>Cancel</span>
+                      <span>{t('common:buttons.cancel')}</span>
                     </button>
                   )}
                 </div>
@@ -381,7 +384,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-[#4F8EF7]" />
-                <h3 className="font-black text-slate-900 text-base">Book Clinic Appointment</h3>
+                <h3 className="font-black text-slate-900 text-base">{t('appointments.bookModal.title')}</h3>
               </div>
               <button
                 onClick={() => setShowBookModal(false)}
@@ -394,21 +397,21 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
             <form onSubmit={handleCreateBooking} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Patient Name *</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.patientName')}</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Lama Al-Rashidi"
+                    placeholder={t('appointments.bookModal.patientNamePlaceholder')}
                     value={bookPatientName}
                     onChange={(e) => setBookPatientName(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Patient File #</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.patientFileNo')}</label>
                   <input
                     type="text"
-                    placeholder="e.g. RC-88120"
+                    placeholder={t('appointments.bookModal.patientFileNoPlaceholder')}
                     value={bookPatientFileNo}
                     onChange={(e) => setBookPatientFileNo(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -417,10 +420,10 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Mobile Contact</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.mobileContact')}</label>
                 <input
                   type="tel"
-                  placeholder="+966 5X XXX XXXX"
+                  placeholder={t('appointments.bookModal.mobileContactPlaceholder')}
                   value={bookPatientPhone}
                   onChange={(e) => setBookPatientPhone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -428,7 +431,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Select Service / Treatment</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.selectService')}</label>
                 <select
                   value={bookServiceId}
                   onChange={(e) => setBookServiceId(e.target.value)}
@@ -443,7 +446,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Select Attending Doctor</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.selectDoctor')}</label>
                 <select
                   value={bookDoctorId}
                   onChange={(e) => setBookDoctorId(e.target.value)}
@@ -459,21 +462,21 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Date</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.date')}</label>
                   <select
                     value={bookDate}
                     onChange={(e) => setBookDate(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                   >
-                    <option value="Today">Today</option>
-                    <option value="Tomorrow">Tomorrow</option>
+                    <option value="Today">{t('appointments.bookModal.today')}</option>
+                    <option value="Tomorrow">{t('appointments.bookModal.tomorrow')}</option>
                     <option value="July 24, 2026">July 24, 2026</option>
                     <option value="July 25, 2026">July 25, 2026</option>
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Time Slot</label>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.timeSlot')}</label>
                   <select
                     value={bookTimeSlot}
                     onChange={(e) => setBookTimeSlot(e.target.value)}
@@ -489,10 +492,10 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Notes / Instructions</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.notes')}</label>
                 <textarea
                   rows={2}
-                  placeholder="Special requests or patient preferences..."
+                  placeholder={t('appointments.bookModal.notesPlaceholder')}
                   value={bookNotes}
                   onChange={(e) => setBookNotes(e.target.value)}
                   className="w-full px-3.5 py-2 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -505,13 +508,13 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                   onClick={() => setShowBookModal(false)}
                   className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
                 >
-                  Cancel
+                  {t('common:buttons.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-5 py-2 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md shadow-blue-500/20"
                 >
-                  Confirm Booking
+                  {t('appointments.bookModal.confirm')}
                 </button>
               </div>
             </form>
@@ -525,25 +528,25 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
           <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center gap-2 text-red-600 pb-2 border-b border-slate-100">
               <AlertTriangle className="w-5 h-5" />
-              <h3 className="font-black text-slate-900 text-base">Cancel Appointment</h3>
+              <h3 className="font-black text-slate-900 text-base">{t('appointments.cancelModal.title')}</h3>
             </div>
 
             <p className="text-xs text-slate-600 font-medium">
-              Are you sure you want to cancel appointment for <strong className="text-slate-900">{showCancelModal.patientName}</strong>?
+              {t('appointments.cancelModal.confirmText', { name: showCancelModal.patientName })}
             </p>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Reason for Cancellation *</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.cancelModal.reasonLabel')}</label>
               <select
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-red-500"
               >
-                <option value="Patient Request">Patient Requested Cancellation</option>
-                <option value="Doctor Emergency">Doctor Emergency / Schedule Change</option>
-                <option value="Weather or Traffic">Traffic or Severe Weather</option>
-                <option value="Payment Issue">Payment / Package Issue</option>
-                <option value="No-Show">Patient No-Show</option>
+                <option value="Patient Request">{t('appointments.cancelModal.reasonPatientRequest')}</option>
+                <option value="Doctor Emergency">{t('appointments.cancelModal.reasonDoctorEmergency')}</option>
+                <option value="Weather or Traffic">{t('appointments.cancelModal.reasonWeather')}</option>
+                <option value="Payment Issue">{t('appointments.cancelModal.reasonPayment')}</option>
+                <option value="No-Show">{t('appointments.cancelModal.reasonNoShow')}</option>
               </select>
             </div>
 
@@ -552,13 +555,13 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                 onClick={() => setShowCancelModal(null)}
                 className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
               >
-                Dismiss
+                {t('appointments.cancelModal.dismiss')}
               </button>
               <button
                 onClick={handleConfirmCancel}
                 className="px-5 py-2 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold shadow-md shadow-red-500/20"
               >
-                Confirm Cancellation
+                {t('appointments.cancelModal.confirm')}
               </button>
             </div>
           </div>
@@ -571,22 +574,22 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
           <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center gap-2 text-[#4F8EF7] pb-2 border-b border-slate-100">
               <RefreshCw className="w-5 h-5" />
-              <h3 className="font-black text-slate-900 text-base">Reschedule Appointment</h3>
+              <h3 className="font-black text-slate-900 text-base">{t('appointments.rescheduleModal.title')}</h3>
             </div>
 
             <p className="text-xs text-slate-600 font-medium">
-              Select a new date and time slot for <strong className="text-slate-900">{showRescheduleModal.patientName}</strong>.
+              {t('appointments.rescheduleModal.selectText', { name: showRescheduleModal.patientName })}
             </p>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">New Date</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.rescheduleModal.newDate')}</label>
                 <select
                   value={rescheduleDate}
                   onChange={(e) => setRescheduleDate(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                 >
-                  <option value="Tomorrow">Tomorrow</option>
+                  <option value="Tomorrow">{t('appointments.rescheduleModal.tomorrow')}</option>
                   <option value="July 24, 2026">July 24, 2026</option>
                   <option value="July 25, 2026">July 25, 2026</option>
                   <option value="July 28, 2026">July 28, 2026</option>
@@ -594,7 +597,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Available Time Slot</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.rescheduleModal.availableTimeSlot')}</label>
                 <select
                   value={rescheduleTimeSlot}
                   onChange={(e) => setRescheduleTimeSlot(e.target.value)}
@@ -608,7 +611,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Assigned Doctor</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.rescheduleModal.assignedDoctor')}</label>
                 <select
                   value={rescheduleDoctorId}
                   onChange={(e) => setRescheduleDoctorId(e.target.value)}
@@ -628,13 +631,13 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                 onClick={() => setShowRescheduleModal(null)}
                 className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
               >
-                Cancel
+                {t('common:buttons.cancel')}
               </button>
               <button
                 onClick={handleConfirmReschedule}
                 className="px-5 py-2 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md shadow-blue-500/20"
               >
-                Update Schedule
+                {t('appointments.rescheduleModal.confirm')}
               </button>
             </div>
           </div>

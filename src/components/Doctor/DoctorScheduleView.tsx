@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   ClinicalScheduleItem,
   ClinicalAppointmentStatus,
@@ -38,6 +39,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
   onUpdateStatus,
   onSelectPatientFile
 }) => {
+  const { t } = useTranslation('doctor');
   const [viewMode, setViewMode] = useState<'daily' | 'weekly'>('daily');
   const [selectedDate, setSelectedDate] = useState<'Today' | 'Tomorrow' | 'This Week'>('Today');
   const [selectedStatusFilter, setSelectedStatusFilter] = useState<string>('all');
@@ -48,14 +50,30 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
   const [selectedAppointment, setSelectedAppointment] = useState<ClinicalScheduleItem | null>(null);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
 
+  // Date filter option display key mapping (underlying values stay unchanged for state/logic)
+  const dateOptionKeys: Record<'Today' | 'Tomorrow' | 'This Week', string> = {
+    'Today': 'today',
+    'Tomorrow': 'tomorrow',
+    'This Week': 'thisWeek'
+  };
+
+  // Weekly day display key mapping
+  const dayKeys: Record<string, string> = {
+    'Monday': 'monday',
+    'Tuesday': 'tuesday',
+    'Wednesday': 'wednesday',
+    'Thursday': 'thursday',
+    'Friday': 'friday'
+  };
+
   // Status mapping
   const statusOptions: Array<{ value: ClinicalAppointmentStatus; label: string; badgeClass: string }> = [
-    { value: 'scheduled', label: 'Scheduled', badgeClass: 'bg-slate-100 text-slate-700 border-slate-200' },
-    { value: 'checked_in', label: 'Checked In', badgeClass: 'bg-amber-100 text-amber-800 border-amber-200' },
-    { value: 'in_consultation', label: 'In Consultation', badgeClass: 'bg-blue-100 text-[#4F8EF7] border-blue-200' },
-    { value: 'procedure', label: 'Procedure', badgeClass: 'bg-purple-100 text-purple-700 border-purple-200' },
-    { value: 'completed', label: 'Completed', badgeClass: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-    { value: 'cancelled', label: 'Cancelled', badgeClass: 'bg-rose-100 text-rose-700 border-rose-200' }
+    { value: 'scheduled', label: t('schedule.status.scheduled'), badgeClass: 'bg-slate-100 text-slate-700 border-slate-200' },
+    { value: 'checked_in', label: t('schedule.status.checkedIn'), badgeClass: 'bg-amber-100 text-amber-800 border-amber-200' },
+    { value: 'in_consultation', label: t('schedule.status.inConsultation'), badgeClass: 'bg-blue-100 text-[#4F8EF7] border-blue-200' },
+    { value: 'procedure', label: t('schedule.status.procedure'), badgeClass: 'bg-purple-100 text-purple-700 border-purple-200' },
+    { value: 'completed', label: t('schedule.status.completed'), badgeClass: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+    { value: 'cancelled', label: t('schedule.status.cancelled'), badgeClass: 'bg-rose-100 text-rose-700 border-rose-200' }
   ];
 
   // Filtering
@@ -91,10 +109,10 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
               </span>
               <div>
                 <h1 className="font-extrabold text-lg text-slate-900 tracking-tight">
-                  Clinical Schedule Management
+                  {t('schedule.header.title')}
                 </h1>
                 <p className="text-xs text-slate-500">
-                  Manage patient appointments, room allocations, and session statuses
+                  {t('schedule.header.subtitle')}
                 </p>
               </div>
             </div>
@@ -112,7 +130,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Daily Timeline
+              {t('schedule.viewToggle.daily')}
             </button>
             <button
               type="button"
@@ -124,7 +142,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Weekly Calendar
+              {t('schedule.viewToggle.weekly')}
             </button>
           </div>
         </div>
@@ -134,7 +152,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
           {/* Date Selector */}
           <div>
             <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Filter Date:
+              {t('schedule.filters.dateLabel')}
             </label>
             <div className="flex bg-slate-50 p-1 rounded-xl border border-slate-200/80 text-xs font-bold">
               {(['Today', 'Tomorrow', 'This Week'] as const).map((d) => (
@@ -145,7 +163,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                     selectedDate === d ? 'bg-white text-[#4F8EF7] shadow-2xs' : 'text-slate-600'
                   }`}
                 >
-                  {d}
+                  {t(`schedule.filters.dateOptions.${dateOptionKeys[d]}`)}
                 </button>
               ))}
             </div>
@@ -154,27 +172,27 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
           {/* Status Filter */}
           <div>
             <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Appointment Status:
+              {t('schedule.filters.statusLabel')}
             </label>
             <select
               value={selectedStatusFilter}
               onChange={(e) => setSelectedStatusFilter(e.target.value)}
               className="w-full px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 outline-hidden"
             >
-              <option value="all">All Statuses ({schedule.length})</option>
-              <option value="scheduled">Scheduled</option>
-              <option value="checked_in">Checked In</option>
-              <option value="in_consultation">In Consultation</option>
-              <option value="procedure">Procedure</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
+              <option value="all">{t('schedule.filters.allStatuses', { count: schedule.length })}</option>
+              <option value="scheduled">{t('schedule.status.scheduled')}</option>
+              <option value="checked_in">{t('schedule.status.checkedIn')}</option>
+              <option value="in_consultation">{t('schedule.status.inConsultation')}</option>
+              <option value="procedure">{t('schedule.status.procedure')}</option>
+              <option value="completed">{t('schedule.status.completed')}</option>
+              <option value="cancelled">{t('schedule.status.cancelled')}</option>
             </select>
           </div>
 
           {/* Quick Search Input */}
           <div>
             <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
-              Search Patient or Procedure:
+              {t('schedule.filters.searchLabel')}
             </label>
             <div className="relative">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -182,7 +200,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Name, treatment, room..."
+                placeholder={t('schedule.filters.searchPlaceholder')}
                 className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl text-xs font-semibold text-slate-800 outline-hidden focus:bg-white focus:border-blue-500"
               />
             </div>
@@ -199,9 +217,9 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
               <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
                 <CalendarIcon className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-slate-800 text-sm">No Appointments Found</h3>
+              <h3 className="font-bold text-slate-800 text-sm">{t('schedule.empty.title')}</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto">
-                No matching clinical schedule items found for the selected date or filter criteria.
+                {t('schedule.empty.subtitle')}
               </p>
             </div>
           ) : (
@@ -219,7 +237,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                         <span>{item.timeSlot}</span>
                       </div>
                       <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold">
-                        Queue #{item.queueNumber}
+                        {t('schedule.list.queueNumber', { number: item.queueNumber })}
                       </span>
                       <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold flex items-center gap-1">
                         <MapPin className="w-3 h-3 text-slate-400" />
@@ -235,7 +253,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                           'bg-slate-100 text-slate-700'
                         }`}
                       >
-                        {item.status.replace('_', ' ')}
+                        {statusOptions.find((s) => s.value === item.status)?.label || item.status.replace('_', ' ')}
                       </span>
                     </div>
                   </div>
@@ -252,12 +270,12 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                         <div className="flex items-center gap-2">
                           <h3 className="font-extrabold text-sm text-slate-900">{item.patientName}</h3>
                           <span className="text-xs text-slate-400 font-medium">
-                            ({item.patientAge}y, {item.patientGender})
+                            {t('schedule.list.ageGender', { age: item.patientAge, gender: item.patientGender })}
                           </span>
                         </div>
                         <p className="text-xs font-bold text-[#4F8EF7]">{item.treatmentName}</p>
                         <p className="text-[11px] text-slate-500 font-medium leading-tight">
-                          Attending: {item.doctorName} • Type: {item.consultationType}
+                          {t('schedule.list.attendingType', { doctor: item.doctorName, type: item.consultationType })}
                         </p>
                       </div>
                     </div>
@@ -270,7 +288,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                         className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5"
                       >
                         <FileText className="w-3.5 h-3.5 text-sky-300" />
-                        <span>Details & Status</span>
+                        <span>{t('schedule.list.detailsButton')}</span>
                       </button>
                     </div>
                   </div>
@@ -284,9 +302,9 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
         <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-2xs space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <h3 className="font-extrabold text-sm text-slate-900">
-              Weekly Overview (July 2026)
+              {t('schedule.weekly.title')}
             </h3>
-            <span className="text-xs font-bold text-[#4F8EF7]">5 Operating Days</span>
+            <span className="text-xs font-bold text-[#4F8EF7]">{t('schedule.weekly.operatingDays')}</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -295,7 +313,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
               return (
                 <div key={day} className="bg-slate-50/70 border border-slate-100 rounded-2xl p-3 space-y-2">
                   <div className="font-bold text-xs text-slate-800 border-b border-slate-200/60 pb-1.5 flex justify-between">
-                    <span>{day}</span>
+                    <span>{t(`schedule.weekly.days.${dayKeys[day]}`)}</span>
                     <span className="text-[10px] text-slate-400">Jul {20 + idx}</span>
                   </div>
 
@@ -354,7 +372,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                   <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-[10px] uppercase text-amber-900 block">
-                      Allergy Caution Flag
+                      {t('schedule.modal.allergyCautionFlag')}
                     </span>
                     {selectedAppointment.allergyAlerts.join(', ')}
                   </div>
@@ -364,7 +382,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
               {/* Status Update Options */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-2">
-                  Update Appointment Status:
+                  {t('schedule.modal.updateStatusLabel')}
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   {statusOptions.map((opt) => (
@@ -391,27 +409,27 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
               {/* Patient Summary Details */}
               <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 space-y-2 text-xs">
                 <div className="flex justify-between border-b border-slate-200/60 pb-1.5">
-                  <span className="text-slate-500">Patient ID:</span>
+                  <span className="text-slate-500">{t('schedule.modal.fields.patientId')}</span>
                   <span className="font-bold text-slate-900">{selectedAppointment.patientId}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200/60 pb-1.5">
-                  <span className="text-slate-500">Age & Gender:</span>
-                  <span className="font-bold text-slate-900">{selectedAppointment.patientAge} years, {selectedAppointment.patientGender}</span>
+                  <span className="text-slate-500">{t('schedule.modal.fields.ageGender')}</span>
+                  <span className="font-bold text-slate-900">{t('schedule.modal.fields.ageGenderValue', { age: selectedAppointment.patientAge, gender: selectedAppointment.patientGender })}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200/60 pb-1.5">
-                  <span className="text-slate-500">Consultation Type:</span>
+                  <span className="text-slate-500">{t('schedule.modal.fields.consultationType')}</span>
                   <span className="font-bold text-slate-900">{selectedAppointment.consultationType}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200/60 pb-1.5">
-                  <span className="text-slate-500">Room Location:</span>
+                  <span className="text-slate-500">{t('schedule.modal.fields.roomLocation')}</span>
                   <span className="font-bold text-slate-900">{selectedAppointment.roomNumber}</span>
                 </div>
                 <div className="flex justify-between border-b border-slate-200/60 pb-1.5">
-                  <span className="text-slate-500">Payment Status:</span>
-                  <span className="font-bold text-emerald-700">{selectedAppointment.paymentStatus || 'Paid'}</span>
+                  <span className="text-slate-500">{t('schedule.modal.fields.paymentStatus')}</span>
+                  <span className="font-bold text-emerald-700">{selectedAppointment.paymentStatus || t('schedule.modal.fields.paymentStatusPaid')}</span>
                 </div>
                 <div className="pt-1">
-                  <span className="text-slate-500 font-semibold block mb-0.5">Visit Reason:</span>
+                  <span className="text-slate-500 font-semibold block mb-0.5">{t('schedule.modal.fields.visitReason')}</span>
                   <p className="text-slate-800 font-medium bg-white p-2 rounded-xl border border-slate-200/60">
                     {selectedAppointment.visitReason}
                   </p>
@@ -430,7 +448,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                     className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold text-xs transition flex items-center justify-center gap-1.5"
                   >
                     <FileText className="w-4 h-4 text-sky-300" />
-                    <span>Open Patient File</span>
+                    <span>{t('schedule.modal.openPatientFile')}</span>
                   </button>
                 )}
                 <button
@@ -438,7 +456,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                   onClick={() => setSelectedAppointment(null)}
                   className="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-xs transition"
                 >
-                  Close
+                  {t('common:buttons.close')}
                 </button>
               </div>
             </div>

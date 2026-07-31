@@ -1,0 +1,69 @@
+{
+  "paymentHistory": {
+    "backButton": "← Back to Profile",
+    "title": "Payment History",
+    "subtitle": "All past clinic invoices and payment records",
+    "transactionRecords": "Transaction Records",
+    "transactionsCount": "{{count}} Transactions",
+    "receiptNumber": "Receipt No: {{receiptNumber}}",
+    "amount": "SAR {{amount}}",
+    "emptyState": "No past payment records found."
+  },
+  "banner": {
+    "changePhotoTitle": "Change Profile Photo",
+    "changePhotoPrompt": "Enter Image URL for Patient Photo:",
+    "verifiedPatient": "Verified Patient",
+    "patientFileId": "Patient File ID:",
+    "accountActiveSince": "Account Active since {{date}}",
+    "editButton": "Edit Profile",
+    "cancelEditButton": "Cancel Edit"
+  },
+  "savedSuccess": "Patient profile details saved successfully!",
+  "tiles": {
+    "loyalty": {
+      "title": "Rewards Catalog",
+      "subtitle": "View Special Offers"
+    },
+    "referral": {
+      "title": "Invite Friends",
+      "subtitle": "Code: {{code}}"
+    },
+    "giftCards": {
+      "title": "Gift Cards",
+      "subtitle": "Send & Redeem"
+    }
+  },
+  "form": {
+    "personalInformation": "Personal Information",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "emailAddress": "Email Address",
+    "dateOfBirth": "Date of Birth",
+    "bloodGroup": "Blood Group",
+    "emergencyContact": "Emergency Secondary Contact",
+    "residentialAddress": "Residential Address",
+    "allergiesLabel": "Known Skin Allergies & Sensitivities",
+    "addAllergyPlaceholder": "Add skin allergy...",
+    "addButton": "Add",
+    "medicalNotes": "Patient Medical Notes",
+    "accountInformation": "Account Information",
+    "patientIdLabel": "Patient ID Number (Read Only)",
+    "patientIdNote": "Automatically assigned once the user is created in the system.",
+    "saveButton": "Save Patient Profile Changes"
+  },
+  "preferences": {
+    "title": "Application Preferences",
+    "language": "Language",
+    "languageEnglish": "English",
+    "languageArabic": "العربية (Arabic)",
+    "security": "Security & Password",
+    "changePasswordButton": "Change Password",
+    "changePasswordAlert": "Password reset link sent to registered email!",
+    "privacyTerms": "Privacy & Terms Policy",
+    "viewDocumentButton": "View Document",
+    "privacyTermsAlert": "Reveal Clinic adheres strictly to HIPAA & GDPR medical privacy regulations.",
+    "paymentHistory": "Payment History",
+    "recordsCount": "{{count}} Records",
+    "signOutButton": "Sign Out of Account"
+  }
+}

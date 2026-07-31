@@ -1,0 +1,25 @@
+{
+  "header": {
+    "title": "التقارير الطبية والشهادات",
+    "subtitle": "الاطلاع على التشخيصات الجلدية وملاحظات العلاج والشهادات الموقعة رقميًا."
+  },
+  "card": {
+    "doctorDate": "{{doctorName}} • {{date}}",
+    "digitallySigned": "ملف PDF موقّع رقميًا",
+    "downloadButton": "تنزيل PDF"
+  },
+  "pdf": {
+    "clinicName": "REVEAL CLINIC",
+    "clinicTagline": "مركز التجميل والأمراض الجلدية الطبي",
+    "documentLabel": "المستند: {{title}}",
+    "documentTypeLabel": "نوع المستند: {{type}}",
+    "doctorLabel": "الطبيب: {{doctorName}}",
+    "dateLabel": "التاريخ: {{date}}",
+    "locationLabel": "الموقع: {{clinicName}}",
+    "summaryHeading": "الملخص السريري والملاحظات:",
+    "prescriptionsHeading": "الوصفات الطبية والتوصيات:",
+    "prescriptionLine": "- {{medication}}: {{dosage}} ({{instructions}})",
+    "signatureNote": "هذا المستند موقّع رقميًا ومشفّر بواسطة بوابة Reveal Clinic الإلكترونية.",
+    "defaultFileName": "Reveal_Medical_Report.pdf"
+  }
+}

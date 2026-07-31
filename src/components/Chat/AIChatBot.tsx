@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChatMessage, TabType, Doctor, ClinicBranch, Appointment } from '../../types';
 import { Bot, Send, Sparkles, User, RefreshCw, ChevronRight } from 'lucide-react';
 import { ChatBookingCard } from './ChatBookingCard';
@@ -21,17 +22,18 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
   selectedBranch,
   onBookAppointment
 }) => {
+  const { t } = useTranslation('chat');
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const [bookingCardDoctor, setBookingCardDoctor] = useState<Doctor | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickPrompts = [
-    'What are the clinic working hours?',
-    'How do I book HydraFacial with Dr. Fatima Al-Zahrani?',
-    'What packages are available for skin rejuvenation?',
-    'Post-laser care instructions for sensitive skin',
-    'How do I earn and redeem loyalty points?'
+    t('aiChatBot.quickPrompts.hours'),
+    t('aiChatBot.quickPrompts.bookHydrafacial'),
+    t('aiChatBot.quickPrompts.packages'),
+    t('aiChatBot.quickPrompts.postLaserCare'),
+    t('aiChatBot.quickPrompts.loyaltyPoints')
   ];
 
   const scrollToBottom = () => {
@@ -74,9 +76,9 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
           </div>
           <div>
             <h2 className="font-extrabold text-sm tracking-tight flex items-center gap-1.5">
-              Reveal AI Assistant
+              {t('aiChatBot.assistantName')}
             </h2>
-            <p className="text-[11px] text-slate-300">24/7 Skin Care, Treatments & Clinic Guidance</p>
+            <p className="text-[11px] text-slate-300">{t('aiChatBot.assistantTagline')}</p>
           </div>
         </div>
       </div>
@@ -84,7 +86,7 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
       {/* Suggested Quick Prompt Pills */}
       <div className="p-3 bg-slate-50 border-b border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-sky-500" /> FAQ Prompts:
+          <Sparkles className="w-3 h-3 text-sky-500" /> {t('aiChatBot.faqPromptsLabel')}
         </span>
         {quickPrompts.map((p, idx) => (
           <button
@@ -128,7 +130,7 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
 
             {msg.sender === 'user' && (
               <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                Me
+                {t('aiChatBot.meLabel')}
               </div>
             )}
           </div>
@@ -141,7 +143,7 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
             </div>
             <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-200 text-xs text-slate-500 flex items-center gap-2">
               <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
-              <span>Reveal AI is generating response...</span>
+              <span>{t('aiChatBot.generatingResponse')}</span>
             </div>
           </div>
         )}
@@ -176,7 +178,7 @@ export const AIChatBot: React.FC<AIChatBotProps> = ({
           type="text"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          placeholder="Ask Reveal Assistant about skin treatments, doctors or bookings..."
+          placeholder={t('aiChatBot.inputPlaceholder')}
           className="flex-1 px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:bg-white focus:border-blue-500 outline-hidden"
         />
         <button

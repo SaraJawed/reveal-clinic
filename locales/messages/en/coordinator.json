@@ -1,0 +1,293 @@
+{
+  "dashboard": {
+    "banner": {
+      "tag": "Reception & Front Desk Center",
+      "greeting": "Good Morning, {{name}} 👋",
+      "subtitle": "Clinic is running smoothly today. Track check-ins, process walk-ins, and manage doctor schedules efficiently.",
+      "qrScanner": "QR Scanner",
+      "addWalkIn": "Add Walk-In"
+    },
+    "stats": {
+      "todayAppts": "Today Appts",
+      "todayApptsNote": "Scheduled across 3 doctors",
+      "checkedIn": "Checked-In",
+      "checkedInNote": "Waiting or in room",
+      "pendingCheckIn": "Pending Check-In",
+      "pendingCheckInNote": "Expected arriving soon",
+      "walkInQueue": "Walk-In Queue",
+      "walkInQueueNote": "Unscheduled walk-ins"
+    },
+    "quickActions": {
+      "title": "Coordinator Quick Action Hub",
+      "bookAppt": "Book Appt",
+      "bookApptNote": "New appointment",
+      "walkInPatient": "Walk-In Patient",
+      "walkInPatientNote": "Register new walk-in",
+      "receivePayment": "Receive Payment",
+      "receivePaymentNote": "Process desk bills"
+    },
+    "pendingCheckIns": {
+      "title": "Pending Check-Ins",
+      "viewAll": "View All ({{count}})",
+      "emptyTitle": "All scheduled patients are checked in!",
+      "emptySubtitle": "No pending arrivals for current time slot.",
+      "doctorRoom": "Dr. {{doctorName}} • {{roomNumber}}",
+      "checkInButton": "Check In",
+      "toastCheckedIn": "{{patientName}} marked as Checked In!"
+    },
+    "walkInQueue": {
+      "title": "Walk-In Queue",
+      "registerButton": "Register Walk-In",
+      "emptyTitle": "No active walk-in patients",
+      "emptySubtitle": "Click Register Walk-In to add unscheduled visits.",
+      "arrived": "Arrived: {{time}}",
+      "assigned": "Assigned: {{doctorName}}",
+      "waitMins": "~{{mins}} mins wait"
+    },
+    "walkInModal": {
+      "title": "Register Walk-In Patient",
+      "patientName": "Patient Full Name *",
+      "patientNamePlaceholder": "e.g. Nadia Mansoor",
+      "mobileContact": "Mobile Contact *",
+      "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "assignDoctor": "Assign Doctor",
+      "requestedService": "Requested Service / Reason",
+      "requestedServicePlaceholder": "e.g. Skin Analysis or Touch-up",
+      "notes": "Coordinator Notes (Optional)",
+      "notesPlaceholder": "Additional requests or instructions...",
+      "confirm": "Confirm Walk-In",
+      "toastRegistered": "Walk-in patient {{name}} registered in queue!"
+    }
+  },
+  "appointments": {
+    "header": {
+      "title": "Appointment Management",
+      "subtitle": "Search, schedule, reschedule, or check-in clinic appointments.",
+      "bookNew": "Book New Appointment"
+    },
+    "search": {
+      "placeholder": "Search by Patient Name, File # (e.g. RC-99841), Service, or Doctor...",
+      "clear": "Clear"
+    },
+    "filters": {
+      "all": "All Appointments",
+      "scheduled": "Scheduled",
+      "checkedIn": "Checked In / Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "status": {
+      "checkedIn": "Checked In",
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "empty": {
+      "title": "No matching appointments found",
+      "subtitle": "Try adjusting your search terms or status filters."
+    },
+    "card": {
+      "doctorRoom": "Doctor: {{doctorName}} • Room: {{roomNumber}}",
+      "reason": "Reason:",
+      "confirmArrival": "Confirm Arrival",
+      "reschedule": "Reschedule",
+      "toastCheckedIn": "{{patientName}} marked as Arrived & Checked In!"
+    },
+    "bookModal": {
+      "title": "Book Clinic Appointment",
+      "patientName": "Patient Name *",
+      "patientNamePlaceholder": "e.g. Lama Al-Rashidi",
+      "patientFileNo": "Patient File #",
+      "patientFileNoPlaceholder": "e.g. RC-88120",
+      "mobileContact": "Mobile Contact",
+      "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "selectService": "Select Service / Treatment",
+      "selectDoctor": "Select Attending Doctor",
+      "date": "Date",
+      "timeSlot": "Time Slot",
+      "notes": "Notes / Instructions",
+      "notesPlaceholder": "Special requests or patient preferences...",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "confirm": "Confirm Booking",
+      "toastBooked": "New appointment booked for {{name}}!"
+    },
+    "cancelModal": {
+      "title": "Cancel Appointment",
+      "confirmText": "Are you sure you want to cancel appointment for {{name}}?",
+      "reasonLabel": "Reason for Cancellation *",
+      "reasonPatientRequest": "Patient Requested Cancellation",
+      "reasonDoctorEmergency": "Doctor Emergency / Schedule Change",
+      "reasonWeather": "Traffic or Severe Weather",
+      "reasonPayment": "Payment / Package Issue",
+      "reasonNoShow": "Patient No-Show",
+      "dismiss": "Dismiss",
+      "confirm": "Confirm Cancellation",
+      "toastCancelled": "Appointment for {{name}} cancelled ({{reason}})."
+    },
+    "rescheduleModal": {
+      "title": "Reschedule Appointment",
+      "selectText": "Select a new date and time slot for {{name}}.",
+      "newDate": "New Date",
+      "availableTimeSlot": "Available Time Slot",
+      "assignedDoctor": "Assigned Doctor",
+      "tomorrow": "Tomorrow",
+      "confirm": "Update Schedule"
+    }
+  },
+  "checkin": {
+    "header": {
+      "title": "Digital Arrival & Check-In Desk",
+      "subtitle": "Scan patient app QR code ticket or enter file number to verify arrival."
+    },
+    "scanner": {
+      "title": "QR Scanner Terminal",
+      "liveFeed": "Live Camera Feed",
+      "scanning": "Scanning QR Code Ticket...",
+      "positionFrame": "Position QR Code within Frame",
+      "processing": "Processing...",
+      "simulateTest": "Simulate QR Scan Test",
+      "manualLookupLabel": "Or Manual File Lookup",
+      "manualPlaceholder": "Enter File # (e.g. RC-20410) or Name...",
+      "toastScanned": "QR Code scanned successfully! Found ticket for {{name}}."
+    },
+    "manual": {
+      "toastFound": "Appointment retrieved for {{name}}.",
+      "toastNotFound": "No appointment found for \"{{query}}\"."
+    },
+    "verification": {
+      "title": "Check-In Verification",
+      "emptyTitle": "Awaiting QR scan or file search",
+      "emptySubtitle": "Scan a ticket on the left to verify patient appointment details.",
+      "scheduledSlot": "Scheduled Slot",
+      "paymentStatus": "Payment Status",
+      "paid": "Paid",
+      "visitReason": "Visit Reason",
+      "dismiss": "Dismiss",
+      "confirmCheckIn": "Confirm Check-In",
+      "toastConfirmed": "{{name}} checked in! Queue Token #{{token}} issued."
+    },
+    "doctorRoom": "Dr. {{doctorName}} • {{roomNumber}}",
+    "queue": {
+      "title": "Waiting Room Queue",
+      "waitingCount": "{{count}} Patients Arrived & Waiting",
+      "emptyTitle": "Waiting room is empty",
+      "emptySubtitle": "No checked-in patients in lounge right now.",
+      "inRoom": "In Room",
+      "waiting": "Waiting",
+      "doctor": "Dr. {{doctorName}}",
+      "suite": "Suite: {{roomNumber}}"
+    }
+  },
+  "patientLookup": {
+    "header": {
+      "title": "Patient File & Desk Payments",
+      "subtitle": "Lookup patient files by File Number, Phone, or Name. Process desk payments and issue receipts."
+    },
+    "search": {
+      "placeholder": "Search by File Number (e.g. RC-99841), Mobile Number, or Full Name...",
+      "button": "Lookup Patient",
+      "toastFound": "Patient file loaded for {{name}}.",
+      "toastNotFound": "No patient found matching \"{{query}}\"."
+    },
+    "receivePayment": "Receive Desk Payment",
+    "lastTreatment": {
+      "label": "Last Treatment",
+      "dateDoctor": "Date: {{date}} • {{doctorName}}"
+    },
+    "financial": {
+      "label": "Account Financial Status",
+      "outstandingBalance": "Outstanding Balance:",
+      "fullySettled": "$0.00 (Fully Settled)",
+      "loyaltyPointsLabel": "Total Loyalty Points:",
+      "loyaltyPointsValue": "1,450 pts (Gold Tier)"
+    },
+    "history": {
+      "title": "Appointment & Billing History",
+      "doctorRoom": "Dr. {{doctorName}} • {{roomNumber}}",
+      "paid": "$280 Paid"
+    },
+    "paymentModal": {
+      "title": "Receive Desk Payment",
+      "fileNo": "File #: {{id}}",
+      "todaysVisit": "Today's Visit",
+      "amountLabel": "Payment Amount ($) *",
+      "methodLabel": "Select Payment Method",
+      "creditCard": "Credit Card",
+      "cash": "Cash",
+      "tabby": "Tabby",
+      "cashTendered": "Cash Tendered ($)",
+      "changeDue": "Change Due:",
+      "confirm": "Confirm Payment & Issue Receipt",
+      "toastProcessed": "Payment of ${{amount}} processed for {{name}}!"
+    },
+    "paymentMethodLabels": {
+      "card": "Credit / Debit Card",
+      "cash": "Cash at Desk",
+      "tabby": "Tabby Installments"
+    },
+    "receiptModal": {
+      "title": "Payment Complete!",
+      "subtitle": "Digital receipt issued and saved to patient account.",
+      "receiptRef": "Receipt Ref",
+      "item": "Item:",
+      "paidAmount": "Paid Amount:",
+      "method": "Method:",
+      "close": "Close Receipt"
+    }
+  },
+  "notifications": {
+    "title": "Reception Notification Center",
+    "subtitle": "Live updates on patient arrivals, walk-ins, schedule changes, and requests",
+    "categories": {
+      "all": "All Alerts",
+      "arrivals": "Patient Arrivals",
+      "newBookings": "New Bookings",
+      "cancellations": "Cancellations & Reschedules",
+      "followUps": "Follow-Ups"
+    },
+    "toastAllRead": "All notifications marked as read."
+  },
+  "profile": {
+    "header": {
+      "title": "Coordinator Account & Preferences",
+      "subtitle": "Manage your reception profile credentials, app language, and security settings."
+    },
+    "badge": "Front Desk Coordinator",
+    "employeeInfo": "Employee ID: COORD-8820 • Shift: Morning (08:30 AM - 05:30 PM)",
+    "contact": {
+      "email": "Email Address",
+      "phone": "Phone Contact"
+    },
+    "security": {
+      "title": "Security & Authentication",
+      "changePassword": "Change Password",
+      "changePasswordNote": "Update reception login password",
+      "offlineMode": "PWA Offline Mode",
+      "offlineModeStatus": "Enabled & Cached",
+      "active": "Active"
+    },
+    "language": {
+      "title": "Language Preferences",
+      "english": "English",
+      "arabic": "Arabic"
+    },
+    "logout": {
+      "button": "End Reception Session (Logout)"
+    },
+    "passwordModal": {
+      "title": "Change Password",
+      "currentPassword": "Current Password *",
+      "newPassword": "New Password *",
+      "confirmPassword": "Confirm New Password *",
+      "update": "Update Password",
+      "toastMismatch": "Passwords do not match.",
+      "toastSuccess": "Password updated successfully!"
+    },
+    "logoutModal": {
+      "title": "Confirm Logout",
+      "confirmText": "Are you sure you want to end your current receptionist session?"
+    },
+    "toastLanguageSet": "App language set to {{lang}}."
+  }
+}

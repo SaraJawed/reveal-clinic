@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Bell, CheckCircle2, X } from 'lucide-react';
 
 export interface NotificationCenterBaseItem {
@@ -43,6 +44,7 @@ export function NotificationCenter<T extends NotificationCenterBaseItem>({
   onMarkAsRead,
   onMarkAllAsRead
 }: NotificationCenterProps<T>) {
+  const { t } = useTranslation('navigation');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
 
@@ -78,7 +80,7 @@ export function NotificationCenter<T extends NotificationCenterBaseItem>({
             className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-2xl transition flex items-center gap-1.5 shrink-0"
           >
             <CheckCircle2 className="w-3.5 h-3.5 text-sky-300" />
-            <span>Mark All as Read ({unreadCount})</span>
+            <span>{t('notificationCenter.markAllAsRead', { count: unreadCount })}</span>
           </button>
         )}
       </div>
@@ -103,8 +105,8 @@ export function NotificationCenter<T extends NotificationCenterBaseItem>({
         {filteredItems.length === 0 ? (
           <div className="bg-white border border-slate-100 rounded-3xl p-10 text-center space-y-2">
             <HeaderIcon className="w-8 h-8 text-slate-300 mx-auto" />
-            <h3 className="font-bold text-slate-700 text-xs">No Notifications Found</h3>
-            <p className="text-[11px] text-slate-400">All alerts in this category have been addressed.</p>
+            <h3 className="font-bold text-slate-700 text-xs">{t('notificationCenter.noNotificationsFound')}</h3>
+            <p className="text-[11px] text-slate-400">{t('notificationCenter.noNotificationsHint')}</p>
           </div>
         ) : (
           filteredItems.map((item) => {
@@ -145,7 +147,7 @@ export function NotificationCenter<T extends NotificationCenterBaseItem>({
                   }}
                   className="text-xs font-bold text-[#4F8EF7] hover:underline shrink-0"
                 >
-                  {!item.read ? 'Read' : 'View'}
+                  {!item.read ? t('notificationCenter.read') : t('notificationCenter.view')}
                 </button>
               </div>
             );
@@ -169,7 +171,7 @@ export function NotificationCenter<T extends NotificationCenterBaseItem>({
             </p>
 
             <div className="text-[11px] text-slate-400 flex justify-between font-semibold">
-              <span>Category: {getDetailLabel(selectedItem)}</span>
+              <span>{t('notificationCenter.category', { category: getDetailLabel(selectedItem) })}</span>
               <span>{selectedItem.timestamp}</span>
             </div>
 
@@ -179,7 +181,7 @@ export function NotificationCenter<T extends NotificationCenterBaseItem>({
                 onClick={() => setSelectedItem(null)}
                 className="px-4 py-2 bg-slate-900 text-white rounded-xl font-bold text-xs"
               >
-                Close Alert
+                {t('notificationCenter.closeAlert')}
               </button>
             </div>
           </div>

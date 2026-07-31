@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { MedicalReport } from '../../types';
 import { FileText, Download, ShieldCheck } from 'lucide-react';
 
@@ -7,33 +8,35 @@ interface MedicalReportsViewProps {
 }
 
 export const MedicalReportsView: React.FC<MedicalReportsViewProps> = ({ reports }) => {
+  const { t } = useTranslation('reports');
+
   const handleDownloadPdf = (report: MedicalReport) => {
     // Generate a simple simulated PDF text file blob download
     const content = `
 ==================================================
-              REVEAL CLINIC
-   Aesthetic & Medical Dermatology Center
+              ${t('pdf.clinicName')}
+   ${t('pdf.clinicTagline')}
 ==================================================
-Document: ${report.title}
-Document Type: ${report.type}
-Doctor: ${report.doctorName}
-Date: ${report.date}
-Location: ${report.clinicName}
+${t('pdf.documentLabel', { title: report.title })}
+${t('pdf.documentTypeLabel', { type: report.type })}
+${t('pdf.doctorLabel', { doctorName: report.doctorName })}
+${t('pdf.dateLabel', { date: report.date })}
+${t('pdf.locationLabel', { clinicName: report.clinicName })}
 --------------------------------------------------
-CLINICAL SUMMARY & NOTES:
+${t('pdf.summaryHeading')}
 ${report.summary}
 
-${report.prescriptions ? `PRESCRIPTIONS & RECOMMENDATIONS:
-` + report.prescriptions.map(p => `- ${p.medication}: ${p.dosage} (${p.instructions})`).join('\n') : ''}
+${report.prescriptions ? `${t('pdf.prescriptionsHeading')}
+` + report.prescriptions.map(p => t('pdf.prescriptionLine', { medication: p.medication, dosage: p.dosage, instructions: p.instructions })).join('\n') : ''}
 
 --------------------------------------------------
-This document is digitally signed and encrypted by Reveal Clinic PWA Portal.
+${t('pdf.signatureNote')}
     `;
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = report.downloadPdfName || 'Reveal_Medical_Report.pdf';
+    a.download = report.downloadPdfName || t('pdf.defaultFileName');
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -44,8 +47,8 @@ This document is digitally signed and encrypted by Reveal Clinic PWA Portal.
     <div className="space-y-6 pb-24 md:pb-8">
       {/* Header */}
       <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs space-y-1">
-        <h1 className="text-lg font-bold text-slate-900">Medical Reports & Certificates</h1>
-        <p className="text-xs text-slate-500">Access digitally signed skin diagnostics, treatment notes & certificates.</p>
+        <h1 className="text-lg font-bold text-slate-900">{t('header.title')}</h1>
+        <p className="text-xs text-slate-500">{t('header.subtitle')}</p>
       </div>
 
       {/* Reports List */}
@@ -65,7 +68,7 @@ This document is digitally signed and encrypted by Reveal Clinic PWA Portal.
                     {rep.type}
                   </span>
                   <h3 className="font-bold text-slate-900 text-sm mt-1">{rep.title}</h3>
-                  <p className="text-xs text-slate-500">{rep.doctorName} • {rep.date}</p>
+                  <p className="text-xs text-slate-500">{t('card.doctorDate', { doctorName: rep.doctorName, date: rep.date })}</p>
                 </div>
               </div>
               <span className="text-[11px] font-semibold text-slate-400 shrink-0">{rep.fileSize}</span>
@@ -77,14 +80,14 @@ This document is digitally signed and encrypted by Reveal Clinic PWA Portal.
 
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
               <span className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> Digitally Signed PDF
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" /> {t('card.digitallySigned')}
               </span>
               <button
                 id={`reports-download-${rep.id}-btn`}
                 onClick={() => handleDownloadPdf(rep)}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3.5 py-1.5 rounded-xl transition shadow-xs flex items-center gap-1.5"
               >
-                <Download className="w-3.5 h-3.5" /> Download PDF
+                <Download className="w-3.5 h-3.5" /> {t('card.downloadButton')}
               </button>
             </div>
           </div>

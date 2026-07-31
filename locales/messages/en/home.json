@@ -1,0 +1,45 @@
+{
+  "welcome": {
+    "greeting": "Good day, {{name}}",
+    "subtitle": "Welcome back to Reveal Clinic.",
+    "fileId": "File ID: {{id}}"
+  },
+  "quickAction": {
+    "bookAppointment": "Book Appointment",
+    "subtitle": "Schedule your next visit in seconds"
+  },
+  "nextAppointment": {
+    "title": "Next Appointment",
+    "myVisits": "My Visits",
+    "confirmed": "Confirmed",
+    "noAppointments": "No upcoming appointments scheduled.",
+    "scheduleAppointment": "Schedule Appointment"
+  },
+  "myPackages": {
+    "title": "My Packages",
+    "currentlyTaking": "Currently Taking",
+    "noActivePackage": "No Active Package"
+  },
+  "recentReports": {
+    "title": "Recent Reports",
+    "viewAll": "View All",
+    "dateLabel": "Date: {{date}}",
+    "viewReportPdf": "View Report PDF"
+  },
+  "popularTreatments": {
+    "title": "Featured Aesthetic Treatments",
+    "subtitle": "Curated skin care and cosmetic dermatological services",
+    "exploreAll": "Explore All",
+    "durationMinutes": "{{minutes}} mins",
+    "bookNow": "Book Now"
+  },
+  "packageDetail": {
+    "currentlyTaking": "Currently Taking",
+    "sessionsUsed": "Sessions Used",
+    "purchasedOn": "Purchased On",
+    "validUntil": "Valid Until",
+    "includedInPackage": "Included in this Package",
+    "qrCheckInCode": "QR Check-In Code",
+    "browseMorePackages": "Browse More Packages"
+  }
+}

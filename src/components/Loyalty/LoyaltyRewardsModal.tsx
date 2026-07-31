@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { loyaltyRewards } from '../../data/mockData';
 import { Award, Check, Copy, Tag, X } from 'lucide-react';
 
@@ -11,6 +12,7 @@ export const LoyaltyRewardsModal: React.FC<LoyaltyRewardsModalProps> = ({
   isOpen,
   onClose
 }) => {
+  const { t } = useTranslation('payments');
   const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -31,8 +33,8 @@ export const LoyaltyRewardsModal: React.FC<LoyaltyRewardsModalProps> = ({
               <Award className="w-6 h-6 text-amber-100" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base">Reveal Loyalty Club</h3>
-              <p className="text-xs text-amber-100">Patient Special Offers & Rewards Catalog</p>
+              <h3 className="font-extrabold text-base">{t('loyalty.headerTitle')}</h3>
+              <p className="text-xs text-amber-100">{t('loyalty.headerSubtitle')}</p>
             </div>
           </div>
           <button
@@ -45,7 +47,7 @@ export const LoyaltyRewardsModal: React.FC<LoyaltyRewardsModalProps> = ({
         </div>
 
         <div className="p-6 overflow-y-auto flex-1 space-y-4">
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Available Rewards Catalog</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t('loyalty.availableRewardsCatalog')}</div>
           {loyaltyRewards.map((rew) => (
             <div
               key={rew.id}
@@ -72,16 +74,16 @@ export const LoyaltyRewardsModal: React.FC<LoyaltyRewardsModalProps> = ({
                 >
                   {copiedCode === rew.code ? (
                     <>
-                      <Check className="w-3.5 h-3.5" /> Copied
+                      <Check className="w-3.5 h-3.5" /> {t('loyalty.copied')}
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3.5 h-3.5" /> Copy Code
+                      <Copy className="w-3.5 h-3.5" /> {t('loyalty.copyCode')}
                     </>
                   )}
                 </button>
               </div>
-              <p className="text-[10px] text-slate-400">Use this voucher code during appointment booking or payment.</p>
+              <p className="text-[10px] text-slate-400">{t('loyalty.voucherUsageHint')}</p>
             </div>
           ))}
         </div>

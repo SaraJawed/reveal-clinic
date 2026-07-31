@@ -1,0 +1,57 @@
+{
+  "aiChatBot": {
+    "assistantName": "مساعد Reveal الذكي",
+    "assistantTagline": "رعاية بشرة وإرشادات علاجية وعيادية على مدار الساعة",
+    "faqPromptsLabel": "أسئلة شائعة:",
+    "quickPrompts": {
+      "hours": "ما هي ساعات عمل العيادة؟",
+      "bookHydrafacial": "كيف يمكنني حجز جلسة HydraFacial مع د. فاطمة الزهراني؟",
+      "packages": "ما هي الباقات المتوفرة لتجديد شباب البشرة؟",
+      "postLaserCare": "تعليمات العناية بعد الليزر للبشرة الحساسة",
+      "loyaltyPoints": "كيف يمكنني كسب نقاط الولاء واستبدالها؟"
+    },
+    "generatingResponse": "مساعد Reveal الذكي يقوم بإنشاء الرد...",
+    "meLabel": "أنا",
+    "inputPlaceholder": "اسأل مساعد Reveal عن علاجات البشرة أو الأطباء أو الحجوزات..."
+  },
+  "floatingChatWidget": {
+    "launcherTitle": "فتح روبوت الدردشة الذكي للعيادة",
+    "backTitle": "العودة إلى التطبيق",
+    "closeTitle": "إغلاق روبوت الدردشة",
+    "assistantName": "مساعد Reveal الذكي",
+    "assistantTagline": "إرشادات سريرية وعلاجية على مدار الساعة",
+    "faqsLabel": "الأسئلة الشائعة:",
+    "quickPrompts": {
+      "hours": "ما هي ساعات عمل العيادة؟",
+      "bookHydrafacial": "احجز جلسة HydraFacial مع د. مها العتيبي",
+      "postLaserCare": "تعليمات العناية بعد الليزر",
+      "redeemRewards": "استبدال المكافآت والعروض الخاصة"
+    },
+    "generatingResponse": "جارٍ إنشاء الرد...",
+    "youLabel": "أنت",
+    "inputPlaceholder": "اسأل الذكاء الاصطناعي عن العلاجات أو العناية بالبشرة أو مواعيد الأطباء...",
+    "sendButton": "إرسال"
+  },
+  "chatBookingCard": {
+    "dismissTitle": "إغلاق",
+    "reviewsCount": "{{count}} تقييم",
+    "consultationFeeLabel": "رسوم الاستشارة:",
+    "sarAmount": "{{amount}} ر.س",
+    "bookAppointment": "حجز موعد",
+    "availableSlotsToday": "الأوقات المتاحة اليوم",
+    "dateAtSlot": "🗓️ {{date}} الساعة {{slot}}",
+    "haveVoucher": "هل لديك رمز قسيمة؟",
+    "voucherApplied": "تم تطبيق {{code}} (-{{discount}} ر.س)",
+    "voucherPlaceholder": "مثال: GLOW10",
+    "viewAvailableVouchers": "عرض القسائم المتاحة",
+    "invalidVoucher": "رمز القسيمة غير صالح أو منتهي الصلاحية.",
+    "payAtClinic": "🏥 الدفع في العيادة",
+    "payOnline": "💳 الدفع عبر الإنترنت",
+    "buyNowPayLater": "🛍️ الشراء الآن، الدفع لاحقًا",
+    "confirmAppointment": "تأكيد الموعد — {{amount}} ر.س",
+    "selectPaymentOption": "اختر وسيلة الدفع",
+    "appointmentConfirmed": "تم تأكيد الموعد!",
+    "confirmedDateWithDoctor": "{{date}} الساعة {{slot}} مع {{doctorName}}",
+    "confirmedFeeMethod": "{{fee}} ر.س ({{method}})"
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   UserProfile,
   ClinicalScheduleItem,
@@ -49,6 +50,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
   onSelectSession,
   onUpdateScheduleStatus
 }) => {
+  const { t } = useTranslation('doctor');
   const [quickSearchQuery, setQuickSearchQuery] = useState('');
 
   // Statistics calculation
@@ -79,17 +81,17 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-sky-300 text-[10px] font-bold uppercase tracking-wider border border-blue-400/20">
-                {user.role === 'nurse' ? 'Aesthetic Nursing Portal' : user.role === 'coordinator' ? 'Clinic Coordinator' : 'Physician Portal'}
+                {user.role === 'nurse' ? t('dashboard.hero.roleBadge.nurse') : user.role === 'coordinator' ? t('dashboard.hero.roleBadge.coordinator') : t('dashboard.hero.roleBadge.doctor')}
               </span>
               <span className="text-xs text-slate-300 font-medium">
                 {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-              Good day, {user.fullName}
+              {t('dashboard.hero.greeting', { name: user.fullName })}
             </h1>
             <p className="text-xs text-slate-300 max-w-xl">
-              You have <strong className="text-white">{checkedInCount} patient(s) checked in</strong> and waiting for procedure in {user.consultationRoom || 'Treatment Suite'}.
+              {t('dashboard.hero.waitingPrefix')} <strong className="text-white">{t('dashboard.hero.checkedInCount', { count: checkedInCount })}</strong> {t('dashboard.hero.waitingSuffix', { room: user.consultationRoom || t('dashboard.hero.defaultRoom') })}
             </p>
           </div>
 
@@ -101,7 +103,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
               className="px-4 py-2.5 bg-[#4F8EF7] hover:bg-blue-600 text-white font-bold text-xs rounded-2xl shadow-md transition flex items-center gap-2"
             >
               <Calendar className="w-4 h-4" />
-              <span>Full Schedule ({totalToday})</span>
+              <span>{t('dashboard.hero.fullScheduleButton', { count: totalToday })}</span>
             </button>
           </div>
         </div>
@@ -112,49 +114,49 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
         {/* Total Today */}
         <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-2xs hover:shadow-md transition">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Today's Total</span>
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.stats.totalLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#4F8EF7] flex items-center justify-center">
               <Calendar className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-slate-900">{totalToday}</div>
-          <p className="text-[11px] text-slate-500 mt-1">Scheduled appointments</p>
+          <p className="text-[11px] text-slate-500 mt-1">{t('dashboard.stats.totalSub')}</p>
         </div>
 
         {/* Checked In / Waiting */}
         <div className="bg-white p-4 rounded-3xl border border-amber-100/80 shadow-2xs hover:shadow-md transition bg-amber-50/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">Checked-In</span>
+            <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">{t('dashboard.stats.checkedInLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
               <UserCheck className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-amber-800">{checkedInCount}</div>
-          <p className="text-[11px] text-amber-700/80 mt-1 font-medium">Ready in lobby / pod</p>
+          <p className="text-[11px] text-amber-700/80 mt-1 font-medium">{t('dashboard.stats.checkedInSub')}</p>
         </div>
 
         {/* In Consultation / Procedure */}
         <div className="bg-white p-4 rounded-3xl border border-blue-100 shadow-2xs hover:shadow-md transition bg-blue-50/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-[#4F8EF7] uppercase tracking-wider">Active Room</span>
+            <span className="text-[11px] font-bold text-[#4F8EF7] uppercase tracking-wider">{t('dashboard.stats.activeLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-blue-100 text-[#4F8EF7] flex items-center justify-center">
               <Activity className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-blue-900">{inConsultationCount}</div>
-          <p className="text-[11px] text-blue-700/80 mt-1 font-medium">In procedure suite</p>
+          <p className="text-[11px] text-blue-700/80 mt-1 font-medium">{t('dashboard.stats.activeSub')}</p>
         </div>
 
         {/* Completed */}
         <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-2xs hover:shadow-md transition bg-emerald-50/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Completed</span>
+            <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">{t('dashboard.stats.completedLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <div className="text-2xl font-black text-emerald-800">{completedCount}</div>
-          <p className="text-[11px] text-emerald-700/80 mt-1 font-medium">Finished today</p>
+          <p className="text-[11px] text-emerald-700/80 mt-1 font-medium">{t('dashboard.stats.completedSub')}</p>
         </div>
       </div>
 
@@ -169,7 +171,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
                   <h2 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider">
-                    Current Patient Focus
+                    {t('dashboard.currentPatient.title')}
                   </h2>
                 </div>
                 <span className="px-3 py-1 rounded-full bg-blue-50 text-[#4F8EF7] text-xs font-bold border border-blue-100">
@@ -189,7 +191,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                       {currentScheduleItem.patientName}
                     </h3>
                     <span className="text-xs text-slate-400 font-semibold">
-                      ({currentScheduleItem.patientAge}y, {currentScheduleItem.patientGender})
+                      {t('dashboard.currentPatient.ageGender', { age: currentScheduleItem.patientAge, gender: currentScheduleItem.patientGender })}
                     </span>
                   </div>
 
@@ -199,7 +201,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                   </p>
 
                   <p className="text-xs text-slate-500 font-medium">
-                    Scheduled: {currentScheduleItem.timeSlot} • Reason: {currentScheduleItem.visitReason}
+                    {t('dashboard.currentPatient.scheduledReason', { time: currentScheduleItem.timeSlot, reason: currentScheduleItem.visitReason })}
                   </p>
                 </div>
 
@@ -211,7 +213,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                     className="flex-1 sm:flex-initial px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
                   >
                     <FileText className="w-3.5 h-3.5 text-sky-300" />
-                    <span>View Medical File</span>
+                    <span>{t('dashboard.currentPatient.viewMedicalFile')}</span>
                   </button>
 
                   <button
@@ -221,7 +223,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                     className="flex-1 sm:flex-initial px-3.5 py-2 bg-[#4F8EF7] hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
                   >
                     <Activity className="w-3.5 h-3.5" />
-                    <span>Treatment Session</span>
+                    <span>{t('dashboard.currentPatient.treatmentSession')}</span>
                   </button>
                 </div>
               </div>
@@ -230,7 +232,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
 
               {/* Status Change Buttons */}
               <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                <span className="text-slate-500 font-medium">Update Patient Status:</span>
+                <span className="text-slate-500 font-medium">{t('dashboard.currentPatient.updateStatusLabel')}</span>
                 <div className="flex flex-wrap gap-1.5">
                   <button
                     type="button"
@@ -241,7 +243,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
-                    In Consultation
+                    {t('dashboard.currentPatient.statusInConsultation')}
                   </button>
                   <button
                     type="button"
@@ -252,7 +254,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
-                    In Procedure
+                    {t('dashboard.currentPatient.statusInProcedure')}
                   </button>
                   <button
                     type="button"
@@ -263,7 +265,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                     }`}
                   >
-                    Complete Session
+                    {t('dashboard.currentPatient.statusComplete')}
                   </button>
                 </div>
               </div>
@@ -277,7 +279,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
           <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-2xs space-y-3">
             <h3 className="font-extrabold text-sm text-slate-900 tracking-tight flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#4F8EF7]" />
-              <span>Clinical Quick Actions</span>
+              <span>{t('dashboard.quickActions.title')}</span>
             </h3>
 
             <div className="grid grid-cols-1 gap-2">
@@ -291,8 +293,8 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                   <Calendar className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-slate-800">Daily Schedule & Filtering</h4>
-                  <p className="text-[10px] text-slate-500">View calendar and update statuses</p>
+                  <h4 className="font-bold text-xs text-slate-800">{t('dashboard.quickActions.scheduleTitle')}</h4>
+                  <p className="text-[10px] text-slate-500">{t('dashboard.quickActions.scheduleSub')}</p>
                 </div>
               </button>
 
@@ -306,8 +308,8 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                   <FileText className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-slate-800">Search Patient Records</h4>
-                  <p className="text-[10px] text-slate-500">Access medical history & allergies</p>
+                  <h4 className="font-bold text-xs text-slate-800">{t('dashboard.quickActions.patientsTitle')}</h4>
+                  <p className="text-[10px] text-slate-500">{t('dashboard.quickActions.patientsSub')}</p>
                 </div>
               </button>
 
@@ -321,8 +323,8 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                   <Activity className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-slate-800">Treatment Session Tracker</h4>
-                  <p className="text-[10px] text-slate-500">Log machines, consumables & items</p>
+                  <h4 className="font-bold text-xs text-slate-800">{t('dashboard.quickActions.sessionsTitle')}</h4>
+                  <p className="text-[10px] text-slate-500">{t('dashboard.quickActions.sessionsSub')}</p>
                 </div>
               </button>
 
@@ -336,8 +338,8 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                   <Bell className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-bold text-xs text-slate-800">Staff Notifications</h4>
-                  <p className="text-[10px] text-slate-500">Patient check-ins & cancellations</p>
+                  <h4 className="font-bold text-xs text-slate-800">{t('dashboard.quickActions.notificationsTitle')}</h4>
+                  <p className="text-[10px] text-slate-500">{t('dashboard.quickActions.notificationsSub')}</p>
                 </div>
               </button>
             </div>

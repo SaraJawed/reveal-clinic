@@ -1,4 +1,6 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { StaffNotification } from '../../types';
 import { Bell, UserCheck, CalendarPlus, XCircle, Clock } from 'lucide-react';
 import { NotificationCenter, NotificationCenterCategory } from '../Notifications/NotificationCenter';
@@ -10,20 +12,20 @@ interface CoordinatorNotificationsViewProps {
   onTriggerToast: (msg: string) => void;
 }
 
-const categories: NotificationCenterCategory<StaffNotification>[] = [
-  { id: 'all', label: 'All Alerts', match: () => true },
+const getCategories = (t: TFunction): NotificationCenterCategory<StaffNotification>[] => [
+  { id: 'all', label: t('notifications.categories.all'), match: () => true },
   {
     id: 'arrivals',
-    label: 'Patient Arrivals',
+    label: t('notifications.categories.arrivals'),
     match: (n) => n.type === 'patient_checked_in' || n.type === 'check_in'
   },
-  { id: 'new_appointment', label: 'New Bookings', match: (n) => n.type === 'new_appointment' },
+  { id: 'new_appointment', label: t('notifications.categories.newBookings'), match: (n) => n.type === 'new_appointment' },
   {
     id: 'cancellations',
-    label: 'Cancellations & Reschedules',
+    label: t('notifications.categories.cancellations'),
     match: (n) => n.type === 'cancellation' || n.type === 'rescheduled'
   },
-  { id: 'followup_reminder', label: 'Follow-Ups', match: (n) => n.type === 'followup_reminder' }
+  { id: 'followup_reminder', label: t('notifications.categories.followUps'), match: (n) => n.type === 'followup_reminder' }
 ];
 
 const getBadge = (notif: StaffNotification) => {
@@ -49,18 +51,20 @@ export const CoordinatorNotificationsView: React.FC<CoordinatorNotificationsView
   onMarkAllAsRead,
   onTriggerToast
 }) => {
+  const { t } = useTranslation('coordinator');
+
   return (
     <NotificationCenter
-      title="Reception Notification Center"
-      subtitle="Live updates on patient arrivals, walk-ins, schedule changes, and requests"
+      title={t('notifications.title')}
+      subtitle={t('notifications.subtitle')}
       items={notifications}
-      categories={categories}
+      categories={getCategories(t)}
       getBadge={getBadge}
       getDetailLabel={(notif) => notif.type.replace('_', ' ').toUpperCase()}
       onMarkAsRead={onMarkAsRead}
       onMarkAllAsRead={() => {
         onMarkAllAsRead();
-        onTriggerToast('All notifications marked as read.');
+        onTriggerToast(t('notifications.toastAllRead'));
       }}
     />
   );

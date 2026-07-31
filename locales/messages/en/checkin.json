@@ -1,0 +1,16 @@
+{
+  "header": {
+    "title": "Clinic Digital Check-In",
+    "subtitle": "Present your patient QR code or File Number at reception desk upon arrival."
+  },
+  "unpaidAlert": {
+    "label": "Outstanding Payment Alert:",
+    "message": "You have an unpaid consultation fee of ${{amount}}.",
+    "payNow": "Pay Now"
+  },
+  "qrCard": {
+    "patientFileNumber": "Patient File Number",
+    "instructions": "Present this file number or show your QR code to reception staff for instant check-in.",
+    "verifiedProfile": "Verified Active Patient Profile • {{city}}"
+  }
+}

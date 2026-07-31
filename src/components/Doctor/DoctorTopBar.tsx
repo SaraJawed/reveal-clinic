@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserProfile, ClinicBranch, StaffNotification } from '../../types';
 import { Stethoscope, Bell, Sparkles, LogOut, RefreshCw, ChevronDown, CheckCircle, X } from 'lucide-react';
+import { LanguageSwitcher } from '../Language/LanguageSwitcher';
 
 interface DoctorTopBarProps {
   user: UserProfile;
@@ -27,6 +29,7 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
   notifications = [],
   onMarkAsRead
 }) => {
+  const { t } = useTranslation('navigation');
   const [showBranchDropdown, setShowBranchDropdown] = React.useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = React.useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] = React.useState(false);
@@ -39,11 +42,19 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
     'Off Duty': 'bg-slate-400 text-white'
   };
 
-  const roleTitle = user.role === 'nurse' 
-    ? 'Aesthetic Nurse Specialist' 
-    : user.role === 'coordinator' 
-    ? 'Clinic Coordinator' 
-    : 'Attending Dermatologist';
+  const statusLabels: Record<keyof typeof statusColors, string> = {
+    'Available': t('doctorTopBar.status.available'),
+    'In Consultation': t('doctorTopBar.status.inConsultation'),
+    'In Procedure': t('doctorTopBar.status.inProcedure'),
+    'On Break': t('doctorTopBar.status.onBreak'),
+    'Off Duty': t('doctorTopBar.status.offDuty')
+  };
+
+  const roleTitle = user.role === 'nurse'
+    ? t('doctorTopBar.roleTitles.nurse')
+    : user.role === 'coordinator'
+    ? t('doctorTopBar.roleTitles.coordinator')
+    : t('doctorTopBar.roleTitles.doctor');
 
   return (
     <header
@@ -53,7 +64,7 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
         {/* Left: Branding & Staff Persona */}
         <div className="flex items-center gap-3">
-          <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">Reveal Clinic</span>
+          <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">{t('brand')}</span>
         </div>
 
         {/* Center: Branch Picker */}
@@ -72,7 +83,7 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
           {showBranchDropdown && (
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 z-50">
               <div className="px-3 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Select Active Branch
+                {t('doctorTopBar.selectActiveBranch')}
               </div>
               {branches.map((branch) => (
                 <button
@@ -97,6 +108,8 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
 
         {/* Right: Actions (Status Toggle, Notifications, Switch Role) */}
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+
           {/* Status Quick Toggle */}
           <div className="relative">
             <button
@@ -108,14 +121,14 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
               }`}
             >
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span className="hidden sm:inline">{user.availabilityStatus || 'Available'}</span>
+              <span className="hidden sm:inline">{statusLabels[user.availabilityStatus || 'Available']}</span>
               <ChevronDown className="w-3 h-3 text-white/80" />
             </button>
 
             {showStatusDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 p-1.5 z-50">
                 <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Set Clinical Status
+                  {t('doctorTopBar.setClinicalStatus')}
                 </div>
                 {(['Available', 'On Break', 'Off Duty'] as const).map((status) => (
                   <button
@@ -130,7 +143,7 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
                         : 'hover:bg-slate-50 text-slate-700'
                     }`}
                   >
-                    <span>{status}</span>
+                    <span>{statusLabels[status]}</span>
                     {user.availabilityStatus === status && <CheckCircle className="w-3.5 h-3.5 text-[#4F8EF7]" />}
                   </button>
                 ))}
@@ -145,7 +158,7 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
               id="doctor-notifications-btn"
               onClick={() => setShowNotificationsDropdown(!showNotificationsDropdown)}
               className="relative w-9 h-9 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition"
-              title="Notifications"
+              title={t('doctorTopBar.notifications')}
             >
               <Bell className="w-4 h-4" />
               {unreadNotificationsCount > 0 && (
@@ -162,19 +175,19 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Recent Alerts
+                    {t('doctorTopBar.recentAlerts')}
                   </span>
-                  <button 
+                  <button
                     onClick={() => setShowNotificationsDropdown(false)}
                     className="text-slate-400 hover:text-slate-600"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 </div>
-                
+
                 <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
                   {(!notifications || notifications.length === 0) ? (
-                    <p className="text-center text-slate-400 text-[11px] py-4">No recent notifications</p>
+                    <p className="text-center text-slate-400 text-[11px] py-4">{t('doctorTopBar.noRecentNotifications')}</p>
                   ) : (
                     notifications.slice(0, 5).map((notif) => (
                       <div 
@@ -204,13 +217,13 @@ export const DoctorTopBar: React.FC<DoctorTopBarProps> = ({
                     }}
                     className="text-[#4F8EF7] font-bold hover:underline"
                   >
-                    Open View Center
+                    {t('doctorTopBar.openViewCenter')}
                   </button>
-                  <button 
+                  <button
                     onClick={() => setShowNotificationsDropdown(false)}
                     className="text-slate-500 hover:underline font-semibold"
                   >
-                    Dismiss
+                    {t('doctorTopBar.dismiss')}
                   </button>
                 </div>
               </div>

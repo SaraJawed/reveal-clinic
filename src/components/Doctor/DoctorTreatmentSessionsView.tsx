@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TreatmentSession, UserProfile } from '../../types';
 import {
   Activity,
@@ -34,11 +35,19 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
   onIssueItem,
   onRequestItem
 }) => {
+  const { t } = useTranslation('doctor');
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showRequestItemModal, setShowRequestItemModal] = useState(false);
   const [requestItemName, setRequestItemName] = useState('');
   const [requestUrgency, setRequestUrgency] = useState<'Normal' | 'High' | 'Immediate'>('Normal');
+
+  // Status display key mapping (underlying values stay unchanged for state/logic)
+  const sessionStatusKeys: Record<string, string> = {
+    'In Progress': 'inProgress',
+    'Scheduled': 'scheduled',
+    'Completed': 'completed'
+  };
 
   const filteredSessions = sessions.filter((s) => {
     if (statusFilter !== 'all' && s.status !== statusFilter) return false;
@@ -57,10 +66,10 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
           </div>
           <div>
             <h1 className="font-extrabold text-lg text-slate-900 tracking-tight">
-              Clinical Treatment Sessions
+              {t('sessions.header.title')}
             </h1>
             <p className="text-xs text-slate-500">
-              Manage procedure consumables, laser machine settings, items issued, and session progress
+              {t('sessions.header.subtitle')}
             </p>
           </div>
         </div>
@@ -75,7 +84,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 statusFilter === st ? 'bg-white text-purple-700 shadow-2xs' : 'text-slate-600'
               }`}
             >
-              {st === 'all' ? 'All Sessions' : st}
+              {st === 'all' ? t('sessions.filters.all') : t(`sessions.status.${sessionStatusKeys[st]}`)}
             </button>
           ))}
         </div>
@@ -84,7 +93,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
       {!selectedSession ? (
         <div className="space-y-3">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">
-            Active Sessions ({filteredSessions.length})
+            {t('sessions.list.activeCount', { count: filteredSessions.length })}
           </h2>
 
           <div className="grid grid-cols-1 gap-4">
@@ -98,7 +107,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                   <div className="space-y-2 min-w-0">
                     <div className="flex items-center justify-between">
                       <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[10px] font-extrabold uppercase border border-purple-100">
-                        Room {session.roomNumber}
+                        {t('sessions.list.roomBadge', { number: session.roomNumber })}
                       </span>
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
@@ -109,7 +118,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                             : 'bg-blue-100 text-blue-700'
                         }`}
                       >
-                        {session.status}
+                        {t(`sessions.status.${sessionStatusKeys[session.status] || session.status}`)}
                       </span>
                     </div>
 
@@ -121,13 +130,13 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                         {session.treatmentName}
                       </p>
                       <p className="text-[10px] text-slate-500 truncate mt-0.5">
-                        Attending: {session.doctorName}
+                        {t('sessions.list.attending', { doctor: session.doctorName })}
                       </p>
                     </div>
                   </div>
 
                   <div className="border-t border-slate-50 pt-3 flex items-center justify-between text-[11px] font-semibold text-slate-400">
-                    <span>Progress</span>
+                    <span>{t('sessions.list.progressLabel')}</span>
                     <span className="text-purple-700 font-bold">{session.progressPercent}%</span>
                   </div>
                 </div>
@@ -143,7 +152,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
               onClick={() => setSelectedSessionId(null)}
               className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition cursor-pointer"
             >
-              ← Back to Active Sessions
+              {t('sessions.detail.backButton')}
             </button>
           </div>
 
@@ -154,17 +163,17 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-extrabold uppercase">
-                      Session #{selectedSession.id}
+                      {t('sessions.detail.sessionId', { id: selectedSession.id })}
                     </span>
                     <span className="text-xs font-bold text-slate-400">
-                      Suite {selectedSession.roomNumber}
+                      {t('sessions.detail.suite', { room: selectedSession.roomNumber })}
                     </span>
                   </div>
                   <h2 className="font-black text-slate-900 text-lg sm:text-xl mt-1">
                     {selectedSession.treatmentName}
                   </h2>
                   <p className="text-xs font-semibold text-slate-600">
-                    Patient: <strong className="text-slate-900">{selectedSession.patientName}</strong> • Attending: {selectedSession.doctorName}
+                    {t('sessions.detail.patientLine', { name: selectedSession.patientName, doctor: selectedSession.doctorName })}
                   </p>
                 </div>
 
@@ -177,7 +186,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                       className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-2xl text-xs font-bold transition flex items-center gap-2 shadow-md shadow-purple-500/20"
                     >
                       <Play className="w-4 h-4 fill-current" />
-                      <span>Start Procedure</span>
+                      <span>{t('sessions.detail.startButton')}</span>
                     </button>
                   )}
                   {selectedSession.status === 'In Progress' && (
@@ -187,13 +196,13 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                       className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-bold transition flex items-center gap-2 shadow-md shadow-emerald-500/20"
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Finish & Save Session</span>
+                      <span>{t('sessions.detail.finishButton')}</span>
                     </button>
                   )}
                   {selectedSession.status === 'Completed' && (
                     <span className="px-3.5 py-2 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl text-xs font-extrabold flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                      <span>Completed & Archived</span>
+                      <span>{t('sessions.detail.completedArchived')}</span>
                     </span>
                   )}
                 </div>
@@ -202,7 +211,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
               {/* Progress Bar */}
               <div>
                 <div className="flex justify-between text-xs font-bold mb-1.5">
-                  <span className="text-slate-700">Procedure Steps Completed</span>
+                  <span className="text-slate-700">{t('sessions.detail.progressLabel')}</span>
                   <span className="text-purple-700">{selectedSession.progressPercent}%</span>
                 </div>
                 <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
@@ -219,15 +228,15 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                   <CreditCard className="w-4 h-4 text-[#4F8EF7]" />
                   <div>
                     <span className="font-bold text-slate-800 block">
-                      Gateway Payment Status ({selectedSession.paymentIntegrationStatus?.gateway || (selectedSession as any).paymentGateway || 'Stripe'})
+                      {t('sessions.detail.gatewayStatus', { gateway: selectedSession.paymentIntegrationStatus?.gateway || (selectedSession as any).paymentGateway || t('sessions.detail.defaultGateway') })}
                     </span>
                     <span className="text-slate-500 text-[11px]">
-                      Ref: {selectedSession.paymentIntegrationStatus?.transactionRef || (selectedSession as any).paymentTransactionId || 'N/A'}
+                      {t('sessions.detail.refLabel', { ref: selectedSession.paymentIntegrationStatus?.transactionRef || (selectedSession as any).paymentTransactionId || t('sessions.detail.defaultRef') })}
                     </span>
                   </div>
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[11px] font-extrabold">
-                  {selectedSession.paymentIntegrationStatus?.status || (selectedSession as any).paymentStatus || 'Paid'}
+                  {selectedSession.paymentIntegrationStatus?.status || (selectedSession as any).paymentStatus || t('sessions.detail.defaultPaid')}
                 </span>
               </div>
             </div>
@@ -239,10 +248,10 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h3 className="font-extrabold text-xs text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Syringe className="w-4 h-4 text-[#4F8EF7]" />
-                    <span>Consumables Applied</span>
+                    <span>{t('sessions.consumables.title')}</span>
                   </h3>
                   <span className="text-[10px] font-bold text-slate-400">
-                    {selectedSession.consumablesUsed?.length || 0} Items
+                    {t('sessions.consumables.itemsCount', { count: selectedSession.consumablesUsed?.length || 0 })}
                   </span>
                 </div>
 
@@ -251,7 +260,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     <div key={idx} className="p-2.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between text-xs">
                       <div>
                         <span className="font-bold text-slate-800 block">{item.name}</span>
-                        <span className="text-[10px] text-slate-400 font-semibold">Lot: {item.batchNumber || (item as any).lotNumber || 'N/A'}</span>
+                        <span className="text-[10px] text-slate-400 font-semibold">{t('sessions.consumables.lotLabel', { lot: item.batchNumber || (item as any).lotNumber || t('sessions.consumables.defaultLot') })}</span>
                       </div>
                       <span className="px-2.5 py-1 bg-blue-50 text-[#4F8EF7] font-extrabold rounded-xl border border-blue-100 text-xs">
                         {item.quantity} {item.unit}
@@ -266,23 +275,23 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h3 className="font-extrabold text-xs text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Zap className="w-4 h-4 text-purple-600" />
-                    <span>Devices & Laser Parameters</span>
+                    <span>{t('sessions.devices.title')}</span>
                   </h3>
                   <span className="text-[10px] font-bold text-slate-400">
-                    {selectedSession.machinesUsed?.length || 0} Device
+                    {t('sessions.devices.count', { count: selectedSession.machinesUsed?.length || 0 })}
                   </span>
                 </div>
 
                 <div className="space-y-2">
                   {(selectedSession.machinesUsed || []).map((m: any, idx) => {
                     const settingsObj = m.settings || (m.laserSettings ? {
-                      'Energy': m.laserSettings.energyJoules ? `${m.laserSettings.energyJoules} J` : undefined,
-                      'Pulse': m.laserSettings.pulseDurationMs ? `${m.laserSettings.pulseDurationMs} ms` : undefined,
-                      'Spot Size': m.laserSettings.spotSizeMm ? `${m.laserSettings.spotSizeMm} mm` : undefined,
-                      'Passes': m.laserSettings.totalPasses ? `${m.laserSettings.totalPasses}` : undefined
+                      [t('sessions.devices.settings.energy')]: m.laserSettings.energyJoules ? `${m.laserSettings.energyJoules} J` : undefined,
+                      [t('sessions.devices.settings.pulse')]: m.laserSettings.pulseDurationMs ? `${m.laserSettings.pulseDurationMs} ms` : undefined,
+                      [t('sessions.devices.settings.spotSize')]: m.laserSettings.spotSizeMm ? `${m.laserSettings.spotSizeMm} mm` : undefined,
+                      [t('sessions.devices.settings.passes')]: m.laserSettings.totalPasses ? `${m.laserSettings.totalPasses}` : undefined
                     } : {
-                      'Model': m.model || 'Standard',
-                      'Sanitized': m.lastSanitized || 'Verified'
+                      [t('sessions.devices.settings.model')]: m.model || t('sessions.devices.defaultModel'),
+                      [t('sessions.devices.settings.sanitized')]: m.lastSanitized || t('sessions.devices.defaultSanitized')
                     });
 
                     const entries = Object.entries(settingsObj || {}).filter(([_, v]) => v !== undefined);
@@ -290,8 +299,8 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     return (
                       <div key={idx} className="p-3 bg-purple-50/50 border border-purple-100 rounded-2xl text-xs space-y-2">
                         <div className="font-black text-purple-900 flex justify-between">
-                          <span>{m.machineName || m.name || 'Device'}</span>
-                          <span className="text-[10px] text-purple-700 font-bold">Serial #{m.serialNumber || 'N/A'}</span>
+                          <span>{m.machineName || m.name || t('sessions.devices.defaultName')}</span>
+                          <span className="text-[10px] text-purple-700 font-bold">{t('sessions.devices.serialLabel', { serial: m.serialNumber || t('sessions.devices.defaultSerial') })}</span>
                         </div>
                         {entries.length > 0 && (
                           <div className="grid grid-cols-2 gap-1 text-[11px] bg-white p-2 rounded-xl border border-purple-100">
@@ -317,7 +326,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h3 className="font-extrabold text-xs text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <Package className="w-4 h-4 text-emerald-600" />
-                    <span>Items Issued To Patient</span>
+                    <span>{t('sessions.issued.title')}</span>
                   </h3>
                 </div>
 
@@ -326,10 +335,10 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     <div key={idx} className="p-2.5 bg-emerald-50/50 border border-emerald-100 rounded-2xl flex items-center justify-between text-xs">
                       <div>
                         <span className="font-bold text-emerald-900 block">{item.name}</span>
-                        <span className="text-[10px] text-emerald-700 font-medium">Issued by staff</span>
+                        <span className="text-[10px] text-emerald-700 font-medium">{t('sessions.issued.issuedByStaff')}</span>
                       </div>
                       <span className="px-2 py-0.5 bg-emerald-600 text-white font-extrabold rounded-lg text-[10px]">
-                        x{item.quantity}
+                        {t('sessions.issued.quantityBadge', { qty: item.quantity })}
                       </span>
                     </div>
                   ))}
@@ -341,7 +350,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                   <h3 className="font-extrabold text-xs text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                     <AlertCircle className="w-4 h-4 text-amber-500" />
-                    <span>Requested Consumables</span>
+                    <span>{t('sessions.requested.title')}</span>
                   </h3>
                   <button
                     type="button"
@@ -349,7 +358,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     className="px-2.5 py-1 bg-amber-50 text-amber-700 font-bold rounded-xl text-[10px] hover:bg-amber-100 transition flex items-center gap-1"
                   >
                     <Plus className="w-3 h-3" />
-                    <span>Request Stock</span>
+                    <span>{t('sessions.requested.requestButton')}</span>
                   </button>
                 </div>
 
@@ -358,10 +367,10 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     <div key={idx} className="p-2.5 bg-amber-50/40 border border-amber-200/60 rounded-2xl flex items-center justify-between text-xs">
                       <div>
                         <span className="font-bold text-amber-900 block">{req.name}</span>
-                        <span className="text-[10px] text-amber-700 font-semibold uppercase">Urgency: {req.urgency}</span>
+                        <span className="text-[10px] text-amber-700 font-semibold uppercase">{t('sessions.requested.urgencyLabel', { urgency: req.urgency })}</span>
                       </div>
                       <span className="px-2.5 py-1 bg-white border border-amber-200 font-extrabold rounded-xl text-[10px] text-amber-800">
-                        {req.status}
+                        {t(`sessions.requested.statusLabels.${req.status.toLowerCase().replace(' ', '')}`, req.status)}
                       </span>
                     </div>
                   ))}
@@ -377,30 +386,30 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 space-y-4 border border-slate-100">
             <h3 className="font-extrabold text-sm text-slate-900">
-              Request Additional Consumable / Item
+              {t('sessions.requestModal.title')}
             </h3>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Item Name:</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{t('sessions.requestModal.itemNameLabel')}</label>
               <input
                 type="text"
                 value={requestItemName}
                 onChange={(e) => setRequestItemName(e.target.value)}
-                placeholder="e.g. Sterile Gauze 4x4 or 1% Lidocaine"
+                placeholder={t('sessions.requestModal.itemNamePlaceholder')}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 outline-hidden"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Urgency Level:</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{t('sessions.requestModal.urgencyLabel')}</label>
               <select
                 value={requestUrgency}
                 onChange={(e) => setRequestUrgency(e.target.value as any)}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-800 outline-hidden"
               >
-                <option value="Normal">Normal</option>
-                <option value="High">High Priority</option>
-                <option value="Immediate">Immediate Room Delivery</option>
+                <option value="Normal">{t('sessions.requestModal.urgencyOptions.normal')}</option>
+                <option value="High">{t('sessions.requestModal.urgencyOptions.high')}</option>
+                <option value="Immediate">{t('sessions.requestModal.urgencyOptions.immediate')}</option>
               </select>
             </div>
 
@@ -410,7 +419,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 onClick={() => setShowRequestItemModal(false)}
                 className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs"
               >
-                Cancel
+                {t('common:buttons.cancel')}
               </button>
               <button
                 type="button"
@@ -434,7 +443,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 }}
                 className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold text-xs"
               >
-                Send Request
+                {t('sessions.requestModal.sendButton')}
               </button>
             </div>
           </div>

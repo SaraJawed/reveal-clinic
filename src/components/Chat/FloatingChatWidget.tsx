@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChatMessage, TabType, Doctor, ClinicBranch, Appointment } from '../../types';
 import { Bot, Send, Sparkles, X, RefreshCw, MessageSquare, ArrowLeft } from 'lucide-react';
 import { ChatBookingCard } from './ChatBookingCard';
@@ -25,16 +26,17 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
   selectedBranch,
   onBookAppointment
 }) => {
+  const { t } = useTranslation('chat');
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const [bookingCardDoctor, setBookingCardDoctor] = useState<Doctor | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickPrompts = [
-    'What are the clinic working hours?',
-    'Book HydraFacial with Dr. Maha Al-Otaibi',
-    'Post-laser care instructions',
-    'Redeem rewards & special offers'
+    t('floatingChatWidget.quickPrompts.hours'),
+    t('floatingChatWidget.quickPrompts.bookHydrafacial'),
+    t('floatingChatWidget.quickPrompts.postLaserCare'),
+    t('floatingChatWidget.quickPrompts.redeemRewards')
   ];
 
   const scrollToBottom = () => {
@@ -80,7 +82,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
               id="floating-chatbot-trigger-btn"
               onClick={onToggleOpen}
               className="relative group w-12 h-12 flex items-center justify-center bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 rounded-full shadow-2xl border border-sky-400/30 hover:scale-105 active:scale-95 transition-all cursor-pointer"
-              title="Open AI Clinic Chatbot"
+              title={t('floatingChatWidget.launcherTitle')}
             >
               {/* Pulsing Aura */}
               <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 opacity-40 blur-xs group-hover:opacity-80 transition duration-300 animate-pulse" />
@@ -112,9 +114,9 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
                 id="floating-chat-back-btn"
                 onClick={onToggleOpen}
                 className="p-2 bg-slate-800/80 hover:bg-slate-700 text-white rounded-2xl transition font-bold text-xs flex items-center gap-1.5 border border-slate-700 cursor-pointer"
-                title="Return to Application"
+                title={t('floatingChatWidget.backTitle')}
               >
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {t('common:buttons.back')}
               </button>
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sky-400 to-blue-600 flex items-center justify-center text-white shadow-md">
                 <Bot className="w-5 h-5" />
@@ -122,9 +124,9 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
 
               <div>
                 <h3 className="font-extrabold text-sm sm:text-base tracking-tight flex items-center gap-2">
-                  Reveal AI Assistant
+                  {t('floatingChatWidget.assistantName')}
                 </h3>
-                <p className="text-[11px] text-slate-300">24/7 Clinical & Treatment Guidance</p>
+                <p className="text-[11px] text-slate-300">{t('floatingChatWidget.assistantTagline')}</p>
               </div>
             </div>
 
@@ -133,7 +135,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
               id="floating-chat-close-btn"
               onClick={onToggleOpen}
               className="p-2.5 text-slate-300 hover:text-white rounded-2xl hover:bg-slate-800 transition cursor-pointer"
-              title="Close Chatbot"
+              title={t('floatingChatWidget.closeTitle')}
             >
               <X className="w-5 h-5" />
             </button>
@@ -142,7 +144,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
           {/* Quick FAQ Prompts */}
           <div className="p-3 bg-slate-50 border-b border-slate-100 flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0 px-6">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-sky-500" /> FAQs:
+              <Sparkles className="w-3.5 h-3.5 text-sky-500" /> {t('floatingChatWidget.faqsLabel')}
             </span>
             {quickPrompts.map((p, idx) => (
               <button
@@ -187,7 +189,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
 
                 {msg.sender === 'user' && (
                   <div className="w-8 h-8 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center shrink-0 mt-0.5 font-bold text-xs">
-                    You
+                    {t('floatingChatWidget.youLabel')}
                   </div>
                 )}
               </div>
@@ -200,7 +202,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
                 </div>
                 <div className="bg-white p-3.5 rounded-3xl rounded-tl-none border border-slate-200 text-xs text-slate-500 flex items-center gap-2.5 shadow-xs">
                   <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
-                  <span>Generating response...</span>
+                  <span>{t('floatingChatWidget.generatingResponse')}</span>
                 </div>
               </div>
             )}
@@ -236,7 +238,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                placeholder="Ask AI about treatments, skincare, or doctor availability..."
+                placeholder={t('floatingChatWidget.inputPlaceholder')}
                 className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs sm:text-sm font-semibold focus:bg-white focus:border-blue-500 outline-hidden shadow-xs"
               />
               <button
@@ -245,7 +247,7 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
                 disabled={loading || !inputText.trim()}
                 className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold flex items-center gap-2 shadow-md shrink-0 transition cursor-pointer text-xs sm:text-sm"
               >
-                <span>Send</span>
+                <span>{t('floatingChatWidget.sendButton')}</span>
                 <Send className="w-4 h-4" />
               </button>
             </form>

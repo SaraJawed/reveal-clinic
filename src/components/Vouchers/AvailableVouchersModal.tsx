@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { loyaltyRewards } from '../../data/mockData';
 import { Gift, Tag, X } from 'lucide-react';
 
@@ -8,13 +9,14 @@ interface AvailableVouchersModalProps {
 }
 
 export const AvailableVouchersModal: React.FC<AvailableVouchersModalProps> = ({ onSelect, onClose }) => {
+  const { t } = useTranslation('payments');
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs">
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm max-h-[80vh] flex flex-col border border-slate-100">
         <div className="flex items-center justify-between p-4 border-b border-slate-100 shrink-0">
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-emerald-600" />
-            <h3 className="font-extrabold text-sm text-slate-900">Available Vouchers</h3>
+            <h3 className="font-extrabold text-sm text-slate-900">{t('vouchers.availableVouchers')}</h3>
           </div>
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600">
             <X className="w-5 h-5" />

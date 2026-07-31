@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StaffNotification } from '../../types';
 import { Bell, AlertCircle, UserCheck, Package } from 'lucide-react';
 import { NotificationCenter, NotificationCenterCategory } from '../Notifications/NotificationCenter';
@@ -8,14 +9,6 @@ interface DoctorNotificationsViewProps {
   onMarkAsRead: (id: string) => void;
   onMarkAllAsRead: () => void;
 }
-
-const categories: NotificationCenterCategory<StaffNotification>[] = [
-  { id: 'all', label: 'All Alerts', match: () => true },
-  { id: 'check_in', label: 'Patient Check-Ins', match: (n) => n.type === 'check_in' },
-  { id: 'consumable_request', label: 'Consumables & Stock', match: (n) => n.type === 'consumable_request' },
-  { id: 'emergency', label: 'Urgent Directives', match: (n) => n.type === 'emergency' },
-  { id: 'cancellation', label: 'Schedule Changes', match: (n) => n.type === 'cancellation' || n.type === 'rescheduled' }
-];
 
 const getBadge = (notif: StaffNotification) => {
   switch (notif.type) {
@@ -30,19 +23,38 @@ const getBadge = (notif: StaffNotification) => {
   }
 };
 
+// Notification type -> translation key mapping (underlying type values stay unchanged)
+const typeLabelKeys: Record<string, string> = {
+  check_in: 'checkIn',
+  consumable_request: 'consumableRequest',
+  emergency: 'emergency',
+  cancellation: 'cancellation',
+  rescheduled: 'rescheduled'
+};
+
 export const DoctorNotificationsView: React.FC<DoctorNotificationsViewProps> = ({
   notifications,
   onMarkAsRead,
   onMarkAllAsRead
 }) => {
+  const { t } = useTranslation('doctor');
+
+  const categories: NotificationCenterCategory<StaffNotification>[] = [
+    { id: 'all', label: t('notifications.categories.all'), match: () => true },
+    { id: 'check_in', label: t('notifications.categories.checkIns'), match: (n) => n.type === 'check_in' },
+    { id: 'consumable_request', label: t('notifications.categories.consumables'), match: (n) => n.type === 'consumable_request' },
+    { id: 'emergency', label: t('notifications.categories.emergency'), match: (n) => n.type === 'emergency' },
+    { id: 'cancellation', label: t('notifications.categories.scheduleChanges'), match: (n) => n.type === 'cancellation' || n.type === 'rescheduled' }
+  ];
+
   return (
     <NotificationCenter
-      title="Clinical Notification Center"
-      subtitle="Real-time patient check-ins, room readiness, urgent requests, and schedule changes"
+      title={t('notifications.header.title')}
+      subtitle={t('notifications.header.subtitle')}
       items={notifications}
       categories={categories}
       getBadge={getBadge}
-      getDetailLabel={(notif) => notif.type.replace('_', ' ').toUpperCase()}
+      getDetailLabel={(notif) => t(`notifications.types.${typeLabelKeys[notif.type] || notif.type}`, notif.type.replace('_', ' ').toUpperCase())}
       onMarkAsRead={onMarkAsRead}
       onMarkAllAsRead={onMarkAllAsRead}
     />

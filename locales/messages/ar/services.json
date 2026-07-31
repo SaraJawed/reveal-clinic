@@ -1,0 +1,121 @@
+{
+  "errors": {
+    "invalidVoucher": "رمز القسيمة غير صالح أو منتهي الصلاحية."
+  },
+  "header": {
+    "title": "العلاجات والخدمات والباقات",
+    "subtitle": "استكشف إجراءات التجميل والأمراض الجلدية المعتمدة من إدارة الغذاء والدواء."
+  },
+  "categories": {
+    "All": "الكل",
+    "Medical Aesthetics": "التجميل الطبي",
+    "Laser Treatments": "علاجات الليزر",
+    "Injectables": "الحقن التجميلي",
+    "Anti-Aging": "مكافحة الشيخوخة",
+    "Body Contouring": "نحت الجسم"
+  },
+  "packagesSection": {
+    "title": "باقات العلاج والباقات الموفرة",
+    "saveBadge": "وفّر حتى 22%",
+    "sessionsPack": "باقة {{count}} جلسات",
+    "saveTag": "وفّر {{percentage}}%",
+    "originalValue": "{{amount}} ريال",
+    "price": "{{amount}} ريال",
+    "purchaseButton": "شراء الباقة"
+  },
+  "treatmentsSection": {
+    "title": "العلاجات الفردية والإجراءات السريرية ({{count}})",
+    "price": "{{amount}} ريال",
+    "duration": "{{minutes}} دقيقة",
+    "detailsButton": "التفاصيل",
+    "bookButton": "احجز"
+  },
+  "treatmentSheet": {
+    "subtitleDoctorSlot": "اختر الطبيب والتاريخ والموعد.",
+    "subtitleCardDetails": "أدخل بيانات بطاقتك لإتمام الدفع.",
+    "subtitlePayment": "راجع ملخص الحجز واختر طريقة الدفع.",
+    "details": {
+      "benefitsTitle": "أبرز فوائد العلاج",
+      "preCareLabel": "إرشادات ما قبل العلاج:",
+      "postCareLabel": "إرشادات ما بعد العلاج:",
+      "price": "{{amount}} ريال",
+      "scheduleButton": "حجز موعد"
+    },
+    "doctorSlot": {
+      "continueButton": "المتابعة إلى الدفع"
+    },
+    "payment": {
+      "summary": {
+        "treatment": "العلاج:",
+        "doctor": "الطبيب:",
+        "dateTime": "التاريخ والوقت:",
+        "dateTimeValue": "{{date}} في {{timeSlot}}",
+        "voucherDiscount": "خصم القسيمة:",
+        "voucherDiscountValue": "-{{amount}} ريال",
+        "total": "الإجمالي:",
+        "totalValue": "{{amount}} ريال"
+      },
+      "confirmButton": "تأكيد الحجز — {{amount}} ريال",
+      "selectPaymentPrompt": "اختر طريقة دفع للمتابعة",
+      "backButton": "رجوع"
+    },
+    "confirmed": {
+      "title": "تم حجز الموعد!",
+      "treatmentLabel": "العلاج:",
+      "doctorLabel": "الطبيب:",
+      "dateLabel": "التاريخ:",
+      "dateValue": "{{date}} في {{timeSlot}}",
+      "feeMethodLabel": "الرسوم / طريقة الدفع:",
+      "feeMethodValue": "{{amount}} ريال ({{method}})",
+      "voucherLabel": "القسيمة:",
+      "voucherValue": "{{code}} (-{{amount}} ريال)",
+      "doneButton": "تم"
+    }
+  },
+  "packageSheet": {
+    "subtitleDetails": "تفاصيل الباقة",
+    "subtitleDoctorSlot": "اختر الطبيب والتاريخ والموعد لجلستك الأولى.",
+    "subtitleCardDetails": "أدخل بيانات بطاقتك لإتمام الدفع.",
+    "subtitlePayment": "راجع ملخص الحجز واختر طريقة الدفع.",
+    "details": {
+      "totalPriceLabel": "إجمالي سعر الباقة:",
+      "totalPriceValue": "{{amount}} ريال",
+      "originalValueLabel": "القيمة الأصلية:",
+      "originalValueValue": "{{amount}} ريال",
+      "savingsLabel": "إجمالي توفيرك:",
+      "savingsValue": "{{amount}} ريال ({{percentage}}%)",
+      "purchaseNote": "شراء هذه الباقة يضيف <strong>{{sessions}} جلسات</strong> إلى حسابك النشط، صالحة لمدة {{months}} أشهر في جميع فروع Reveal Clinic.",
+      "bookFirstSessionButton": "حجز الجلسة الأولى"
+    },
+    "doctorSlot": {
+      "continueButton": "المتابعة إلى الدفع",
+      "backButton": "رجوع"
+    },
+    "payment": {
+      "summary": {
+        "package": "الباقة:",
+        "doctor": "الطبيب:",
+        "firstSession": "الجلسة الأولى:",
+        "firstSessionValue": "{{date}} في {{timeSlot}}",
+        "voucherDiscount": "خصم القسيمة:",
+        "voucherDiscountValue": "-{{amount}} ريال",
+        "total": "الإجمالي:",
+        "totalValue": "{{amount}} ريال"
+      },
+      "confirmButton": "تأكيد الشراء — {{amount}} ريال",
+      "selectPaymentPrompt": "اختر طريقة دفع للمتابعة",
+      "backButton": "رجوع"
+    },
+    "confirmed": {
+      "title": "تم شراء الباقة!",
+      "packageLabel": "الباقة:",
+      "packageValue": "{{packageName}} ({{sessions}} جلسات)",
+      "doctorLabel": "طبيب الجلسة الأولى:",
+      "dateLabel": "التاريخ:",
+      "dateValue": "{{date}} في {{timeSlot}}",
+      "feeMethodLabel": "الرسوم / طريقة الدفع:",
+      "feeMethodValue": "{{amount}} ريال ({{method}})",
+      "doneButton": "تم"
+    }
+  }
+}

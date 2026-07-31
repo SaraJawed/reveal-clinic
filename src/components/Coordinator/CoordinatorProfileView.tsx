@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { UserProfile, ClinicBranch } from '../../types';
+import { DEFAULT_LOCALE, isSupportedLocale, type Locale } from '../../i18n/locales';
 import {
   User,
   ShieldCheck,
@@ -29,7 +32,12 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
   onLogout,
   onTriggerToast
 }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<'English' | 'Arabic'>('English');
+  const { t } = useTranslation('coordinator');
+  const { locale: rawLocale } = useParams<{ locale: string }>();
+  const locale: Locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -41,19 +49,21 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPassword || newPassword !== confirmPassword) {
-      onTriggerToast('Passwords do not match.');
+      onTriggerToast(t('profile.passwordModal.toastMismatch'));
       return;
     }
-    onTriggerToast('Password updated successfully!');
+    onTriggerToast(t('profile.passwordModal.toastSuccess'));
     setShowPasswordModal(false);
     setOldPassword('');
     setNewPassword('');
     setConfirmPassword('');
   };
 
-  const handleLanguageSelect = (lang: 'English' | 'Arabic') => {
-    setSelectedLanguage(lang);
-    onTriggerToast(`App language set to ${lang}.`);
+  const handleLanguageSelect = (lang: Locale) => {
+    if (lang === locale) return;
+    onTriggerToast(t('profile.toastLanguageSet', { lang: t(`profile.language.${lang === 'en' ? 'english' : 'arabic'}`) }));
+    const rest = location.pathname.replace(new RegExp(`^/${locale}`), '');
+    navigate(`/${lang}${rest}${location.search}`);
   };
 
   return (
@@ -62,10 +72,10 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
       <div>
         <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
           <User className="w-6 h-6 text-[#4F8EF7]" />
-          Coordinator Account & Preferences
+          {t('profile.header.title')}
         </h1>
         <p className="text-xs text-slate-500 font-medium">
-          Manage your reception profile credentials, app language, and security settings.
+          {t('profile.header.subtitle')}
         </p>
       </div>
 
@@ -81,27 +91,27 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-black text-slate-900">{user.fullName}</h2>
               <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#4F8EF7] text-xs font-extrabold border border-blue-100">
-                Front Desk Coordinator
+                {t('profile.badge')}
               </span>
             </div>
             <p className="text-xs font-bold text-slate-500 flex items-center gap-1">
               <Building2 className="w-3.5 h-3.5 text-[#4F8EF7]" /> {selectedBranch.name}
             </p>
-            <p className="text-[11px] text-slate-400 font-medium">Employee ID: COORD-8820 • Shift: Morning (08:30 AM - 05:30 PM)</p>
+            <p className="text-[11px] text-slate-400 font-medium">{t('profile.employeeInfo')}</p>
           </div>
         </div>
 
         {/* Contact info grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t border-slate-100 text-xs">
           <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase block">Email Address</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase block">{t('profile.contact.email')}</span>
             <span className="font-extrabold text-slate-800 flex items-center gap-1.5 mt-0.5">
               <Mail className="w-3.5 h-3.5 text-slate-400" /> {user.email}
             </span>
           </div>
 
           <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
-            <span className="text-[10px] font-bold text-slate-400 uppercase block">Phone Contact</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase block">{t('profile.contact.phone')}</span>
             <span className="font-extrabold text-slate-800 flex items-center gap-1.5 mt-0.5">
               <Phone className="w-3.5 h-3.5 text-slate-400" /> {user.phone}
             </span>
@@ -115,7 +125,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
         <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-2xs space-y-4">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-[#4F8EF7]" />
-            <h3 className="font-extrabold text-slate-900 text-base">Security & Authentication</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">{t('profile.security.title')}</h3>
           </div>
 
           <div className="space-y-3">
@@ -128,8 +138,8 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
                   <Lock className="w-4 h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="font-extrabold text-slate-900">Change Password</div>
-                  <div className="text-[10px] text-slate-400">Update reception login password</div>
+                  <div className="font-extrabold text-slate-900">{t('profile.security.changePassword')}</div>
+                  <div className="text-[10px] text-slate-400">{t('profile.security.changePasswordNote')}</div>
                 </div>
               </div>
               <Key className="w-4 h-4 text-slate-400" />
@@ -141,12 +151,12 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
                   <Wifi className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="font-extrabold text-slate-900">PWA Offline Mode</div>
-                  <div className="text-[10px] text-emerald-600 font-bold">Enabled & Cached</div>
+                  <div className="font-extrabold text-slate-900">{t('profile.security.offlineMode')}</div>
+                  <div className="text-[10px] text-emerald-600 font-bold">{t('profile.security.offlineModeStatus')}</div>
                 </div>
               </div>
               <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-black rounded-full">
-                Active
+                {t('profile.security.active')}
               </span>
             </div>
           </div>
@@ -156,22 +166,22 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
         <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-2xs space-y-4">
           <div className="flex items-center gap-2">
             <Globe className="w-5 h-5 text-purple-600" />
-            <h3 className="font-extrabold text-slate-900 text-base">Language Preferences</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">{t('profile.language.title')}</h3>
           </div>
 
           <div className="space-y-2">
-            {(['English', 'Arabic'] as const).map((lang) => (
+            {(['en', 'ar'] as const).map((lang) => (
               <button
                 key={lang}
                 onClick={() => handleLanguageSelect(lang)}
                 className={`w-full p-3 rounded-2xl border text-xs font-extrabold flex items-center justify-between transition-all ${
-                  selectedLanguage === lang
+                  locale === lang
                     ? 'bg-blue-50 border-[#4F8EF7] text-[#4F8EF7]'
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <span>{lang}</span>
-                {selectedLanguage === lang && <CheckCircle2 className="w-4 h-4 text-[#4F8EF7]" />}
+                <span>{lang === 'en' ? t('profile.language.english') : t('profile.language.arabic')}</span>
+                {locale === lang && <CheckCircle2 className="w-4 h-4 text-[#4F8EF7]" />}
               </button>
             ))}
           </div>
@@ -185,7 +195,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
           className="w-full p-4 rounded-3xl bg-red-50 hover:bg-red-100 text-red-600 font-extrabold text-xs transition-all border border-red-100 flex items-center justify-center gap-2 shadow-xs"
         >
           <LogOut className="w-4 h-4" />
-          <span>End Reception Session (Logout)</span>
+          <span>{t('profile.logout.button')}</span>
         </button>
       </div>
 
@@ -196,7 +206,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
             <div className="flex items-center justify-between pb-2 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <Lock className="w-5 h-5 text-[#4F8EF7]" />
-                <h3 className="font-black text-slate-900 text-base">Change Password</h3>
+                <h3 className="font-black text-slate-900 text-base">{t('profile.passwordModal.title')}</h3>
               </div>
               <button
                 onClick={() => setShowPasswordModal(false)}
@@ -208,7 +218,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
 
             <form onSubmit={handleChangePassword} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Current Password *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.currentPassword')}</label>
                 <input
                   type="password"
                   required
@@ -220,7 +230,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">New Password *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.newPassword')}</label>
                 <input
                   type="password"
                   required
@@ -232,7 +242,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Confirm New Password *</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.confirmPassword')}</label>
                 <input
                   type="password"
                   required
@@ -249,13 +259,13 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
                   onClick={() => setShowPasswordModal(false)}
                   className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
                 >
-                  Cancel
+                  {t('common:buttons.cancel')}
                 </button>
                 <button
                   type="submit"
                   className="px-5 py-2 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md shadow-blue-500/20"
                 >
-                  Update Password
+                  {t('profile.passwordModal.update')}
                 </button>
               </div>
             </form>
@@ -271,9 +281,9 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
               <LogOut className="w-6 h-6" />
             </div>
 
-            <h3 className="font-black text-slate-900 text-base">Confirm Logout</h3>
+            <h3 className="font-black text-slate-900 text-base">{t('profile.logoutModal.title')}</h3>
             <p className="text-xs text-slate-500 font-medium">
-              Are you sure you want to end your current receptionist session?
+              {t('profile.logoutModal.confirmText')}
             </p>
 
             <div className="pt-2 flex items-center gap-2">
@@ -281,7 +291,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
                 onClick={() => setShowLogoutModal(false)}
                 className="w-full py-2.5 rounded-2xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50"
               >
-                Cancel
+                {t('common:buttons.cancel')}
               </button>
               <button
                 onClick={() => {
@@ -290,7 +300,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
                 }}
                 className="w-full py-2.5 rounded-2xl bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold shadow-md shadow-red-500/20"
               >
-                Logout
+                {t('common:buttons.logout')}
               </button>
             </div>
           </div>

@@ -1,0 +1,122 @@
+{
+  "header": {
+    "title": "إدارة المواعيد",
+    "subtitle": "احجز موعدًا مع أطباء الجلدية أو أدر زياراتك القادمة للعيادة.",
+    "tabBookNew": "حجز جديد",
+    "tabMyVisits": "زياراتي ({{count}})",
+    "searchPlaceholder": "ابحث عن أطباء أو تخصصات أو علاجات..."
+  },
+  "specialtyFilters": {
+    "all": "الكل",
+    "antiAging": "مكافحة الشيخوخة",
+    "laserSkin": "الليزر والبشرة",
+    "cosmeticDermatology": "الجلدية التجميلية",
+    "clinicalDermatology": "الجلدية السريرية"
+  },
+  "doctorList": {
+    "availableDoctors": "أطباء الجلدية والجراحون المتاحون ({{count}})",
+    "reviewCount": "({{count}} تقييم)",
+    "yearsExp": "{{years}} سنوات خبرة",
+    "consultationFeeLabel": "رسوم الاستشارة",
+    "feeAmount": "{{amount}} ر.س",
+    "selectAndBook": "اختيار وحجز"
+  },
+  "history": {
+    "emptyTitle": "لا توجد سجلات مواعيد",
+    "emptySubtitle": "احجز استشارتك الأولى من خلال تبويب 'حجز جديد'.",
+    "pendingConfirmation": "بانتظار التأكيد",
+    "feeWithMethod": "{{fee}} ر.س ({{method}})",
+    "voucherApplied": "تم تطبيق القسيمة {{code}} (خصم {{amount}} ر.س)",
+    "cancelConfirm": "هل أنت متأكد من رغبتك في إلغاء هذا الموعد؟",
+    "cancel": "إلغاء",
+    "reschedule": "إعادة جدولة",
+    "ratedOutOf5": "التقييم {{rating}}/5",
+    "rateVisit": "قيّم زيارتك",
+    "paidLabel": "مدفوع",
+    "payAtClinicLabel": "الدفع في العيادة"
+  },
+  "paymentMethods": {
+    "payAtClinic": "الدفع في العيادة",
+    "payOnline": "الدفع الإلكتروني",
+    "buyNowPayLater": "اشترِ الآن وادفع لاحقًا",
+    "payOnlineFull": "الدفع الإلكتروني (مدى / آبل باي / فيزا)",
+    "bnplFull": "اشترِ الآن وادفع لاحقًا (تقسيط)",
+    "paidOnline": "مدفوع إلكترونيًا"
+  },
+  "consultationTypes": {
+    "inClinic": "استشارة داخل العيادة",
+    "followUp": "فحص متابعة",
+    "procedure": "إجراء تجميلي"
+  },
+  "booking": {
+    "sheetTitle": "حجز موعد - {{doctorName}}",
+    "subtitleForm": "اختر نوع الاستشارة والتاريخ والوقت المناسب.",
+    "subtitleCardDetails": "أدخل بيانات بطاقتك لإتمام الدفع.",
+    "subtitleSummary": "راجع ملخص الحجز واختر طريقة الدفع.",
+    "consultationTypeLabel": "نوع الاستشارة",
+    "selectTreatmentLabel": "اختر خدمة العلاج",
+    "treatmentOption": "{{name}} ({{price}} ر.س • {{duration}} دقيقة)",
+    "consultationFeeFor": "رسوم الاستشارة ({{type}}):",
+    "appointmentDateLabel": "تاريخ الموعد",
+    "availableSlotsLabel": "الأوقات المتاحة",
+    "notesLabel": "ملاحظات للطبيب (اختياري)",
+    "notesPlaceholder": "اذكر مشاكل البشرة أو الحساسية إن وجدت...",
+    "totalFeeLabel": "إجمالي رسوم الموعد",
+    "proceedToSummary": "المتابعة إلى ملخص الحجز"
+  },
+  "summary": {
+    "title": "ملخص الحجز",
+    "doctorLabel": "الطبيب:",
+    "typeLabel": "النوع:",
+    "treatmentLabel": "العلاج:",
+    "dateTimeLabel": "التاريخ والوقت:",
+    "dateAtSlot": "{{date}} الساعة {{slot}}",
+    "subtotalLabel": "المجموع الفرعي:",
+    "voucherLabel": "القسيمة ({{code}}):",
+    "voucherAmount": "-{{amount}} ر.س",
+    "totalDueLabel": "الإجمالي المستحق:",
+    "feeAmount": "{{amount}} ر.س",
+    "haveVoucherCode": "هل لديك رمز قسيمة؟",
+    "voucherAppliedInline": "تم تطبيق {{code}} — خصم {{amount}} ر.س",
+    "voucherPlaceholder": "مثال: GLOW10",
+    "invalidVoucher": "رمز القسيمة غير صالح أو منتهي الصلاحية.",
+    "viewAvailableVouchers": "عرض القسائم المتاحة",
+    "selectPaymentOption": "اختر طريقة الدفع",
+    "payAtClinicDesc": "ادفع نقدًا أو بالبطاقة عند وصولك إلى مكتب العيادة",
+    "payOnlineDesc": "دفع إلكتروني آمن وفوري مع تأكيد مباشر",
+    "bnplDesc": "قسّط دفعتك عبر تابي — موافقة فورية ولا يوجد مبلغ مستحق اليوم",
+    "confirmBookingWithFee": "تأكيد الحجز — {{amount}} ر.س",
+    "selectPaymentToContinue": "اختر طريقة دفع للمتابعة",
+    "backToDetails": "العودة إلى تفاصيل الموعد"
+  },
+  "success": {
+    "title": "تأكيد الموعد",
+    "messages": {
+      "payAtClinic": "تم حجز موعدك. سيتم تأكيد الحجز فور إتمام الدفع في العيادة.",
+      "payOnline": "تم حجز موعدك بنجاح واستلام دفعتك. تم إرسال تأكيد إليك.",
+      "buyNowPayLater": "تم تأكيد موعدك! تم إعداد خطة الدفع بالتقسيط الخاصة بك — لا يوجد مبلغ مستحق اليوم."
+    },
+    "doctorLabel": "الطبيب:",
+    "dateLabel": "التاريخ:",
+    "locationLabel": "الموقع:",
+    "feeStatusLabel": "الرسوم / الحالة:",
+    "voucherLabel": "القسيمة:",
+    "dateAtSlot": "{{date}} الساعة {{slot}}",
+    "feeStatusValue": "{{fee}} ر.س ({{method}})",
+    "voucherValue": "{{code}} (خصم {{amount}} ر.س)",
+    "doneButton": "تم — العودة إلى المواعيد"
+  },
+  "rescheduleSheet": {
+    "title": "إعادة جدولة الموعد",
+    "subtitle": "الطبيب: {{name}}",
+    "newDateLabel": "التاريخ الجديد",
+    "newSlotLabel": "الوقت الجديد",
+    "confirmButton": "تأكيد الموعد الجديد"
+  },
+  "feedbackSheet": {
+    "title": "تقييم الطبيب",
+    "subtitle": "قيّم إجراءك مع {{name}}",
+    "placeholder": "كيف كانت تجربتك مع الإجراء وجودة الرعاية المقدمة؟",
+    "submitButton": "إرسال تقييم المريض"
+  }
+}

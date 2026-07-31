@@ -1,0 +1,324 @@
+{
+  "dashboard": {
+    "hero": {
+      "roleBadge": {
+        "nurse": "Aesthetic Nursing Portal",
+        "coordinator": "Clinic Coordinator",
+        "doctor": "Physician Portal"
+      },
+      "greeting": "Good day, {{name}}",
+      "waitingPrefix": "You have",
+      "checkedInCount": "{{count}} patient(s) checked in",
+      "waitingSuffix": "and waiting for procedure in {{room}}.",
+      "defaultRoom": "Treatment Suite",
+      "fullScheduleButton": "Full Schedule ({{count}})"
+    },
+    "stats": {
+      "totalLabel": "Today's Total",
+      "totalSub": "Scheduled appointments",
+      "checkedInLabel": "Checked-In",
+      "checkedInSub": "Ready in lobby / pod",
+      "activeLabel": "Active Room",
+      "activeSub": "In procedure suite",
+      "completedLabel": "Completed",
+      "completedSub": "Finished today"
+    },
+    "currentPatient": {
+      "title": "Current Patient Focus",
+      "ageGender": "({{age}}y, {{gender}})",
+      "viewMedicalFile": "View Medical File",
+      "treatmentSession": "Treatment Session",
+      "scheduledReason": "Scheduled: {{time}} • Reason: {{reason}}",
+      "updateStatusLabel": "Update Patient Status:",
+      "statusInConsultation": "In Consultation",
+      "statusInProcedure": "In Procedure",
+      "statusComplete": "Complete Session"
+    },
+    "quickActions": {
+      "title": "Clinical Quick Actions",
+      "scheduleTitle": "Daily Schedule & Filtering",
+      "scheduleSub": "View calendar and update statuses",
+      "patientsTitle": "Search Patient Records",
+      "patientsSub": "Access medical history & allergies",
+      "sessionsTitle": "Treatment Session Tracker",
+      "sessionsSub": "Log machines, consumables & items",
+      "notificationsTitle": "Staff Notifications",
+      "notificationsSub": "Patient check-ins & cancellations"
+    }
+  },
+  "schedule": {
+    "header": {
+      "title": "Clinical Schedule Management",
+      "subtitle": "Manage patient appointments, room allocations, and session statuses"
+    },
+    "viewToggle": {
+      "daily": "Daily Timeline",
+      "weekly": "Weekly Calendar"
+    },
+    "filters": {
+      "dateLabel": "Filter Date:",
+      "dateOptions": {
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "thisWeek": "This Week"
+      },
+      "statusLabel": "Appointment Status:",
+      "allStatuses": "All Statuses ({{count}})",
+      "searchLabel": "Search Patient or Procedure:",
+      "searchPlaceholder": "Name, treatment, room..."
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "checkedIn": "Checked In",
+      "inConsultation": "In Consultation",
+      "procedure": "Procedure",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "empty": {
+      "title": "No Appointments Found",
+      "subtitle": "No matching clinical schedule items found for the selected date or filter criteria."
+    },
+    "list": {
+      "queueNumber": "Queue #{{number}}",
+      "ageGender": "({{age}}y, {{gender}})",
+      "attendingType": "Attending: {{doctor}} • Type: {{type}}",
+      "detailsButton": "Details & Status"
+    },
+    "weekly": {
+      "title": "Weekly Overview (July 2026)",
+      "operatingDays": "5 Operating Days",
+      "days": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday"
+      }
+    },
+    "modal": {
+      "allergyCautionFlag": "Allergy Caution Flag",
+      "updateStatusLabel": "Update Appointment Status:",
+      "fields": {
+        "patientId": "Patient ID:",
+        "ageGender": "Age & Gender:",
+        "ageGenderValue": "{{age}} years, {{gender}}",
+        "consultationType": "Consultation Type:",
+        "roomLocation": "Room Location:",
+        "paymentStatus": "Payment Status:",
+        "paymentStatusPaid": "Paid",
+        "visitReason": "Visit Reason:"
+      },
+      "openPatientFile": "Open Patient File"
+    }
+  },
+  "patients": {
+    "header": {
+      "title": "Patient Medical Records",
+      "subtitle": "Access comprehensive patient history, clinical skin profiles, allergies, and visits",
+      "searchPlaceholder": "Search patient name or ID..."
+    },
+    "list": {
+      "registeredCount": "Registered Patients ({{count}})",
+      "allergyFlagTitle": "Has allergy flags",
+      "idAgeGender": "ID: {{patientId}} • {{age}}y ({{gender}})"
+    },
+    "detail": {
+      "backButton": "← Back to Patient List",
+      "addNoteButton": "Add Note",
+      "ageGenderBlood": "{{age}} years old • {{gender}} • Blood Group:",
+      "registeredBranch": "Registered Branch",
+      "activePackages": "Active Packages",
+      "activePackagesValue": "{{count}} Active Package(s)",
+      "totalVisited": "Total Visited",
+      "totalVisitedValue": "{{count}} Recorded Visit(s)"
+    },
+    "tabs": {
+      "history": "Medical Notes",
+      "visits": "Previous Visits ({{count}})",
+      "treatments": "Treatment History",
+      "reports": "Medical Reports ({{count}})"
+    },
+    "history": {
+      "sectionTitle": "Dermatology & Clinical History Summary"
+    },
+    "visits": {
+      "sectionTitle": "Clinical Visit History",
+      "prescriptionsLabel": "Prescriptions Issued:",
+      "prescriptionItem": "💊 {{medication}} ({{dosage}} - {{frequency}})",
+      "physicianLine": "Physician: {{doctor}} • {{branch}}"
+    },
+    "treatments": {
+      "sectionTitle": "Subscribed Packages & Procedures",
+      "datesLine": "Started: {{startDate}} • Last: {{lastDate}}",
+      "sessionsCount": "{{completed}} / {{total}} Sessions"
+    },
+    "reports": {
+      "sectionTitle": "Diagnostic Reports & Skin Analysis",
+      "empty": "No diagnostic PDF reports attached yet.",
+      "downloadingAlert": "Downloading {{fileName}}...",
+      "pdfButton": "PDF"
+    },
+    "noteModal": {
+      "title": "Add Medical Note ({{name}})",
+      "placeholder": "e.g. Patient requested ice cooling before injections due to mild needle sensitivity...",
+      "saveButton": "Save Note"
+    }
+  },
+  "sessions": {
+    "header": {
+      "title": "Clinical Treatment Sessions",
+      "subtitle": "Manage procedure consumables, laser machine settings, items issued, and session progress"
+    },
+    "filters": {
+      "all": "All Sessions"
+    },
+    "status": {
+      "inProgress": "In Progress",
+      "scheduled": "Scheduled",
+      "completed": "Completed"
+    },
+    "list": {
+      "activeCount": "Active Sessions ({{count}})",
+      "roomBadge": "Room {{number}}",
+      "attending": "Attending: {{doctor}}",
+      "progressLabel": "Progress"
+    },
+    "detail": {
+      "backButton": "← Back to Active Sessions",
+      "sessionId": "Session #{{id}}",
+      "suite": "Suite {{room}}",
+      "patientLine": "Patient: {{name}} • Attending: {{doctor}}",
+      "startButton": "Start Procedure",
+      "finishButton": "Finish & Save Session",
+      "completedArchived": "Completed & Archived",
+      "progressLabel": "Procedure Steps Completed",
+      "gatewayStatus": "Gateway Payment Status ({{gateway}})",
+      "defaultGateway": "Stripe",
+      "refLabel": "Ref: {{ref}}",
+      "defaultRef": "N/A",
+      "defaultPaid": "Paid"
+    },
+    "consumables": {
+      "title": "Consumables Applied",
+      "itemsCount": "{{count}} Items",
+      "lotLabel": "Lot: {{lot}}",
+      "defaultLot": "N/A"
+    },
+    "devices": {
+      "title": "Devices & Laser Parameters",
+      "count": "{{count}} Device",
+      "defaultName": "Device",
+      "serialLabel": "Serial #{{serial}}",
+      "defaultSerial": "N/A",
+      "defaultModel": "Standard",
+      "defaultSanitized": "Verified",
+      "settings": {
+        "energy": "Energy",
+        "pulse": "Pulse",
+        "spotSize": "Spot Size",
+        "passes": "Passes",
+        "model": "Model",
+        "sanitized": "Sanitized"
+      }
+    },
+    "issued": {
+      "title": "Items Issued To Patient",
+      "issuedByStaff": "Issued by staff",
+      "quantityBadge": "x{{qty}}"
+    },
+    "requested": {
+      "title": "Requested Consumables",
+      "requestButton": "Request Stock",
+      "urgencyLabel": "Urgency: {{urgency}}",
+      "statusLabels": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "delivered": "Delivered"
+      }
+    },
+    "requestModal": {
+      "title": "Request Additional Consumable / Item",
+      "itemNameLabel": "Item Name:",
+      "itemNamePlaceholder": "e.g. Sterile Gauze 4x4 or 1% Lidocaine",
+      "urgencyLabel": "Urgency Level:",
+      "urgencyOptions": {
+        "normal": "Normal",
+        "high": "High Priority",
+        "immediate": "Immediate Room Delivery"
+      },
+      "sendButton": "Send Request"
+    }
+  },
+  "notifications": {
+    "header": {
+      "title": "Clinical Notification Center",
+      "subtitle": "Real-time patient check-ins, room readiness, urgent requests, and schedule changes"
+    },
+    "categories": {
+      "all": "All Alerts",
+      "checkIns": "Patient Check-Ins",
+      "consumables": "Consumables & Stock",
+      "emergency": "Urgent Directives",
+      "scheduleChanges": "Schedule Changes"
+    },
+    "types": {
+      "checkIn": "CHECK-IN",
+      "consumableRequest": "CONSUMABLE REQUEST",
+      "emergency": "EMERGENCY",
+      "cancellation": "CANCELLATION",
+      "rescheduled": "RESCHEDULED"
+    }
+  },
+  "profile": {
+    "header": {
+      "defaultRoleBadge": "PHYSICIAN",
+      "reviewsCount": "({{count}} Reviews)",
+      "defaultSpecialty": "Aesthetic Dermatologist",
+      "licensePrefix": "License #{{number}}",
+      "staffIdPrefix": "Staff ID:",
+      "staffIdSuffix": "• Registered: {{branch}}"
+    },
+    "branch": {
+      "title": "Clinic Branch Assignment",
+      "description": "Select your active consulting clinic branch for room & appointment dispatching:"
+    },
+    "language": {
+      "title": "Clinical Interface Language",
+      "description": "Select preferred language for medical terminology & clinical interface:",
+      "options": {
+        "english": "English",
+        "arabic": "Arabic"
+      },
+      "activeBadge": "Active"
+    },
+    "security": {
+      "title": "Account Security",
+      "description": "Manage password, two-factor authentication, and HIPAA/GDPR clinical compliance credentials.",
+      "changePasswordButton": "Change Security Password"
+    },
+    "sessions": {
+      "title": "Active Logged-in Sessions",
+      "revokeTitle": "Revoke session",
+      "currentBadge": "Current"
+    },
+    "logout": {
+      "signOutButton": "Sign Out of Staff Portal"
+    },
+    "passwordModal": {
+      "title": "Change Staff Account Password",
+      "mismatchAlert": "New password and confirm password do not match.",
+      "successMessage": "Password updated successfully!",
+      "currentPasswordLabel": "Current Password:",
+      "newPasswordLabel": "New Password:",
+      "confirmPasswordLabel": "Confirm New Password:",
+      "updateButton": "Update Password"
+    },
+    "logoutModal": {
+      "title": "Sign Out Confirmation",
+      "description": "Are you sure you want to log out of the Reveal Clinic staff portal?",
+      "stayButton": "Stay Logged In",
+      "confirmButton": "Confirm Logout"
+    }
+  }
+}

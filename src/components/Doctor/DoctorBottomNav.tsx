@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { StaffTabType } from '../../types';
 import { LayoutDashboard, Calendar, Users, Activity, Bell, User } from 'lucide-react';
 
@@ -13,12 +14,13 @@ export const DoctorBottomNav: React.FC<DoctorBottomNavProps> = ({
   onChangeTab,
   unreadNotificationsCount = 0
 }) => {
+  const { t } = useTranslation('navigation');
   const navItems: Array<{ id: StaffTabType; label: string; icon: React.FC<{ className?: string }> }> = [
-    { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-    { id: 'schedule', label: 'Schedule', icon: Calendar },
-    { id: 'patients', label: 'Patients', icon: Users },
-    { id: 'sessions', label: 'Sessions', icon: Activity },
-    { id: 'profile', label: 'Profile', icon: User }
+    { id: 'dashboard', label: t('doctorBottomNav.overview'), icon: LayoutDashboard },
+    { id: 'schedule', label: t('doctorBottomNav.schedule'), icon: Calendar },
+    { id: 'patients', label: t('doctorBottomNav.patients'), icon: Users },
+    { id: 'sessions', label: t('doctorBottomNav.sessions'), icon: Activity },
+    { id: 'profile', label: t('doctorBottomNav.profile'), icon: User }
   ];
 
   return (

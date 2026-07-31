@@ -1,0 +1,129 @@
+{
+  "brand": "عيادة ريفيل",
+  "topBar": {
+    "switchClinicLocation": "تبديل موقع العيادة",
+    "selectClinicLocation": "اختر موقع العيادة",
+    "notifications": "الإشعارات",
+    "notificationsHeading": "الإشعارات",
+    "recentAlerts": "أحدث التنبيهات",
+    "noRecentNotifications": "لا توجد إشعارات حديثة",
+    "openViewCenter": "فتح مركز الإشعارات",
+    "dismiss": "تجاهل",
+    "returnToPreviousScreen": "العودة إلى الشاشة السابقة",
+    "closeNotifications": "إغلاق الإشعارات",
+    "categories": {
+      "all": "كل التنبيهات",
+      "appointmentConfirmations": "تأكيدات المواعيد",
+      "appointmentReminders": "تذكيرات المواعيد",
+      "followUps": "المتابعات",
+      "payments": "المدفوعات",
+      "offers": "العروض"
+    },
+    "notificationCenter": {
+      "title": "مركز إشعارات المريض",
+      "subtitle": "تأكيدات المواعيد والتذكيرات والمدفوعات وعروض العيادة"
+    },
+    "mockNotifications": {
+      "confirmation": {
+        "title": "تأكيد الموعد",
+        "message": "تم تأكيد موعدك لجلسة تجديد سطح الجلد بالليزر مع الدكتورة فاطمة الزهراني يوم 24 أكتوبر الساعة 10:00 صباحًا.",
+        "timestamp": "الآن"
+      },
+      "reminder": {
+        "title": "تذكير بالموعد",
+        "message": "تذكير: لديك استشارة غدًا الساعة 10:00 صباحًا في مركز ريفيل العليا (الرياض). يُرجى الحضور قبل الموعد بعشر دقائق.",
+        "timestamp": "قبل ساعتين"
+      },
+      "followUp": {
+        "title": "تذكير بالمتابعة",
+        "message": "متابعة ما بعد الإجراء: كيف تسير عملية تعافي بشرتك بعد جلسة الهايدرافيشل؟ اضغط لتسجيل ملاحظات العناية اللاحقة.",
+        "timestamp": "قبل يوم واحد"
+      },
+      "payment": {
+        "title": "تأكيد الدفع",
+        "message": "تم استلام دفعة بقيمة 850.00 ريال سعودي مقابل الاستشارة وجلسة الليزر. رقم الإيصال RC-INV-2026-8842#.",
+        "timestamp": "قبل يومين"
+      },
+      "promo": {
+        "title": "العروض الترويجية",
+        "message": "عرض حصري: استمتعي بخصم 20% على جميع باقات التقشير المنعش هذا الشهر في عيادة ريفيل بالرياض!",
+        "timestamp": "قبل 3 أيام"
+      }
+    }
+  },
+  "bottomNav": {
+    "home": "الرئيسية",
+    "book": "حجز",
+    "services": "الخدمات",
+    "reports": "التقارير",
+    "profile": "الملف الشخصي"
+  },
+  "doctorTopBar": {
+    "selectActiveBranch": "اختر الفرع النشط",
+    "notifications": "الإشعارات",
+    "recentAlerts": "أحدث التنبيهات",
+    "noRecentNotifications": "لا توجد إشعارات حديثة",
+    "openViewCenter": "فتح مركز الإشعارات",
+    "dismiss": "تجاهل",
+    "setClinicalStatus": "تحديد الحالة السريرية",
+    "roleTitles": {
+      "nurse": "أخصائية تمريض تجميلي",
+      "coordinator": "منسق العيادة",
+      "doctor": "طبيب جلدية معالج"
+    },
+    "status": {
+      "available": "متاح",
+      "inConsultation": "في استشارة",
+      "inProcedure": "في إجراء",
+      "onBreak": "في استراحة",
+      "offDuty": "خارج الدوام"
+    }
+  },
+  "doctorBottomNav": {
+    "overview": "نظرة عامة",
+    "schedule": "الجدول",
+    "patients": "المرضى",
+    "sessions": "الجلسات",
+    "profile": "الملف الشخصي"
+  },
+  "coordinatorTopBar": {
+    "quickFind": "بحث سريع",
+    "searchPatientOrAppointment": "البحث عن مريض أو موعد",
+    "notifications": "الإشعارات",
+    "recentAlerts": "أحدث التنبيهات",
+    "noRecentNotifications": "لا توجد إشعارات حديثة",
+    "openViewCenter": "فتح مركز الإشعارات",
+    "dismiss": "تجاهل",
+    "status": {
+      "onDuty": "في الدوام",
+      "inConsultation": "في استشارة",
+      "inProcedure": "في إجراء",
+      "onBreak": "في استراحة",
+      "offDuty": "خارج الدوام"
+    }
+  },
+  "coordinatorBottomNav": {
+    "overview": "نظرة عامة",
+    "appointments": "المواعيد",
+    "patients": "المرضى",
+    "profile": "الملف الشخصي"
+  },
+  "pwaInstallBanner": {
+    "offlineNotice": "أنت تتصفح حاليًا في <strong>وضع عدم الاتصال</strong>. المواعيد والتقارير المخزّنة متاحة للعرض.",
+    "reconnect": "إعادة الاتصال",
+    "installAppTitle": "تثبيت تطبيق عيادة ريفيل",
+    "pwaBadge": "تطبيق ويب",
+    "installStepsIOS": "اضغط على أيقونة المشاركة، ثم \"إضافة إلى الشاشة الرئيسية\" لتسجيل الوصول والاطلاع على التقارير دون اتصال.",
+    "installStepsDefault": "أضف التطبيق إلى شاشتك الرئيسية لتسجيل وصول رقمي سريع وتقارير طبية دون اتصال.",
+    "installButton": "تثبيت"
+  },
+  "notificationCenter": {
+    "markAllAsRead": "تمييز الكل كمقروء ({{count}})",
+    "noNotificationsFound": "لا توجد إشعارات",
+    "noNotificationsHint": "تمت معالجة جميع التنبيهات في هذه الفئة.",
+    "read": "مقروء",
+    "view": "عرض",
+    "category": "الفئة: {{category}}",
+    "closeAlert": "إغلاق التنبيه"
+  }
+}

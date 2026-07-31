@@ -1,0 +1,69 @@
+{
+  "paymentHistory": {
+    "backButton": "← العودة إلى الملف الشخصي",
+    "title": "سجل المدفوعات",
+    "subtitle": "جميع فواتير العيادة وسجلات الدفع السابقة",
+    "transactionRecords": "سجلات المعاملات",
+    "transactionsCount": "{{count}} معاملة",
+    "receiptNumber": "رقم الإيصال: {{receiptNumber}}",
+    "amount": "{{amount}} ريال",
+    "emptyState": "لا توجد سجلات دفع سابقة."
+  },
+  "banner": {
+    "changePhotoTitle": "تغيير صورة الملف الشخصي",
+    "changePhotoPrompt": "أدخل رابط صورة المريض:",
+    "verifiedPatient": "مريض موثّق",
+    "patientFileId": "رقم ملف المريض:",
+    "accountActiveSince": "الحساب نشط منذ {{date}}",
+    "editButton": "تعديل الملف الشخصي",
+    "cancelEditButton": "إلغاء التعديل"
+  },
+  "savedSuccess": "تم حفظ بيانات الملف الشخصي للمريض بنجاح!",
+  "tiles": {
+    "loyalty": {
+      "title": "كتالوج المكافآت",
+      "subtitle": "عرض العروض الخاصة"
+    },
+    "referral": {
+      "title": "دعوة الأصدقاء",
+      "subtitle": "الرمز: {{code}}"
+    },
+    "giftCards": {
+      "title": "بطاقات الهدايا",
+      "subtitle": "إرسال واسترداد"
+    }
+  },
+  "form": {
+    "personalInformation": "المعلومات الشخصية",
+    "fullName": "الاسم الكامل",
+    "phoneNumber": "رقم الهاتف",
+    "emailAddress": "البريد الإلكتروني",
+    "dateOfBirth": "تاريخ الميلاد",
+    "bloodGroup": "فصيلة الدم",
+    "emergencyContact": "جهة اتصال الطوارئ الثانوية",
+    "residentialAddress": "عنوان السكن",
+    "allergiesLabel": "الحساسيات الجلدية المعروفة",
+    "addAllergyPlaceholder": "أضف حساسية جلدية...",
+    "addButton": "إضافة",
+    "medicalNotes": "الملاحظات الطبية للمريض",
+    "accountInformation": "معلومات الحساب",
+    "patientIdLabel": "رقم هوية المريض (للقراءة فقط)",
+    "patientIdNote": "يتم تعيينه تلقائيًا عند إنشاء المستخدم في النظام.",
+    "saveButton": "حفظ تغييرات الملف الشخصي للمريض"
+  },
+  "preferences": {
+    "title": "تفضيلات التطبيق",
+    "language": "اللغة",
+    "languageEnglish": "English",
+    "languageArabic": "العربية (Arabic)",
+    "security": "الأمان وكلمة المرور",
+    "changePasswordButton": "تغيير كلمة المرور",
+    "changePasswordAlert": "تم إرسال رابط إعادة تعيين كلمة المرور إلى البريد الإلكتروني المسجل!",
+    "privacyTerms": "سياسة الخصوصية والشروط",
+    "viewDocumentButton": "عرض المستند",
+    "privacyTermsAlert": "تلتزم Reveal Clinic بشكل صارم بأنظمة الخصوصية الطبية HIPAA وGDPR.",
+    "paymentHistory": "سجل المدفوعات",
+    "recordsCount": "{{count}} سجل",
+    "signOutButton": "تسجيل الخروج من الحساب"
+  }
+}

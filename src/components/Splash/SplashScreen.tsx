@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 interface SplashScreenProps {
   onFinish: () => void;
 }
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
+  const { t } = useTranslation('splash');
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onFinish();
@@ -30,16 +33,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           </div>
 
           <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent">
-            REVEAL CLINIC
+            {t('brand.name')}
           </h1>
           <p className="text-xs font-medium text-sky-300 tracking-widest uppercase mt-2">
-            Aesthetic & Medical Dermatology
+            {t('brand.tagline')}
           </p>
 
           {/* Loading Ring */}
           <div className="mt-12 flex items-center gap-2 text-slate-400 text-xs font-medium">
             <div className="w-4 h-4 border-2 border-sky-400 border-t-transparent rounded-full animate-spin" />
-            <span>Initializing PWA Portal...</span>
+            <span>{t('loading')}</span>
           </div>
         </motion.div>
 
@@ -47,7 +50,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           className="absolute text-[11px] text-slate-500 text-center"
           style={{ bottom: 'max(2rem, env(safe-area-inset-bottom))' }}
         >
-          Powered by Reveal PWA Architecture • Secure & Encrypted
+          {t('footer')}
         </div>
       </div>
     </div>

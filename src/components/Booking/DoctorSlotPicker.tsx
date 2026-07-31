@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Doctor } from '../../types';
 import { Star } from 'lucide-react';
 
@@ -23,10 +24,11 @@ export const DoctorSlotPicker: React.FC<DoctorSlotPickerProps> = ({
   onChangeSlot,
   minDate
 }) => {
+  const { t } = useTranslation('payments');
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-xs font-bold text-slate-700 mb-2">Select Attending Doctor</label>
+        <label className="block text-xs font-bold text-slate-700 mb-2">{t('doctorSlotPicker.selectDoctorLabel')}</label>
         <div className="space-y-2">
           {doctors.map((doc) => (
             <button
@@ -56,7 +58,7 @@ export const DoctorSlotPicker: React.FC<DoctorSlotPickerProps> = ({
       </div>
 
       <div>
-        <label className="block text-xs font-bold text-slate-700 mb-1.5">Appointment Date</label>
+        <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('doctorSlotPicker.appointmentDateLabel')}</label>
         <input
           type="date"
           value={selectedDate}
@@ -68,7 +70,7 @@ export const DoctorSlotPicker: React.FC<DoctorSlotPickerProps> = ({
 
       {selectedDoctor && (
         <div>
-          <label className="block text-xs font-bold text-slate-700 mb-1.5">Available Time Slots</label>
+          <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('doctorSlotPicker.availableTimeSlotsLabel')}</label>
           <div className="grid grid-cols-3 gap-2">
             {selectedDoctor.availableTimeSlots.map((slot) => (
               <button

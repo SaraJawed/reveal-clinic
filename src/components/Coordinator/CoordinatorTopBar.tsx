@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserProfile, ClinicBranch, StaffNotification } from '../../types';
 import { UserCheck, Bell, RefreshCw, ChevronDown, CheckCircle, MapPin, Search, X } from 'lucide-react';
+import { LanguageSwitcher } from '../Language/LanguageSwitcher';
 
 interface CoordinatorTopBarProps {
   user: UserProfile;
@@ -29,6 +31,7 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
   notifications = [],
   onMarkAsRead
 }) => {
+  const { t } = useTranslation('navigation');
   const [showBranchDropdown, setShowBranchDropdown] = useState(false);
   const [showStatusDropdown, setShowStatusDropdown] = useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
@@ -41,6 +44,14 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
     'Off Duty': 'bg-slate-400 text-white'
   };
 
+  const statusLabels: Record<keyof typeof statusColors, string> = {
+    'Available': t('coordinatorTopBar.status.onDuty'),
+    'In Consultation': t('coordinatorTopBar.status.inConsultation'),
+    'In Procedure': t('coordinatorTopBar.status.inProcedure'),
+    'On Break': t('coordinatorTopBar.status.onBreak'),
+    'Off Duty': t('coordinatorTopBar.status.offDuty')
+  };
+
   const currentStatus = user.availabilityStatus || 'Available';
 
   return (
@@ -51,20 +62,22 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
         {/* Left: Branding */}
         <div className="flex items-center gap-3">
-          <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">Reveal Clinic</span>
+          <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">{t('brand')}</span>
         </div>
 
         {/* Right: Quick Search, Duty Status, Notifications */}
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+
           {/* Quick Search trigger */}
           {onQuickSearchClick && (
             <button
               onClick={onQuickSearchClick}
               className="p-2 sm:px-3 sm:py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 transition-all text-xs font-semibold flex items-center gap-1.5"
-              title="Search Patient or Appointment"
+              title={t('coordinatorTopBar.searchPatientOrAppointment')}
             >
               <Search className="w-4 h-4 text-slate-500" />
-              <span className="hidden md:inline">Quick Find</span>
+              <span className="hidden md:inline">{t('coordinatorTopBar.quickFind')}</span>
             </button>
           )}
 
@@ -77,7 +90,7 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
               }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-              <span>{currentStatus === 'Available' ? 'On Duty' : currentStatus}</span>
+              <span>{statusLabels[currentStatus]}</span>
               <ChevronDown className="w-3 h-3" />
             </button>
 
@@ -94,7 +107,7 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
                       currentStatus === status ? 'text-[#4F8EF7] font-bold bg-blue-50/50' : 'text-slate-700'
                     }`}
                   >
-                    <span>{status === 'Available' ? 'On Duty' : status}</span>
+                    <span>{statusLabels[status]}</span>
                     {currentStatus === status && <CheckCircle className="w-3.5 h-3.5 text-[#4F8EF7]" />}
                   </button>
                 ))}
@@ -109,7 +122,7 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
               id="coordinator-notifications-btn"
               onClick={() => setShowNotificationsDropdown(!showNotificationsDropdown)}
               className="relative w-9 h-9 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition"
-              title="Notifications"
+              title={t('coordinatorTopBar.notifications')}
             >
               <Bell className="w-4 h-4" />
               {unreadNotificationsCount > 0 && (
@@ -126,7 +139,7 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Recent Alerts
+                    {t('coordinatorTopBar.recentAlerts')}
                   </span>
                   <button
                     onClick={() => setShowNotificationsDropdown(false)}
@@ -138,7 +151,7 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
 
                 <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
                   {(!notifications || notifications.length === 0) ? (
-                    <p className="text-center text-slate-400 text-[11px] py-4">No recent notifications</p>
+                    <p className="text-center text-slate-400 text-[11px] py-4">{t('coordinatorTopBar.noRecentNotifications')}</p>
                   ) : (
                     notifications.slice(0, 5).map((notif) => (
                       <div
@@ -168,13 +181,13 @@ export const CoordinatorTopBar: React.FC<CoordinatorTopBarProps> = ({
                     }}
                     className="text-[#4F8EF7] font-bold hover:underline"
                   >
-                    Open View Center
+                    {t('coordinatorTopBar.openViewCenter')}
                   </button>
                   <button
                     onClick={() => setShowNotificationsDropdown(false)}
                     className="text-slate-500 hover:underline font-semibold"
                   >
-                    Dismiss
+                    {t('coordinatorTopBar.dismiss')}
                   </button>
                 </div>
               </div>

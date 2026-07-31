@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Home, Calendar, Sparkles, QrCode, FileText, Bot, User } from 'lucide-react';
 import { TabType } from '../../types';
 
@@ -13,12 +14,13 @@ export const BottomNav: React.FC<BottomNavProps> = ({
   onChangeTab,
   upcomingCount = 0
 }) => {
+  const { t } = useTranslation('navigation');
   const navItems: Array<{ id: TabType; label: string; icon: React.FC<{ className?: string }> }> = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'appointments', label: 'Book', icon: Calendar },
-    { id: 'services', label: 'Services', icon: Sparkles },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'profile', label: 'Profile', icon: User }
+    { id: 'home', label: t('bottomNav.home'), icon: Home },
+    { id: 'appointments', label: t('bottomNav.book'), icon: Calendar },
+    { id: 'services', label: t('bottomNav.services'), icon: Sparkles },
+    { id: 'reports', label: t('bottomNav.reports'), icon: FileText },
+    { id: 'profile', label: t('bottomNav.profile'), icon: User }
   ];
 
   return (

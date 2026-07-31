@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Bell,
   MapPin,
@@ -13,6 +14,7 @@ import {
 } from 'lucide-react';
 import { ClinicBranch, UserProfile, TabType } from '../../types';
 import { NotificationCenter, NotificationCenterCategory } from '../Notifications/NotificationCenter';
+import { LanguageSwitcher } from '../Language/LanguageSwitcher';
 
 interface TopBarProps {
   user: UserProfile;
@@ -37,33 +39,34 @@ interface PatientNotification {
   badgeColor: string;
 }
 
-const categories: NotificationCenterCategory<PatientNotification>[] = [
-  { id: 'all', label: 'All Alerts', match: () => true },
-  { id: 'Appointment Confirmation', label: 'Appointment Confirmations', match: (n) => n.category === 'Appointment Confirmation' },
-  { id: 'Appointment Reminder', label: 'Appointment Reminders', match: (n) => n.category === 'Appointment Reminder' },
-  { id: 'Follow-Up Reminder', label: 'Follow-Ups', match: (n) => n.category === 'Follow-Up Reminder' },
-  { id: 'Payment Confirmation', label: 'Payments', match: (n) => n.category === 'Payment Confirmation' },
-  { id: 'Promotional Campaigns', label: 'Offers', match: (n) => n.category === 'Promotional Campaigns' }
-];
-
 export const TopBar: React.FC<TopBarProps> = ({
   user,
   branches,
   selectedBranch,
   onSelectBranch,
 }) => {
+  const { t } = useTranslation('navigation');
   const [showBranchMenu, setShowBranchMenu] = useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] = useState(false);
   const [showNotificationsPage, setShowNotificationsPage] = useState(false);
+
+  const categories: NotificationCenterCategory<PatientNotification>[] = [
+    { id: 'all', label: t('topBar.categories.all'), match: () => true },
+    { id: 'Appointment Confirmation', label: t('topBar.categories.appointmentConfirmations'), match: (n) => n.category === 'Appointment Confirmation' },
+    { id: 'Appointment Reminder', label: t('topBar.categories.appointmentReminders'), match: (n) => n.category === 'Appointment Reminder' },
+    { id: 'Follow-Up Reminder', label: t('topBar.categories.followUps'), match: (n) => n.category === 'Follow-Up Reminder' },
+    { id: 'Payment Confirmation', label: t('topBar.categories.payments'), match: (n) => n.category === 'Payment Confirmation' },
+    { id: 'Promotional Campaigns', label: t('topBar.categories.offers'), match: (n) => n.category === 'Promotional Campaigns' }
+  ];
 
   // 5 Patient Notification Items
   const [notifications, setNotifications] = useState<PatientNotification[]>([
     {
       id: 'notif-1',
       category: 'Appointment Confirmation',
-      title: 'Appointment Confirmation',
-      message: 'Your appointment for Laser Skin Resurfacing with Dr. Fatima Al-Zahrani on Oct 24 at 10:00 AM has been confirmed.',
-      timestamp: 'Just now',
+      title: t('topBar.mockNotifications.confirmation.title'),
+      message: t('topBar.mockNotifications.confirmation.message'),
+      timestamp: t('topBar.mockNotifications.confirmation.timestamp'),
       read: false,
       icon: Calendar,
       badgeColor: 'bg-emerald-100 text-emerald-800 border-emerald-200'
@@ -71,9 +74,9 @@ export const TopBar: React.FC<TopBarProps> = ({
     {
       id: 'notif-2',
       category: 'Appointment Reminder',
-      title: 'Appointment Reminder',
-      message: 'Reminder: You have an upcoming consultation tomorrow at 10:00 AM at Reveal Olaya Center (Riyadh). Please arrive 10 mins early.',
-      timestamp: '2 hours ago',
+      title: t('topBar.mockNotifications.reminder.title'),
+      message: t('topBar.mockNotifications.reminder.message'),
+      timestamp: t('topBar.mockNotifications.reminder.timestamp'),
       read: false,
       icon: Clock,
       badgeColor: 'bg-blue-100 text-blue-800 border-blue-200'
@@ -81,9 +84,9 @@ export const TopBar: React.FC<TopBarProps> = ({
     {
       id: 'notif-3',
       category: 'Follow-Up Reminder',
-      title: 'Follow-Up Reminder',
-      message: 'Post-procedure care: How is your skin recovery following your HydraFacial session? Tap to record post-care notes.',
-      timestamp: '1 day ago',
+      title: t('topBar.mockNotifications.followUp.title'),
+      message: t('topBar.mockNotifications.followUp.message'),
+      timestamp: t('topBar.mockNotifications.followUp.timestamp'),
       read: false,
       icon: HeartPulse,
       badgeColor: 'bg-teal-100 text-teal-800 border-teal-200'
@@ -91,9 +94,9 @@ export const TopBar: React.FC<TopBarProps> = ({
     {
       id: 'notif-4',
       category: 'Payment Confirmation',
-      title: 'Payment Confirmation',
-      message: 'Payment of SAR 850.00 received for Consultation & Laser Session. Receipt #RC-INV-2026-8842.',
-      timestamp: '2 days ago',
+      title: t('topBar.mockNotifications.payment.title'),
+      message: t('topBar.mockNotifications.payment.message'),
+      timestamp: t('topBar.mockNotifications.payment.timestamp'),
       read: true,
       icon: CreditCard,
       badgeColor: 'bg-purple-100 text-purple-800 border-purple-200'
@@ -101,9 +104,9 @@ export const TopBar: React.FC<TopBarProps> = ({
     {
       id: 'notif-5',
       category: 'Promotional Campaigns',
-      title: 'Promotional Campaigns',
-      message: 'Exclusive Campaign: Enjoy 20% off all Glow & Radiance Peel packages this month at Reveal Clinic Riyadh!',
-      timestamp: '3 days ago',
+      title: t('topBar.mockNotifications.promo.title'),
+      message: t('topBar.mockNotifications.promo.message'),
+      timestamp: t('topBar.mockNotifications.promo.timestamp'),
       read: true,
       icon: Tag,
       badgeColor: 'bg-amber-100 text-amber-800 border-amber-200'
@@ -127,10 +130,12 @@ export const TopBar: React.FC<TopBarProps> = ({
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="flex items-center gap-3">
-          <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">Reveal Clinic</span>
+          <span className="font-extrabold text-slate-900 tracking-tight text-base sm:text-xl">{t('brand')}</span>
         </div>
 
         <div className="flex items-center gap-2 sm:gap-6">
+          <LanguageSwitcher />
+
           {/* Branch Selector Pill */}
           <div className="relative">
             <button
@@ -141,7 +146,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 setShowNotificationsDropdown(false);
               }}
               className="flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 active:scale-95 px-2.5 py-1.5 rounded-full text-xs font-medium text-slate-700 transition border border-slate-200/80 min-h-[36px] cursor-pointer"
-              title="Switch Clinic Location"
+              title={t('topBar.switchClinicLocation')}
             >
               <MapPin className="w-3.5 h-3.5 text-[#4F8EF7] shrink-0" />
               <span className="truncate max-w-[85px] sm:max-w-[160px] text-slate-800 font-semibold">
@@ -152,7 +157,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             {showBranchMenu && (
               <div className="absolute right-0 mt-1 w-60 bg-white rounded-2xl shadow-xl border border-slate-100 py-2 z-50">
                 <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                  Select Clinic Location
+                  {t('topBar.selectClinicLocation')}
                 </div>
                 {branches.map((b) => (
                   <button
@@ -189,7 +194,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 setShowBranchMenu(false);
               }}
               className="relative w-9 h-9 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-600 transition"
-              title="Notifications"
+              title={t('topBar.notifications')}
             >
               <Bell className="w-4 h-4" />
               {activeUnread > 0 && (
@@ -206,7 +211,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               >
                 <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2">
                   <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                    Recent Alerts
+                    {t('topBar.recentAlerts')}
                   </span>
                   <button
                     onClick={() => setShowNotificationsDropdown(false)}
@@ -218,7 +223,7 @@ export const TopBar: React.FC<TopBarProps> = ({
 
                 <div className="space-y-1.5 max-h-60 overflow-y-auto pr-0.5">
                   {notifications.length === 0 ? (
-                    <p className="text-center text-slate-400 text-[11px] py-4">No recent notifications</p>
+                    <p className="text-center text-slate-400 text-[11px] py-4">{t('topBar.noRecentNotifications')}</p>
                   ) : (
                     notifications.slice(0, 5).map((notif) => (
                       <div
@@ -246,13 +251,13 @@ export const TopBar: React.FC<TopBarProps> = ({
                     }}
                     className="text-[#4F8EF7] font-bold hover:underline"
                   >
-                    Open View Center
+                    {t('topBar.openViewCenter')}
                   </button>
                   <button
                     onClick={() => setShowNotificationsDropdown(false)}
                     className="text-slate-500 hover:underline font-semibold"
                   >
-                    Dismiss
+                    {t('topBar.dismiss')}
                   </button>
                 </div>
               </div>
@@ -275,17 +280,17 @@ export const TopBar: React.FC<TopBarProps> = ({
                 id="notifications-back-btn"
                 onClick={() => setShowNotificationsPage(false)}
                 className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 transition"
-                title="Return to Previous Screen"
+                title={t('topBar.returnToPreviousScreen')}
               >
                 <ArrowLeft className="w-4 h-4" />
               </button>
-              <h3 className="font-extrabold text-sm text-slate-900 flex-1">Notifications</h3>
+              <h3 className="font-extrabold text-sm text-slate-900 flex-1">{t('topBar.notificationsHeading')}</h3>
               <button
                 type="button"
                 id="notifications-close-btn"
                 onClick={() => setShowNotificationsPage(false)}
                 className="p-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-600 transition"
-                title="Close Notifications"
+                title={t('topBar.closeNotifications')}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -294,8 +299,8 @@ export const TopBar: React.FC<TopBarProps> = ({
             {/* Content container */}
             <div className="w-full p-3 sm:p-6 flex-1">
               <NotificationCenter
-                title="Patient Notification Center"
-                subtitle="Appointment confirmations, reminders, payments, and clinic offers"
+                title={t('topBar.notificationCenter.title')}
+                subtitle={t('topBar.notificationCenter.subtitle')}
                 items={notifications}
                 categories={categories}
                 getBadge={(n) => ({ icon: n.icon, className: n.badgeColor })}

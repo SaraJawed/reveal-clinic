@@ -1,0 +1,129 @@
+{
+  "brand": "Reveal Clinic",
+  "topBar": {
+    "switchClinicLocation": "Switch Clinic Location",
+    "selectClinicLocation": "Select Clinic Location",
+    "notifications": "Notifications",
+    "notificationsHeading": "Notifications",
+    "recentAlerts": "Recent Alerts",
+    "noRecentNotifications": "No recent notifications",
+    "openViewCenter": "Open View Center",
+    "dismiss": "Dismiss",
+    "returnToPreviousScreen": "Return to Previous Screen",
+    "closeNotifications": "Close Notifications",
+    "categories": {
+      "all": "All Alerts",
+      "appointmentConfirmations": "Appointment Confirmations",
+      "appointmentReminders": "Appointment Reminders",
+      "followUps": "Follow-Ups",
+      "payments": "Payments",
+      "offers": "Offers"
+    },
+    "notificationCenter": {
+      "title": "Patient Notification Center",
+      "subtitle": "Appointment confirmations, reminders, payments, and clinic offers"
+    },
+    "mockNotifications": {
+      "confirmation": {
+        "title": "Appointment Confirmation",
+        "message": "Your appointment for Laser Skin Resurfacing with Dr. Fatima Al-Zahrani on Oct 24 at 10:00 AM has been confirmed.",
+        "timestamp": "Just now"
+      },
+      "reminder": {
+        "title": "Appointment Reminder",
+        "message": "Reminder: You have an upcoming consultation tomorrow at 10:00 AM at Reveal Olaya Center (Riyadh). Please arrive 10 mins early.",
+        "timestamp": "2 hours ago"
+      },
+      "followUp": {
+        "title": "Follow-Up Reminder",
+        "message": "Post-procedure care: How is your skin recovery following your HydraFacial session? Tap to record post-care notes.",
+        "timestamp": "1 day ago"
+      },
+      "payment": {
+        "title": "Payment Confirmation",
+        "message": "Payment of SAR 850.00 received for Consultation & Laser Session. Receipt #RC-INV-2026-8842.",
+        "timestamp": "2 days ago"
+      },
+      "promo": {
+        "title": "Promotional Campaigns",
+        "message": "Exclusive Campaign: Enjoy 20% off all Glow & Radiance Peel packages this month at Reveal Clinic Riyadh!",
+        "timestamp": "3 days ago"
+      }
+    }
+  },
+  "bottomNav": {
+    "home": "Home",
+    "book": "Book",
+    "services": "Services",
+    "reports": "Reports",
+    "profile": "Profile"
+  },
+  "doctorTopBar": {
+    "selectActiveBranch": "Select Active Branch",
+    "notifications": "Notifications",
+    "recentAlerts": "Recent Alerts",
+    "noRecentNotifications": "No recent notifications",
+    "openViewCenter": "Open View Center",
+    "dismiss": "Dismiss",
+    "setClinicalStatus": "Set Clinical Status",
+    "roleTitles": {
+      "nurse": "Aesthetic Nurse Specialist",
+      "coordinator": "Clinic Coordinator",
+      "doctor": "Attending Dermatologist"
+    },
+    "status": {
+      "available": "Available",
+      "inConsultation": "In Consultation",
+      "inProcedure": "In Procedure",
+      "onBreak": "On Break",
+      "offDuty": "Off Duty"
+    }
+  },
+  "doctorBottomNav": {
+    "overview": "Overview",
+    "schedule": "Schedule",
+    "patients": "Patients",
+    "sessions": "Sessions",
+    "profile": "Profile"
+  },
+  "coordinatorTopBar": {
+    "quickFind": "Quick Find",
+    "searchPatientOrAppointment": "Search Patient or Appointment",
+    "notifications": "Notifications",
+    "recentAlerts": "Recent Alerts",
+    "noRecentNotifications": "No recent notifications",
+    "openViewCenter": "Open View Center",
+    "dismiss": "Dismiss",
+    "status": {
+      "onDuty": "On Duty",
+      "inConsultation": "In Consultation",
+      "inProcedure": "In Procedure",
+      "onBreak": "On Break",
+      "offDuty": "Off Duty"
+    }
+  },
+  "coordinatorBottomNav": {
+    "overview": "Overview",
+    "appointments": "Appts",
+    "patients": "Patients",
+    "profile": "Profile"
+  },
+  "pwaInstallBanner": {
+    "offlineNotice": "You are currently browsing in <strong>Offline Mode</strong>. Cached appointments and reports are available.",
+    "reconnect": "Reconnect",
+    "installAppTitle": "Install Reveal Clinic App",
+    "pwaBadge": "PWA",
+    "installStepsIOS": "Tap the Share icon, then \"Add to Home Screen\" for offline check-in & reports.",
+    "installStepsDefault": "Add to your home screen for quick digital check-in & offline medical reports.",
+    "installButton": "Install"
+  },
+  "notificationCenter": {
+    "markAllAsRead": "Mark All as Read ({{count}})",
+    "noNotificationsFound": "No Notifications Found",
+    "noNotificationsHint": "All alerts in this category have been addressed.",
+    "read": "Read",
+    "view": "View",
+    "category": "Category: {{category}}",
+    "closeAlert": "Close Alert"
+  }
+}

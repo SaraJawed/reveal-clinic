@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Doctor, ClinicBranch, Appointment, AppointmentStatus } from '../../types';
 import { Star, Clock, CheckCircle2, Tag, X, ArrowRight, CalendarCheck } from 'lucide-react';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
@@ -20,6 +21,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
   onBookAppointment,
   onDismiss
 }) => {
+  const { t } = useTranslation('chat');
   const [step, setStep] = useState<Step>('suggestion');
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<Appointment['paymentMethod'] | null>(null);
@@ -38,7 +40,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
     if (!code) return;
     const discount = calculateVoucherDiscount(code, baseFee);
     if (discount === null) {
-      setVoucherError('Invalid or expired voucher code.');
+      setVoucherError(t('chatBookingCard.invalidVoucher'));
       setAppliedVoucher(null);
       return;
     }
@@ -100,7 +102,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
           <div className="text-[10px] text-slate-500 truncate">{doctor.specialty}</div>
         </div>
         {step !== 'confirmed' && (
-          <button type="button" onClick={onDismiss} className="text-slate-400 hover:text-slate-600 shrink-0" title="Dismiss">
+          <button type="button" onClick={onDismiss} className="text-slate-400 hover:text-slate-600 shrink-0" title={t('chatBookingCard.dismissTitle')}>
             <X className="w-4 h-4" />
           </button>
         )}
@@ -110,10 +112,10 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
         {step === 'suggestion' && (
           <>
             <div className="flex items-center gap-1.5 text-[11px] text-amber-700 font-bold">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {doctor.rating} ({doctor.reviewCount} Reviews)
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {doctor.rating} ({t('chatBookingCard.reviewsCount', { count: doctor.reviewCount })})
             </div>
             <p className="text-[11px] text-slate-500">
-              {selectedBranch.name} • Consultation Fee: <strong className="text-slate-800">SAR {doctor.consultationFee}</strong>
+              {selectedBranch.name} • {t('chatBookingCard.consultationFeeLabel')} <strong className="text-slate-800">{t('chatBookingCard.sarAmount', { amount: doctor.consultationFee })}</strong>
             </p>
             <button
               type="button"
@@ -121,7 +123,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
               onClick={() => setStep('slots')}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5"
             >
-              Book Appointment <ArrowRight className="w-3.5 h-3.5" />
+              {t('chatBookingCard.bookAppointment')} <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </>
         )}
@@ -129,7 +131,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
         {step === 'slots' && (
           <>
             <div className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-blue-600" /> Available Time Slots Today
+              <Clock className="w-3.5 h-3.5 text-blue-600" /> {t('chatBookingCard.availableSlotsToday')}
             </div>
             <div className="grid grid-cols-3 gap-1.5">
               {doctor.availableTimeSlots.map((slot) => (
@@ -151,7 +153,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
               onClick={() => setStep('suggestion')}
               className="w-full text-[11px] font-bold text-slate-500 hover:text-slate-700 py-1"
             >
-              Back
+              {t('common:buttons.back')}
             </button>
           </>
         )}
@@ -159,19 +161,19 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
         {step === 'payment' && (
           <>
             <div className="flex items-center justify-between text-[11px] text-slate-600 bg-slate-50 rounded-lg px-2.5 py-1.5">
-              <span>🗓️ {today} at {selectedSlot}</span>
-              <span className="font-bold text-slate-900">SAR {finalFee}</span>
+              <span>{t('chatBookingCard.dateAtSlot', { date: today, slot: selectedSlot })}</span>
+              <span className="font-bold text-slate-900">{t('chatBookingCard.sarAmount', { amount: finalFee })}</span>
             </div>
 
             {/* Voucher */}
             <div className="space-y-1">
               <div className="text-[10px] font-bold text-slate-600 flex items-center gap-1">
-                <Tag className="w-3 h-3 text-emerald-600" /> Have a Voucher Code?
+                <Tag className="w-3 h-3 text-emerald-600" /> {t('chatBookingCard.haveVoucher')}
               </div>
               {appliedVoucher ? (
                 <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-lg px-2.5 py-1.5">
                   <span className="text-[10px] font-bold text-emerald-800">
-                    {appliedVoucher.code} applied (-SAR {appliedVoucher.discount})
+                    {t('chatBookingCard.voucherApplied', { code: appliedVoucher.code, discount: appliedVoucher.discount })}
                   </span>
                   <button type="button" onClick={handleRemoveVoucher} className="text-emerald-700 hover:text-rose-600">
                     <X className="w-3.5 h-3.5" />
@@ -187,7 +189,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                       setVoucherInput(e.target.value);
                       setVoucherError('');
                     }}
-                    placeholder="e.g. GLOW10"
+                    placeholder={t('chatBookingCard.voucherPlaceholder')}
                     className="flex-1 px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] font-semibold outline-hidden focus:bg-white focus:border-blue-500"
                   />
                   <button
@@ -196,7 +198,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                     onClick={handleApplyVoucher}
                     className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg text-[11px] transition shrink-0"
                   >
-                    Apply
+                    {t('common:buttons.apply')}
                   </button>
                 </div>
               )}
@@ -208,7 +210,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                   onClick={() => setShowVoucherList(true)}
                   className="text-[10px] font-bold text-emerald-700 hover:underline"
                 >
-                  View Available Vouchers
+                  {t('chatBookingCard.viewAvailableVouchers')}
                 </button>
               )}
             </div>
@@ -225,10 +227,10 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                     : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
-                <span>🏥 Pay at Clinic</span>
+                <span>{t('chatBookingCard.payAtClinic')}</span>
                 <span className="flex items-center gap-1">
                   {paymentMethod === 'Pay at Clinic' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
-                  SAR {finalFee}
+                  {t('chatBookingCard.sarAmount', { amount: finalFee })}
                 </span>
               </button>
 
@@ -242,10 +244,10 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                     : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
-                <span>💳 Pay Online</span>
+                <span>{t('chatBookingCard.payOnline')}</span>
                 <span className="flex items-center gap-1">
                   {paymentMethod === 'Pay Online' && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
-                  SAR {finalFee}
+                  {t('chatBookingCard.sarAmount', { amount: finalFee })}
                 </span>
               </button>
 
@@ -259,10 +261,10 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                     : 'bg-white text-slate-700 border border-slate-200'
                 }`}
               >
-                <span>🛍️ Buy Now, Pay Later</span>
+                <span>{t('chatBookingCard.buyNowPayLater')}</span>
                 <span className="flex items-center gap-1">
                   {paymentMethod === 'Buy Now Pay Later' && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
-                  SAR {finalFee}
+                  {t('chatBookingCard.sarAmount', { amount: finalFee })}
                 </span>
               </button>
             </div>
@@ -284,7 +286,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed'
               }`}
             >
-              {paymentMethod ? `Confirm Appointment — SAR ${finalFee}` : 'Select a Payment Option'}
+              {paymentMethod ? t('chatBookingCard.confirmAppointment', { amount: finalFee }) : t('chatBookingCard.selectPaymentOption')}
             </button>
 
             <button
@@ -292,7 +294,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
               onClick={() => setStep('slots')}
               className="w-full text-[11px] font-bold text-slate-500 hover:text-slate-700 py-1"
             >
-              Back
+              {t('common:buttons.back')}
             </button>
           </>
         )}
@@ -310,19 +312,19 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
             <div className="w-11 h-11 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CalendarCheck className="w-6 h-6" />
             </div>
-            <p className="text-xs font-bold text-slate-900">Appointment Confirmed!</p>
+            <p className="text-xs font-bold text-slate-900">{t('chatBookingCard.appointmentConfirmed')}</p>
             <p className="text-[11px] text-slate-500">
-              {today} at {confirmedAppt.timeSlot} with {doctor.name}
+              {t('chatBookingCard.confirmedDateWithDoctor', { date: today, slot: confirmedAppt.timeSlot, doctorName: doctor.name })}
             </p>
             <p className="text-[11px] font-bold text-slate-700">
-              SAR {confirmedAppt.fee} ({confirmedAppt.paymentMethod})
+              {t('chatBookingCard.confirmedFeeMethod', { fee: confirmedAppt.fee, method: confirmedAppt.paymentMethod })}
             </p>
             <button
               type="button"
               onClick={onDismiss}
               className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2 rounded-xl text-xs transition"
             >
-              Done
+              {t('common:buttons.done')}
             </button>
           </div>
         )}

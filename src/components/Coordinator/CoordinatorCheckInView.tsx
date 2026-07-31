@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ClinicalScheduleItem } from '../../types';
 import {
   QrCode,
@@ -26,6 +27,8 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
   onConfirmCheckIn,
   onTriggerToast
 }) => {
+  const { t } = useTranslation('coordinator');
+
   // Scanner state
   const [isScanning, setIsScanning] = useState(false);
   const [manualQuery, setManualQuery] = useState('');
@@ -42,7 +45,7 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
       // Pick first scheduled or default appointment
       const found = schedule.find(s => s.status === 'scheduled') || schedule[0];
       setScannedAppt(found || null);
-      onTriggerToast(`QR Code scanned successfully! Found ticket for ${found?.patientName}.`);
+      onTriggerToast(t('checkin.scanner.toastScanned', { name: found?.patientName }));
     }, 1200);
   };
 
@@ -59,16 +62,16 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
 
     if (found) {
       setScannedAppt(found);
-      onTriggerToast(`Appointment retrieved for ${found.patientName}.`);
+      onTriggerToast(t('checkin.manual.toastFound', { name: found.patientName }));
     } else {
-      onTriggerToast(`No appointment found for "${manualQuery}".`);
+      onTriggerToast(t('checkin.manual.toastNotFound', { query: manualQuery }));
     }
   };
 
   const handleConfirmArrival = () => {
     if (!scannedAppt) return;
     onConfirmCheckIn(scannedAppt.id);
-    onTriggerToast(`${scannedAppt.patientName} checked in! Queue Token #${scannedAppt.queueNumber || 104} issued.`);
+    onTriggerToast(t('checkin.verification.toastConfirmed', { name: scannedAppt.patientName, token: scannedAppt.queueNumber || 104 }));
     setScannedAppt(null);
     setManualQuery('');
   };
@@ -79,10 +82,10 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
       <div>
         <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
           <QrCode className="w-6 h-6 text-[#4F8EF7]" />
-          Digital Arrival & Check-In Desk
+          {t('checkin.header.title')}
         </h1>
         <p className="text-xs text-slate-500 font-medium">
-          Scan patient app QR code ticket or enter file number to verify arrival.
+          {t('checkin.header.subtitle')}
         </p>
       </div>
 
@@ -93,10 +96,10 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Camera className="w-5 h-5 text-[#4F8EF7]" />
-              <h2 className="font-extrabold text-slate-900 text-base">QR Scanner Terminal</h2>
+              <h2 className="font-extrabold text-slate-900 text-base">{t('checkin.scanner.title')}</h2>
             </div>
             <span className="px-2.5 py-1 rounded-full bg-blue-50 text-[#4F8EF7] text-[10px] font-black border border-blue-100">
-              Live Camera Feed
+              {t('checkin.scanner.liveFeed')}
             </span>
           </div>
 
@@ -118,14 +121,14 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
             <div className="text-center p-4 z-10 space-y-2">
               <QrCode className={`w-12 h-12 mx-auto text-blue-400 ${isScanning ? 'animate-bounce' : ''}`} />
               <p className="text-xs font-bold text-slate-200">
-                {isScanning ? 'Scanning QR Code Ticket...' : 'Position QR Code within Frame'}
+                {isScanning ? t('checkin.scanner.scanning') : t('checkin.scanner.positionFrame')}
               </p>
               <button
                 onClick={handleSimulateScan}
                 disabled={isScanning}
                 className="mt-2 px-4 py-2 rounded-xl bg-[#4F8EF7] hover:bg-blue-600 active:scale-95 text-white text-xs font-extrabold shadow-md shadow-blue-500/30 transition-all"
               >
-                {isScanning ? 'Processing...' : 'Simulate QR Scan Test'}
+                {isScanning ? t('checkin.scanner.processing') : t('checkin.scanner.simulateTest')}
               </button>
             </div>
           </div>
@@ -133,14 +136,14 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
           {/* Manual Lookup Option */}
           <div className="pt-2">
             <div className="text-[11px] font-extrabold text-slate-400 uppercase mb-2">
-              Or Manual File Lookup
+              {t('checkin.scanner.manualLookupLabel')}
             </div>
             <form onSubmit={handleManualSearch} className="flex gap-2">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Enter File # (e.g. RC-20410) or Name..."
+                  placeholder={t('checkin.scanner.manualPlaceholder')}
                   value={manualQuery}
                   onChange={(e) => setManualQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
@@ -150,7 +153,7 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
                 type="submit"
                 className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-extrabold shrink-0"
               >
-                Search
+                {t('common:buttons.search')}
               </button>
             </form>
           </div>
@@ -160,14 +163,14 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
         <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-2xs space-y-4">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-5 h-5 text-emerald-600" />
-            <h2 className="font-extrabold text-slate-900 text-base">Check-In Verification</h2>
+            <h2 className="font-extrabold text-slate-900 text-base">{t('checkin.verification.title')}</h2>
           </div>
 
           {!scannedAppt ? (
             <div className="text-center py-12 bg-slate-50 rounded-2xl border border-slate-100 text-slate-400 space-y-2">
               <QrCode className="w-10 h-10 mx-auto text-slate-300" />
-              <p className="text-xs font-bold text-slate-700">Awaiting QR scan or file search</p>
-              <p className="text-[11px]">Scan a ticket on the left to verify patient appointment details.</p>
+              <p className="text-xs font-bold text-slate-700">{t('checkin.verification.emptyTitle')}</p>
+              <p className="text-[11px]">{t('checkin.verification.emptySubtitle')}</p>
             </div>
           ) : (
             <div className="bg-gradient-to-b from-blue-50/50 to-white rounded-3xl border border-blue-100 p-5 space-y-4">
@@ -185,22 +188,22 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
                     </span>
                   </div>
                   <p className="text-xs font-bold text-slate-600 mt-0.5">{scannedAppt.treatmentName}</p>
-                  <p className="text-[11px] text-slate-400">Dr. {scannedAppt.doctorName} • {scannedAppt.roomNumber}</p>
+                  <p className="text-[11px] text-slate-400">{t('checkin.doctorRoom', { doctorName: scannedAppt.doctorName, roomNumber: scannedAppt.roomNumber })}</p>
                 </div>
               </div>
 
               {/* Verified Details Grid */}
               <div className="grid grid-cols-2 gap-2 text-xs bg-white p-3 rounded-2xl border border-slate-100">
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Scheduled Slot</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">{t('checkin.verification.scheduledSlot')}</span>
                   <span className="font-black text-slate-800">{scannedAppt.timeSlot}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Payment Status</span>
-                  <span className="font-black text-emerald-600">{scannedAppt.paymentStatus || 'Paid'}</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">{t('checkin.verification.paymentStatus')}</span>
+                  <span className="font-black text-emerald-600">{scannedAppt.paymentStatus || t('checkin.verification.paid')}</span>
                 </div>
                 <div className="col-span-2 pt-1 border-t border-slate-100">
-                  <span className="text-[10px] text-slate-400 uppercase font-bold block">Visit Reason</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold block">{t('checkin.verification.visitReason')}</span>
                   <span className="font-medium text-slate-700">{scannedAppt.visitReason}</span>
                 </div>
               </div>
@@ -211,14 +214,14 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
                   onClick={() => setScannedAppt(null)}
                   className="flex-1 py-2.5 rounded-2xl border border-slate-200 text-slate-600 text-xs font-bold hover:bg-slate-50"
                 >
-                  Dismiss
+                  {t('checkin.verification.dismiss')}
                 </button>
                 <button
                   onClick={handleConfirmArrival}
                   className="flex-2 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-md shadow-emerald-500/20 flex items-center justify-center gap-1.5"
                 >
                   <UserCheck className="w-4 h-4" />
-                  <span>Confirm Check-In</span>
+                  <span>{t('checkin.verification.confirmCheckIn')}</span>
                 </button>
               </div>
             </div>
@@ -231,18 +234,18 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Users className="w-5 h-5 text-purple-600" />
-            <h2 className="font-extrabold text-slate-900 text-base">Waiting Room Queue</h2>
+            <h2 className="font-extrabold text-slate-900 text-base">{t('checkin.queue.title')}</h2>
           </div>
           <span className="text-xs font-bold text-slate-500">
-            {waitingQueue.length} Patients Arrived & Waiting
+            {t('checkin.queue.waitingCount', { count: waitingQueue.length })}
           </span>
         </div>
 
         {waitingQueue.length === 0 ? (
           <div className="text-center py-8 bg-slate-50 rounded-2xl border border-slate-100 text-slate-400">
             <CheckCircle2 className="w-8 h-8 mx-auto text-emerald-500 mb-2" />
-            <p className="text-xs font-bold text-slate-700">Waiting room is empty</p>
-            <p className="text-[11px]">No checked-in patients in lounge right now.</p>
+            <p className="text-xs font-bold text-slate-700">{t('checkin.queue.emptyTitle')}</p>
+            <p className="text-[11px]">{t('checkin.queue.emptySubtitle')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -256,18 +259,18 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
                     #{item.queueNumber || idx + 1}
                   </span>
                   <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black">
-                    {item.status === 'in_consultation' ? 'In Room' : 'Waiting'}
+                    {item.status === 'in_consultation' ? t('checkin.queue.inRoom') : t('checkin.queue.waiting')}
                   </span>
                 </div>
 
                 <div>
                   <div className="font-extrabold text-xs text-slate-900">{item.patientName}</div>
                   <div className="text-[10px] text-slate-500 font-medium truncate">{item.treatmentName}</div>
-                  <div className="text-[10px] text-slate-400">Dr. {item.doctorName}</div>
+                  <div className="text-[10px] text-slate-400">{t('checkin.queue.doctor', { doctorName: item.doctorName })}</div>
                 </div>
 
                 <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[10px]">
-                  <span className="text-slate-400 font-bold">Suite: {item.roomNumber}</span>
+                  <span className="text-slate-400 font-bold">{t('checkin.queue.suite', { roomNumber: item.roomNumber })}</span>
                   <span className="text-[#4F8EF7] font-black">{item.timeSlot}</span>
                 </div>
               </div>

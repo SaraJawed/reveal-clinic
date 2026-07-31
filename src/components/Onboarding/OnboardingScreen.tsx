@@ -1,35 +1,37 @@
 import React, { useState } from 'react';
 import { Sparkles, ArrowRight, ShieldCheck, Calendar, Gift, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
 export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
+  const { t } = useTranslation('onboarding');
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
     {
       icon: Sparkles,
-      title: 'Welcome to Reveal Clinic',
-      subtitle: 'Premium skin, laser & aesthetic care tailored to your unique elegance.',
+      title: t('slides.welcome.title'),
+      subtitle: t('slides.welcome.subtitle'),
       image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&q=80&w=800',
-      badge: 'Luxury Medical Care'
+      badge: t('slides.welcome.badge')
     },
     {
       icon: Calendar,
-      title: 'Instant Booking & Digital Check-In',
-      subtitle: 'Choose top board-certified dermatologists, select time slots, and skip waiting lines with QR check-in.',
+      title: t('slides.booking.title'),
+      subtitle: t('slides.booking.subtitle'),
       image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=800',
-      badge: 'Seamless Convenience'
+      badge: t('slides.booking.badge')
     },
     {
       icon: Gift,
-      title: 'Packages, Reports & Rewards',
-      subtitle: 'Access PDF skin diagnostic reports, track session packages, and earn loyalty credits on every treatment.',
+      title: t('slides.packages.title'),
+      subtitle: t('slides.packages.subtitle'),
       image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800',
-      badge: 'All-In-One PWA Portal'
+      badge: t('slides.packages.badge')
     }
   ];
 
@@ -52,14 +54,14 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
           <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
             <Sparkles className="w-4 h-4 text-white" />
           </div>
-          <span className="font-bold text-sm tracking-tight text-slate-100">REVEAL</span>
+          <span className="font-bold text-sm tracking-tight text-slate-100">{t('brand')}</span>
         </div>
         <button
           id="onboarding-skip-btn"
           onClick={onComplete}
           className="text-xs font-semibold text-slate-400 hover:text-white transition px-3 py-1 bg-slate-800/80 rounded-full"
         >
-          Skip
+          {t('skip')}
         </button>
       </div>
 
@@ -124,7 +126,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
           onClick={handleNext}
           className="w-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 text-sm transition"
         >
-          <span>{currentSlide === slides.length - 1 ? 'Get Started Now' : 'Next'}</span>
+          <span>{currentSlide === slides.length - 1 ? t('cta.getStarted') : t('cta.next')}</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

@@ -1,0 +1,324 @@
+{
+  "dashboard": {
+    "hero": {
+      "roleBadge": {
+        "nurse": "بوابة التمريض التجميلي",
+        "coordinator": "منسق العيادة",
+        "doctor": "بوابة الطبيب"
+      },
+      "greeting": "نهارك سعيد، {{name}}",
+      "waitingPrefix": "لديك",
+      "checkedInCount": "{{count}} مريض(ة) مسجَّل الوصول",
+      "waitingSuffix": "بانتظار الإجراء في {{room}}.",
+      "defaultRoom": "جناح العلاج",
+      "fullScheduleButton": "الجدول الكامل ({{count}})"
+    },
+    "stats": {
+      "totalLabel": "إجمالي اليوم",
+      "totalSub": "المواعيد المجدولة",
+      "checkedInLabel": "تم تسجيل الوصول",
+      "checkedInSub": "جاهز في الاستقبال / الجناح",
+      "activeLabel": "الغرفة النشطة",
+      "activeSub": "في جناح الإجراء",
+      "completedLabel": "مكتمل",
+      "completedSub": "أُنجز اليوم"
+    },
+    "currentPatient": {
+      "title": "تركيز المريض الحالي",
+      "ageGender": "({{age}} سنة، {{gender}})",
+      "viewMedicalFile": "عرض الملف الطبي",
+      "treatmentSession": "جلسة العلاج",
+      "scheduledReason": "الموعد: {{time}} • السبب: {{reason}}",
+      "updateStatusLabel": "تحديث حالة المريض:",
+      "statusInConsultation": "في الاستشارة",
+      "statusInProcedure": "في الإجراء",
+      "statusComplete": "إنهاء الجلسة"
+    },
+    "quickActions": {
+      "title": "إجراءات سريعة سريرية",
+      "scheduleTitle": "الجدول اليومي والتصفية",
+      "scheduleSub": "عرض التقويم وتحديث الحالات",
+      "patientsTitle": "البحث في سجلات المرضى",
+      "patientsSub": "الوصول إلى التاريخ الطبي والحساسية",
+      "sessionsTitle": "متتبع جلسات العلاج",
+      "sessionsSub": "تسجيل الأجهزة والمستهلكات والمواد",
+      "notificationsTitle": "إشعارات الطاقم",
+      "notificationsSub": "تسجيل وصول المرضى وحالات الإلغاء"
+    }
+  },
+  "schedule": {
+    "header": {
+      "title": "إدارة الجدول السريري",
+      "subtitle": "إدارة مواعيد المرضى وتخصيص الغرف وحالات الجلسات"
+    },
+    "viewToggle": {
+      "daily": "الجدول الزمني اليومي",
+      "weekly": "التقويم الأسبوعي"
+    },
+    "filters": {
+      "dateLabel": "تصفية حسب التاريخ:",
+      "dateOptions": {
+        "today": "اليوم",
+        "tomorrow": "غدًا",
+        "thisWeek": "هذا الأسبوع"
+      },
+      "statusLabel": "حالة الموعد:",
+      "allStatuses": "جميع الحالات ({{count}})",
+      "searchLabel": "البحث عن مريض أو إجراء:",
+      "searchPlaceholder": "الاسم، العلاج، الغرفة..."
+    },
+    "status": {
+      "scheduled": "مجدول",
+      "checkedIn": "تم تسجيل الوصول",
+      "inConsultation": "في الاستشارة",
+      "procedure": "إجراء",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "empty": {
+      "title": "لم يتم العثور على مواعيد",
+      "subtitle": "لا توجد عناصر جدول سريري مطابقة للتاريخ أو معايير التصفية المحددة."
+    },
+    "list": {
+      "queueNumber": "رقم الانتظار #{{number}}",
+      "ageGender": "({{age}} سنة، {{gender}})",
+      "attendingType": "الطبيب المعالج: {{doctor}} • النوع: {{type}}",
+      "detailsButton": "التفاصيل والحالة"
+    },
+    "weekly": {
+      "title": "نظرة عامة أسبوعية (يوليو 2026)",
+      "operatingDays": "5 أيام عمل",
+      "days": {
+        "monday": "الاثنين",
+        "tuesday": "الثلاثاء",
+        "wednesday": "الأربعاء",
+        "thursday": "الخميس",
+        "friday": "الجمعة"
+      }
+    },
+    "modal": {
+      "allergyCautionFlag": "تنبيه حذر من الحساسية",
+      "updateStatusLabel": "تحديث حالة الموعد:",
+      "fields": {
+        "patientId": "رقم المريض:",
+        "ageGender": "العمر والجنس:",
+        "ageGenderValue": "{{age}} سنة، {{gender}}",
+        "consultationType": "نوع الاستشارة:",
+        "roomLocation": "موقع الغرفة:",
+        "paymentStatus": "حالة الدفع:",
+        "paymentStatusPaid": "مدفوع",
+        "visitReason": "سبب الزيارة:"
+      },
+      "openPatientFile": "فتح ملف المريض"
+    }
+  },
+  "patients": {
+    "header": {
+      "title": "السجلات الطبية للمرضى",
+      "subtitle": "الوصول إلى التاريخ الشامل للمريض والملامح السريرية للبشرة والحساسية والزيارات",
+      "searchPlaceholder": "ابحث باسم المريض أو الرقم التعريفي..."
+    },
+    "list": {
+      "registeredCount": "المرضى المسجلون ({{count}})",
+      "allergyFlagTitle": "توجد إشارات حساسية",
+      "idAgeGender": "الرقم التعريفي: {{patientId}} • {{age}} سنة ({{gender}})"
+    },
+    "detail": {
+      "backButton": "← العودة إلى قائمة المرضى",
+      "addNoteButton": "إضافة ملاحظة",
+      "ageGenderBlood": "{{age}} سنة • {{gender}} • فصيلة الدم:",
+      "registeredBranch": "الفرع المسجل",
+      "activePackages": "الباقات النشطة",
+      "activePackagesValue": "{{count}} باقة نشطة",
+      "totalVisited": "إجمالي الزيارات",
+      "totalVisitedValue": "{{count}} زيارة مسجلة"
+    },
+    "tabs": {
+      "history": "الملاحظات الطبية",
+      "visits": "الزيارات السابقة ({{count}})",
+      "treatments": "تاريخ العلاجات",
+      "reports": "التقارير الطبية ({{count}})"
+    },
+    "history": {
+      "sectionTitle": "ملخص التاريخ السريري والأمراض الجلدية"
+    },
+    "visits": {
+      "sectionTitle": "سجل الزيارات السريرية",
+      "prescriptionsLabel": "الوصفات الطبية الصادرة:",
+      "prescriptionItem": "💊 {{medication}} ({{dosage}} - {{frequency}})",
+      "physicianLine": "الطبيب المعالج: {{doctor}} • {{branch}}"
+    },
+    "treatments": {
+      "sectionTitle": "الباقات والإجراءات المشترك بها",
+      "datesLine": "البدء: {{startDate}} • آخر جلسة: {{lastDate}}",
+      "sessionsCount": "{{completed}} / {{total}} جلسات"
+    },
+    "reports": {
+      "sectionTitle": "التقارير التشخيصية وتحليل البشرة",
+      "empty": "لا توجد تقارير PDF تشخيصية مرفقة بعد.",
+      "downloadingAlert": "جارٍ تنزيل {{fileName}}...",
+      "pdfButton": "PDF"
+    },
+    "noteModal": {
+      "title": "إضافة ملاحظة طبية ({{name}})",
+      "placeholder": "مثال: طلب المريض التبريد بالثلج قبل الحقن بسبب حساسية خفيفة تجاه الإبر...",
+      "saveButton": "حفظ الملاحظة"
+    }
+  },
+  "sessions": {
+    "header": {
+      "title": "جلسات العلاج السريرية",
+      "subtitle": "إدارة مستهلكات الإجراء وإعدادات جهاز الليزر والمواد المصروفة وتقدم الجلسة"
+    },
+    "filters": {
+      "all": "جميع الجلسات"
+    },
+    "status": {
+      "inProgress": "قيد التنفيذ",
+      "scheduled": "مجدولة",
+      "completed": "مكتملة"
+    },
+    "list": {
+      "activeCount": "الجلسات النشطة ({{count}})",
+      "roomBadge": "الغرفة {{number}}",
+      "attending": "الطبيب المعالج: {{doctor}}",
+      "progressLabel": "التقدم"
+    },
+    "detail": {
+      "backButton": "← العودة إلى الجلسات النشطة",
+      "sessionId": "الجلسة #{{id}}",
+      "suite": "الجناح {{room}}",
+      "patientLine": "المريض: {{name}} • الطبيب المعالج: {{doctor}}",
+      "startButton": "بدء الإجراء",
+      "finishButton": "إنهاء وحفظ الجلسة",
+      "completedArchived": "اكتملت وأُرشفت",
+      "progressLabel": "خطوات الإجراء المكتملة",
+      "gatewayStatus": "حالة بوابة الدفع ({{gateway}})",
+      "defaultGateway": "Stripe",
+      "refLabel": "المرجع: {{ref}}",
+      "defaultRef": "غير متوفر",
+      "defaultPaid": "مدفوع"
+    },
+    "consumables": {
+      "title": "المستهلكات المستخدمة",
+      "itemsCount": "{{count}} عنصر",
+      "lotLabel": "رقم التشغيلة: {{lot}}",
+      "defaultLot": "غير متوفر"
+    },
+    "devices": {
+      "title": "الأجهزة ومعايير الليزر",
+      "count": "{{count}} جهاز",
+      "defaultName": "جهاز",
+      "serialLabel": "الرقم التسلسلي #{{serial}}",
+      "defaultSerial": "غير متوفر",
+      "defaultModel": "قياسي",
+      "defaultSanitized": "تم التحقق",
+      "settings": {
+        "energy": "الطاقة",
+        "pulse": "مدة النبضة",
+        "spotSize": "حجم البقعة",
+        "passes": "عدد المرات",
+        "model": "الطراز",
+        "sanitized": "التعقيم"
+      }
+    },
+    "issued": {
+      "title": "المواد المصروفة للمريض",
+      "issuedByStaff": "صادرة من الطاقم",
+      "quantityBadge": "x{{qty}}"
+    },
+    "requested": {
+      "title": "المستهلكات المطلوبة",
+      "requestButton": "طلب مخزون",
+      "urgencyLabel": "الأولوية: {{urgency}}",
+      "statusLabels": {
+        "pending": "قيد الانتظار",
+        "approved": "تمت الموافقة",
+        "delivered": "تم التسليم"
+      }
+    },
+    "requestModal": {
+      "title": "طلب مادة مستهلكة / عنصر إضافي",
+      "itemNameLabel": "اسم العنصر:",
+      "itemNamePlaceholder": "مثال: شاش معقم 4x4 أو ليدوكائين 1%",
+      "urgencyLabel": "مستوى الأولوية:",
+      "urgencyOptions": {
+        "normal": "عادية",
+        "high": "أولوية عالية",
+        "immediate": "توصيل فوري للغرفة"
+      },
+      "sendButton": "إرسال الطلب"
+    }
+  },
+  "notifications": {
+    "header": {
+      "title": "مركز الإشعارات السريرية",
+      "subtitle": "تسجيل وصول المرضى الفوري، جاهزية الغرف، الطلبات العاجلة، وتغييرات الجدول"
+    },
+    "categories": {
+      "all": "جميع التنبيهات",
+      "checkIns": "تسجيلات وصول المرضى",
+      "consumables": "المستهلكات والمخزون",
+      "emergency": "توجيهات عاجلة",
+      "scheduleChanges": "تغييرات الجدول"
+    },
+    "types": {
+      "checkIn": "تسجيل وصول",
+      "consumableRequest": "طلب مستهلكات",
+      "emergency": "طارئ",
+      "cancellation": "إلغاء",
+      "rescheduled": "إعادة جدولة"
+    }
+  },
+  "profile": {
+    "header": {
+      "defaultRoleBadge": "طبيب",
+      "reviewsCount": "({{count}} تقييم)",
+      "defaultSpecialty": "أخصائي جلدية تجميلية",
+      "licensePrefix": "رقم الترخيص #{{number}}",
+      "staffIdPrefix": "رقم الموظف:",
+      "staffIdSuffix": "• مسجَّل في: {{branch}}"
+    },
+    "branch": {
+      "title": "تعيين فرع العيادة",
+      "description": "اختر فرع العيادة النشط للاستشارات لتوزيع الغرف والمواعيد:"
+    },
+    "language": {
+      "title": "لغة الواجهة السريرية",
+      "description": "اختر اللغة المفضلة للمصطلحات الطبية والواجهة السريرية:",
+      "options": {
+        "english": "الإنجليزية",
+        "arabic": "العربية"
+      },
+      "activeBadge": "نشط"
+    },
+    "security": {
+      "title": "أمان الحساب",
+      "description": "إدارة كلمة المرور والمصادقة الثنائية وبيانات الامتثال السريري HIPAA/GDPR.",
+      "changePasswordButton": "تغيير كلمة مرور الأمان"
+    },
+    "sessions": {
+      "title": "الجلسات النشطة المسجَّلة الدخول",
+      "revokeTitle": "إلغاء الجلسة",
+      "currentBadge": "الحالية"
+    },
+    "logout": {
+      "signOutButton": "تسجيل الخروج من بوابة الطاقم"
+    },
+    "passwordModal": {
+      "title": "تغيير كلمة مرور حساب الطاقم",
+      "mismatchAlert": "كلمة المرور الجديدة وتأكيدها غير متطابقتين.",
+      "successMessage": "تم تحديث كلمة المرور بنجاح!",
+      "currentPasswordLabel": "كلمة المرور الحالية:",
+      "newPasswordLabel": "كلمة المرور الجديدة:",
+      "confirmPasswordLabel": "تأكيد كلمة المرور الجديدة:",
+      "updateButton": "تحديث كلمة المرور"
+    },
+    "logoutModal": {
+      "title": "تأكيد تسجيل الخروج",
+      "description": "هل أنت متأكد من رغبتك في تسجيل الخروج من بوابة طاقم عيادة ريفيل؟",
+      "stayButton": "البقاء مسجَّلاً",
+      "confirmButton": "تأكيد تسجيل الخروج"
+    }
+  }
+}

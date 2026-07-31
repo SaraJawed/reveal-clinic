@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Doctor, ClinicBranch, Appointment, TreatmentService, AppointmentStatus, ConsultationType } from '../../types';
 import {
   Search,
@@ -51,6 +52,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   activeSubTab,
   onChangeSubTab: setActiveSubTab
 }) => {
+  const { t } = useTranslation('appointments');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('All');
 
@@ -84,13 +86,26 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   // (e.g. "Laser Hair Removal & Skin Resurfacing") rarely contains the whole
   // label ("Laser & Skin") as a contiguous substring.
   const specialtyFilters: { id: string; label: string; keywords: string[] }[] = [
-    { id: 'All', label: 'All', keywords: [] },
-    { id: 'Anti-Aging', label: 'Anti-Aging', keywords: ['anti-aging'] },
-    { id: 'Laser & Skin', label: 'Laser & Skin', keywords: ['laser', 'resurfacing'] },
-    { id: 'Cosmetic Dermatology', label: 'Cosmetic Dermatology', keywords: ['hydrafacial', 'filler', 'biostimulator'] },
-    { id: 'Clinical Dermatology', label: 'Clinical Dermatology', keywords: ['oncology', 'medical dermatology'] }
+    { id: 'All', label: t('specialtyFilters.all'), keywords: [] },
+    { id: 'Anti-Aging', label: t('specialtyFilters.antiAging'), keywords: ['anti-aging'] },
+    { id: 'Laser & Skin', label: t('specialtyFilters.laserSkin'), keywords: ['laser', 'resurfacing'] },
+    { id: 'Cosmetic Dermatology', label: t('specialtyFilters.cosmeticDermatology'), keywords: ['hydrafacial', 'filler', 'biostimulator'] },
+    { id: 'Clinical Dermatology', label: t('specialtyFilters.clinicalDermatology'), keywords: ['oncology', 'medical dermatology'] }
   ];
-  const specialties = specialtyFilters.map((f) => f.id);
+
+  // Display-only translated labels for values that are also used internally for
+  // logic/state/comparisons (kept in English at the data level; only the shown
+  // text is localized).
+  const consultationTypeLabels: Record<ConsultationType, string> = {
+    'In-Clinic Consultation': t('consultationTypes.inClinic'),
+    'Follow-up Checkup': t('consultationTypes.followUp'),
+    'Procedure': t('consultationTypes.procedure')
+  };
+  const paymentMethodLabels: Record<NonNullable<Appointment['paymentMethod']>, string> = {
+    'Pay at Clinic': t('paymentMethods.payAtClinic'),
+    'Pay Online': t('paymentMethods.payOnline'),
+    'Buy Now Pay Later': t('paymentMethods.buyNowPayLater')
+  };
 
   const filteredDoctors = doctors.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -130,7 +145,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     if (!code) return;
     const discount = calculateVoucherDiscount(code, getAppointmentFee());
     if (discount === null) {
-      setVoucherError('Invalid or expired voucher code.');
+      setVoucherError(t('summary.invalidVoucher'));
       setAppliedVoucher(null);
       return;
     }
@@ -177,9 +192,9 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     };
 
     const successMessages: Record<NonNullable<Appointment['paymentMethod']>, string> = {
-      'Pay at Clinic': "Your appointment slot has been reserved. Your booking will be confirmed once the payment is completed at the clinic.",
-      'Pay Online': "Your appointment has been successfully booked and your payment has been received. A confirmation has been sent to you.",
-      'Buy Now Pay Later': "Your appointment is confirmed! Your Buy Now, Pay Later plan has been set up — nothing is due today."
+      'Pay at Clinic': t('success.messages.payAtClinic'),
+      'Pay Online': t('success.messages.payOnline'),
+      'Buy Now Pay Later': t('success.messages.buyNowPayLater')
     };
 
     onBookAppointment(newAppt);
@@ -206,8 +221,8 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-bold text-slate-900">Appointment Management</h1>
-            <p className="text-xs text-slate-500">Schedule dermatologists or manage upcoming clinic visits.</p>
+            <h1 className="text-lg font-bold text-slate-900">{t('header.title')}</h1>
+            <p className="text-xs text-slate-500">{t('header.subtitle')}</p>
           </div>
           <div className="flex bg-slate-100 p-1 rounded-2xl text-xs font-bold text-slate-600">
             <button
@@ -217,7 +232,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 activeSubTab === 'book' ? 'bg-blue-600 text-white shadow-xs' : ''
               }`}
             >
-              Book New
+              {t('header.tabBookNew')}
             </button>
             <button
               id="appointments-tab-history-btn"
@@ -226,7 +241,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 activeSubTab === 'history' ? 'bg-blue-600 text-white shadow-xs' : ''
               }`}
             >
-              My Visits ({appointments.length})
+              {t('header.tabMyVisits', { count: appointments.length })}
             </button>
           </div>
         </div>
@@ -240,25 +255,25 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search doctors, specialties or treatments..."
+                placeholder={t('header.searchPlaceholder')}
                 className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:bg-white focus:border-blue-500 outline-hidden"
               />
             </div>
 
             {/* Specialty Pills */}
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-              {specialties.map((spec) => (
+              {specialtyFilters.map((f) => (
                 <button
-                  key={spec}
-                  id={`appointments-specialty-filter-${spec}`}
-                  onClick={() => setSelectedSpecialty(spec)}
+                  key={f.id}
+                  id={`appointments-specialty-filter-${f.id}`}
+                  onClick={() => setSelectedSpecialty(f.id)}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-                    selectedSpecialty === spec
+                    selectedSpecialty === f.id
                       ? 'bg-blue-600 text-white shadow-xs'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                   }`}
                 >
-                  {spec}
+                  {f.label}
                 </button>
               ))}
             </div>
@@ -270,7 +285,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       {activeSubTab === 'book' && (
         <div className="space-y-4">
           <div className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">
-            Available Dermatologists & Surgeons ({filteredDoctors.length})
+            {t('doctorList.availableDoctors', { count: filteredDoctors.length })}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -289,12 +304,12 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     <div className="flex items-center justify-between gap-1">
                       <h3 className="font-bold text-slate-900 text-sm truncate">{doc.name}</h3>
                       <span className="flex items-center gap-1 bg-amber-50 text-amber-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-amber-200 shrink-0">
-                        {doc.rating} <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> ({doc.reviewCount} Reviews)
+                        {doc.rating} <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> {t('doctorList.reviewCount', { count: doc.reviewCount })}
                       </span>
                     </div>
                     <div className="text-xs font-bold text-blue-600 truncate">{doc.title}</div>
                     <div className="text-[11px] text-slate-500 font-medium truncate mt-0.5">
-                      {doc.specialty} • {doc.experienceYears} yrs exp
+                      {doc.specialty} • {t('doctorList.yearsExp', { years: doc.experienceYears })}
                     </div>
                   </div>
                 </div>
@@ -305,15 +320,15 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
 
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
                   <div>
-                    <span className="text-[10px] text-slate-400 block font-medium">Consultation Fee</span>
-                    <span className="font-extrabold text-slate-900 text-sm">SAR {doc.consultationFee}</span>
+                    <span className="text-[10px] text-slate-400 block font-medium">{t('doctorList.consultationFeeLabel')}</span>
+                    <span className="font-extrabold text-slate-900 text-sm">{t('doctorList.feeAmount', { amount: doc.consultationFee })}</span>
                   </div>
                   <button
                     id={`appointments-select-doctor-${doc.id}-btn`}
                     onClick={() => setSelectedDoctor(doc)}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-2xl text-xs shadow-xs transition flex items-center gap-1"
                   >
-                    Select & Book <ChevronRight className="w-3.5 h-3.5" />
+                    {t('doctorList.selectAndBook')} <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
@@ -328,8 +343,8 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
           {appointments.length === 0 ? (
             <div className="bg-white rounded-3xl p-8 text-center border border-slate-200">
               <CalendarIcon className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-              <h3 className="font-bold text-slate-800 text-sm">No Appointment Records Found</h3>
-              <p className="text-xs text-slate-500">Book your first consultation using the 'Book New' tab.</p>
+              <h3 className="font-bold text-slate-800 text-sm">{t('history.emptyTitle')}</h3>
+              <p className="text-xs text-slate-500">{t('history.emptySubtitle')}</p>
             </div>
           ) : (
             appointments.map((appt) => (
@@ -347,17 +362,24 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                       ? 'bg-amber-100 text-amber-800'
                       : 'bg-slate-100 text-slate-700'
                   }`}>
-                    {appt.status === 'pending' ? 'Pending Confirmation' : appt.status}
+                    {appt.status === 'pending' ? t('history.pendingConfirmation') : appt.status}
                   </span>
                   <span className="text-xs font-bold text-slate-900">
-                    SAR {appt.fee} ({appt.paymentMethod || (appt.paid ? 'Paid' : 'Pay at Clinic')})
+                    {t('history.feeWithMethod', {
+                      fee: appt.fee,
+                      method: appt.paymentMethod
+                        ? paymentMethodLabels[appt.paymentMethod]
+                        : appt.paid
+                          ? t('history.paidLabel')
+                          : t('history.payAtClinicLabel')
+                    })}
                   </span>
                 </div>
 
                 {appt.voucherCode && (
                   <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
                     <Tag className="w-3 h-3" />
-                    <span>Voucher {appt.voucherCode} applied (-SAR {appt.discountAmount})</span>
+                    <span>{t('history.voucherApplied', { code: appt.voucherCode, amount: appt.discountAmount })}</span>
                   </div>
                 )}
 
@@ -386,20 +408,20 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                       <button
                         id={`appointments-cancel-${appt.id}-btn`}
                         onClick={() => {
-                          if (confirm("Are you sure you want to cancel this appointment?")) {
+                          if (confirm(t('history.cancelConfirm'))) {
                             onCancelAppointment(appt.id);
                           }
                         }}
                         className="text-rose-600 hover:bg-rose-50 px-2.5 py-1 rounded-xl font-bold transition"
                       >
-                        Cancel
+                        {t('history.cancel')}
                       </button>
                       <button
                         id={`appointments-reschedule-${appt.id}-btn`}
                         onClick={() => setRescheduleAppt(appt)}
                         className="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1"
                       >
-                        <RotateCcw className="w-3.5 h-3.5" /> Reschedule
+                        <RotateCcw className="w-3.5 h-3.5" /> {t('history.reschedule')}
                       </button>
                     </div>
                   )}
@@ -408,7 +430,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     <div>
                       {appt.feedbackRating ? (
                         <div className="flex items-center gap-1 text-amber-500 font-bold">
-                          <Star className="w-4 h-4 fill-amber-400" /> Rated {appt.feedbackRating}/5
+                          <Star className="w-4 h-4 fill-amber-400" /> {t('history.ratedOutOf5', { rating: appt.feedbackRating })}
                         </div>
                       ) : (
                         <button
@@ -416,7 +438,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                           onClick={() => setFeedbackAppt(appt)}
                           className="bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1"
                         >
-                          <MessageSquare className="w-3.5 h-3.5" /> Rate Your Visit
+                          <MessageSquare className="w-3.5 h-3.5" /> {t('history.rateVisit')}
                         </button>
                       )}
                     </div>
@@ -432,20 +454,20 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       <BottomSheet
         isOpen={!!selectedDoctor}
         onClose={resetBookingFlowState}
-        title={selectedDoctor ? `Book Appointment - ${selectedDoctor.name}` : ''}
+        title={selectedDoctor ? t('booking.sheetTitle', { doctorName: selectedDoctor.name }) : ''}
         subtitle={
           bookingStep === 'form'
-            ? "Select consultation type, date & time slot."
+            ? t('booking.subtitleForm')
             : bookingStep === 'card_details'
-              ? "Enter your card details to complete payment."
-              : "Review booking summary & select payment option."
+              ? t('booking.subtitleCardDetails')
+              : t('booking.subtitleSummary')
         }
       >
         {selectedDoctor && bookingStep === 'form' && (
           <div className="space-y-4">
             {/* Consultation Type */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Consultation Type</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('booking.consultationTypeLabel')}</label>
               <div className="grid grid-cols-3 gap-2">
                 {(['In-Clinic Consultation', 'Follow-up Checkup', 'Procedure'] as ConsultationType[]).map((type) => (
                   <button
@@ -458,7 +480,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                         : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                     }`}
                   >
-                    {type}
+                    {consultationTypeLabels[type]}
                   </button>
                 ))}
               </div>
@@ -467,34 +489,34 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             {/* Select Treatment (Only if Procedure is selected) */}
             {consultationType === 'Procedure' ? (
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">Select Treatment Service</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('booking.selectTreatmentLabel')}</label>
                 <select
                   value={selectedTreatment?.id || ''}
                   onChange={(e) => {
-                    const t = treatments.find(tr => tr.id === e.target.value);
-                    setSelectedTreatment(t || null);
+                    const found = treatments.find(tr => tr.id === e.target.value);
+                    setSelectedTreatment(found || null);
                   }}
                   className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
                 >
-                  {treatments.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name} (SAR {t.price} • {t.durationMinutes} mins)
+                  {treatments.map((tr) => (
+                    <option key={tr.id} value={tr.id}>
+                      {t('booking.treatmentOption', { name: tr.name, price: tr.price, duration: tr.durationMinutes })}
                     </option>
                   ))}
                 </select>
               </div>
             ) : (
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-600">Consultation Fee ({consultationType}):</span>
+                <span className="font-semibold text-slate-600">{t('booking.consultationFeeFor', { type: consultationTypeLabels[consultationType] })}</span>
                 <span className="font-extrabold text-slate-900">
-                  SAR {consultationType === 'In-Clinic Consultation' ? 400 : 200}
+                  {t('doctorList.feeAmount', { amount: consultationType === 'In-Clinic Consultation' ? 400 : 200 })}
                 </span>
               </div>
             )}
 
             {/* Date Picker */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Appointment Date</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('booking.appointmentDateLabel')}</label>
               <input
                 type="date"
                 value={selectedDate}
@@ -506,7 +528,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
 
             {/* Time Slot Selector */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">Available Time Slots</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('booking.availableSlotsLabel')}</label>
               <div className="grid grid-cols-3 gap-2">
                 {selectedDoctor.availableTimeSlots.map((slot) => (
                   <button
@@ -527,11 +549,11 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
 
             {/* Medical Notes */}
             <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">Notes for Doctor (Optional)</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1">{t('booking.notesLabel')}</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Mention skin concerns or allergies..."
+                placeholder={t('booking.notesPlaceholder')}
                 rows={2}
                 className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
               />
@@ -540,9 +562,9 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             {/* Total Fee & Proceed to Summary */}
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
               <div>
-                <span className="text-[10px] text-slate-400 block font-medium">Total Appointment Fee</span>
+                <span className="text-[10px] text-slate-400 block font-medium">{t('booking.totalFeeLabel')}</span>
                 <span className="font-extrabold text-slate-900 text-base">
-                  SAR {getAppointmentFee()}
+                  {t('doctorList.feeAmount', { amount: getAppointmentFee() })}
                 </span>
               </div>
               <button
@@ -550,7 +572,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 onClick={() => setBookingStep('summary')}
                 className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-2xl text-xs shadow-md shadow-blue-500/25 transition flex items-center gap-2"
               >
-                Proceed to Booking Summary <ChevronRight className="w-4 h-4" />
+                {t('booking.proceedToSummary')} <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -560,40 +582,40 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
           <div className="space-y-4">
             <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2 text-xs">
               <div className="font-bold text-slate-900 text-sm pb-2 border-b border-slate-200 flex justify-between">
-                <span>Booking Summary</span>
+                <span>{t('summary.title')}</span>
                 <span className="text-blue-600">{selectedBranch.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Doctor:</span>
+                <span className="text-slate-500">{t('summary.doctorLabel')}</span>
                 <span className="font-bold text-slate-900">{selectedDoctor.name} ({selectedDoctor.specialty})</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Type:</span>
-                <span className="font-bold text-slate-900">{consultationType}</span>
+                <span className="text-slate-500">{t('summary.typeLabel')}</span>
+                <span className="font-bold text-slate-900">{consultationTypeLabels[consultationType]}</span>
               </div>
               {consultationType === 'Procedure' && selectedTreatment && (
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Treatment:</span>
+                  <span className="text-slate-500">{t('summary.treatmentLabel')}</span>
                   <span className="font-bold text-slate-900">{selectedTreatment.name}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span className="text-slate-500">Date & Time:</span>
-                <span className="font-bold text-slate-900">{selectedDate} at {selectedSlot}</span>
+                <span className="text-slate-500">{t('summary.dateTimeLabel')}</span>
+                <span className="font-bold text-slate-900">{t('summary.dateAtSlot', { date: selectedDate, slot: selectedSlot })}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Subtotal:</span>
-                <span className="font-bold text-slate-900">SAR {getAppointmentFee()}</span>
+                <span className="text-slate-500">{t('summary.subtotalLabel')}</span>
+                <span className="font-bold text-slate-900">{t('summary.feeAmount', { amount: getAppointmentFee() })}</span>
               </div>
               {appliedVoucher && (
                 <div className="flex justify-between text-emerald-600">
-                  <span>Voucher ({appliedVoucher.code}):</span>
-                  <span className="font-bold">-SAR {appliedVoucher.discount}</span>
+                  <span>{t('summary.voucherLabel', { code: appliedVoucher.code })}</span>
+                  <span className="font-bold">{t('summary.voucherAmount', { amount: appliedVoucher.discount })}</span>
                 </div>
               )}
               <div className="flex justify-between pt-2 border-t border-slate-200 font-extrabold text-sm text-slate-900">
-                <span>Total Due:</span>
-                <span className="text-blue-600">SAR {getDiscountedFee()}</span>
+                <span>{t('summary.totalDueLabel')}</span>
+                <span className="text-blue-600">{t('summary.feeAmount', { amount: getDiscountedFee() })}</span>
               </div>
             </div>
 
@@ -601,12 +623,12 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             <div className="bg-white border border-slate-200 rounded-2xl p-3.5 space-y-2">
               <div className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                 <Tag className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Have a Voucher Code?</span>
+                <span>{t('summary.haveVoucherCode')}</span>
               </div>
               {appliedVoucher ? (
                 <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
                   <span className="text-xs font-bold text-emerald-800">
-                    {appliedVoucher.code} applied — -SAR {appliedVoucher.discount}
+                    {t('summary.voucherAppliedInline', { code: appliedVoucher.code, amount: appliedVoucher.discount })}
                   </span>
                   <button
                     type="button"
@@ -627,7 +649,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                       setVoucherInput(e.target.value);
                       setVoucherError('');
                     }}
-                    placeholder="e.g. GLOW10"
+                    placeholder={t('summary.voucherPlaceholder')}
                     className="flex-1 px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:bg-white focus:border-blue-500"
                   />
                   <button
@@ -636,7 +658,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     onClick={handleApplyVoucher}
                     className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition shrink-0"
                   >
-                    Apply
+                    {t('common:buttons.apply')}
                   </button>
                 </div>
               )}
@@ -648,13 +670,13 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   onClick={() => setShowVoucherList(true)}
                   className="text-[11px] font-bold text-emerald-700 hover:underline"
                 >
-                  View Available Vouchers
+                  {t('summary.viewAvailableVouchers')}
                 </button>
               )}
             </div>
 
             <div className="space-y-2.5 pt-2">
-              <div className="text-xs font-bold text-slate-700">Select Payment Option</div>
+              <div className="text-xs font-bold text-slate-700">{t('summary.selectPaymentOption')}</div>
 
               <button
                 type="button"
@@ -669,16 +691,16 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">🏥</span>
                   <div className="text-left">
-                    <div className="font-bold">Pay at Clinic</div>
+                    <div className="font-bold">{t('paymentMethods.payAtClinic')}</div>
                     <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Pay at Clinic' ? 'text-slate-300' : 'text-slate-500'}`}>
-                      Pay cash or card upon arrival at the clinic counter
+                      {t('summary.payAtClinicDesc')}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {selectedPaymentMethod === 'Pay at Clinic' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
                   <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay at Clinic' ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                    SAR {getDiscountedFee()}
+                    {t('summary.feeAmount', { amount: getDiscountedFee() })}
                   </span>
                 </div>
               </button>
@@ -696,16 +718,16 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">💳</span>
                   <div className="text-left">
-                    <div className="font-bold">Pay Online (Mada / Apple Pay / Visa)</div>
+                    <div className="font-bold">{t('paymentMethods.payOnlineFull')}</div>
                     <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Pay Online' ? 'text-blue-100' : 'text-slate-500'}`}>
-                      Instant secure online payment & immediate confirmation
+                      {t('summary.payOnlineDesc')}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {selectedPaymentMethod === 'Pay Online' && <CheckCircle2 className="w-4 h-4 text-white" />}
                   <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay Online' ? 'bg-blue-700' : 'bg-slate-100'}`}>
-                    SAR {getDiscountedFee()}
+                    {t('summary.feeAmount', { amount: getDiscountedFee() })}
                   </span>
                 </div>
               </button>
@@ -723,16 +745,16 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 <div className="flex items-center gap-2.5">
                   <span className="text-base">🛍️</span>
                   <div className="text-left">
-                    <div className="font-bold">Buy Now, Pay Later (BNPL)</div>
+                    <div className="font-bold">{t('paymentMethods.bnplFull')}</div>
                     <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Buy Now Pay Later' ? 'text-purple-100' : 'text-slate-500'}`}>
-                      Split into installments with Tabby — approved instantly, nothing due today
+                      {t('summary.bnplDesc')}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {selectedPaymentMethod === 'Buy Now Pay Later' && <CheckCircle2 className="w-4 h-4 text-white" />}
                   <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Buy Now Pay Later' ? 'bg-purple-700' : 'bg-slate-100'}`}>
-                    SAR {getDiscountedFee()}
+                    {t('summary.feeAmount', { amount: getDiscountedFee() })}
                   </span>
                 </div>
               </button>
@@ -755,7 +777,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              {selectedPaymentMethod ? `Confirm Booking — SAR ${getDiscountedFee()}` : 'Select a Payment Option to Continue'}
+              {selectedPaymentMethod ? t('summary.confirmBookingWithFee', { amount: getDiscountedFee() }) : t('summary.selectPaymentToContinue')}
             </button>
 
             <button
@@ -763,7 +785,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
               onClick={() => setBookingStep('form')}
               className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition"
             >
-              Back to Appointment Details
+              {t('summary.backToDetails')}
             </button>
           </div>
         )}
@@ -797,17 +819,24 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-lg">Appointment Confirmation</h3>
+            <h3 className="font-extrabold text-slate-900 text-lg">{t('success.title')}</h3>
             <p className="text-xs text-slate-700 font-medium leading-relaxed">
               {customSuccessMessage}
             </p>
             <div className="bg-slate-50 p-3 rounded-2xl text-xs text-slate-700 space-y-1 text-left font-medium border border-slate-200">
-              <div>👨‍⚕️ <strong>Doctor:</strong> {bookingSuccess.doctorName}</div>
-              <div>🗓️ <strong>Date:</strong> {bookingSuccess.date} at {bookingSuccess.timeSlot}</div>
-              <div>📍 <strong>Location:</strong> {bookingSuccess.clinicName}</div>
-              <div>💳 <strong>Fee / Status:</strong> SAR {bookingSuccess.fee} ({bookingSuccess.paymentMethod || (bookingSuccess.paid ? 'Paid Online' : 'Pay at Clinic')})</div>
+              <div>👨‍⚕️ <strong>{t('success.doctorLabel')}</strong> {bookingSuccess.doctorName}</div>
+              <div>🗓️ <strong>{t('success.dateLabel')}</strong> {t('success.dateAtSlot', { date: bookingSuccess.date, slot: bookingSuccess.timeSlot })}</div>
+              <div>📍 <strong>{t('success.locationLabel')}</strong> {bookingSuccess.clinicName}</div>
+              <div>💳 <strong>{t('success.feeStatusLabel')}</strong> {t('success.feeStatusValue', {
+                fee: bookingSuccess.fee,
+                method: bookingSuccess.paymentMethod
+                  ? paymentMethodLabels[bookingSuccess.paymentMethod]
+                  : bookingSuccess.paid
+                    ? t('paymentMethods.paidOnline')
+                    : paymentMethodLabels['Pay at Clinic']
+              })}</div>
               {bookingSuccess.voucherCode && (
-                <div>🏷️ <strong>Voucher:</strong> {bookingSuccess.voucherCode} (-SAR {bookingSuccess.discountAmount})</div>
+                <div>🏷️ <strong>{t('success.voucherLabel')}</strong> {t('success.voucherValue', { code: bookingSuccess.voucherCode, amount: bookingSuccess.discountAmount })}</div>
               )}
             </div>
             <button
@@ -815,7 +844,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
               onClick={() => setBookingSuccess(null)}
               className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
             >
-              Done & Return to Appointments
+              {t('success.doneButton')}
             </button>
           </div>
         </div>
@@ -825,12 +854,12 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       <BottomSheet
         isOpen={!!rescheduleAppt}
         onClose={() => setRescheduleAppt(null)}
-        title="Reschedule Appointment"
-        subtitle={rescheduleAppt ? `Doctor: ${rescheduleAppt.doctorName}` : ''}
+        title={t('rescheduleSheet.title')}
+        subtitle={rescheduleAppt ? t('rescheduleSheet.subtitle', { name: rescheduleAppt.doctorName }) : ''}
       >
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">New Date</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">{t('rescheduleSheet.newDateLabel')}</label>
             <input
               type="date"
               value={rescheduleDate}
@@ -839,7 +868,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             />
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">New Time Slot</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1">{t('rescheduleSheet.newSlotLabel')}</label>
             <select
               value={rescheduleSlot}
               onChange={(e) => setRescheduleSlot(e.target.value)}
@@ -856,7 +885,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             onClick={handleConfirmReschedule}
             className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
           >
-            Confirm New Appointment Slot
+            {t('rescheduleSheet.confirmButton')}
           </button>
         </div>
       </BottomSheet>
@@ -865,8 +894,8 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       <BottomSheet
         isOpen={!!feedbackAppt}
         onClose={() => setFeedbackAppt(null)}
-        title="Doctor Feedback"
-        subtitle={feedbackAppt ? `Rate your procedure with ${feedbackAppt.doctorName}` : ''}
+        title={t('feedbackSheet.title')}
+        subtitle={feedbackAppt ? t('feedbackSheet.subtitle', { name: feedbackAppt.doctorName }) : ''}
       >
         <div className="space-y-4 text-center">
           <div className="flex items-center justify-center gap-2">
@@ -884,7 +913,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
           <textarea
             value={feedbackComment}
             onChange={(e) => setFeedbackComment(e.target.value)}
-            placeholder="How was your procedure experience and care quality?"
+            placeholder={t('feedbackSheet.placeholder')}
             rows={3}
             className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden text-left"
           />
@@ -893,7 +922,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             onClick={handleConfirmFeedback}
             className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
           >
-            Submit Patient Review
+            {t('feedbackSheet.submitButton')}
           </button>
         </div>
       </BottomSheet>

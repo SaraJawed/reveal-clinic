@@ -1,0 +1,25 @@
+{
+  "header": {
+    "title": "Medical Reports & Certificates",
+    "subtitle": "Access digitally signed skin diagnostics, treatment notes & certificates."
+  },
+  "card": {
+    "doctorDate": "{{doctorName}} • {{date}}",
+    "digitallySigned": "Digitally Signed PDF",
+    "downloadButton": "Download PDF"
+  },
+  "pdf": {
+    "clinicName": "REVEAL CLINIC",
+    "clinicTagline": "Aesthetic & Medical Dermatology Center",
+    "documentLabel": "Document: {{title}}",
+    "documentTypeLabel": "Document Type: {{type}}",
+    "doctorLabel": "Doctor: {{doctorName}}",
+    "dateLabel": "Date: {{date}}",
+    "locationLabel": "Location: {{clinicName}}",
+    "summaryHeading": "CLINICAL SUMMARY & NOTES:",
+    "prescriptionsHeading": "PRESCRIPTIONS & RECOMMENDATIONS:",
+    "prescriptionLine": "- {{medication}}: {{dosage}} ({{instructions}})",
+    "signatureNote": "This document is digitally signed and encrypted by Reveal Clinic PWA Portal.",
+    "defaultFileName": "Reveal_Medical_Report.pdf"
+  }
+}

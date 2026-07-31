@@ -1,0 +1,122 @@
+{
+  "header": {
+    "title": "Appointment Management",
+    "subtitle": "Schedule dermatologists or manage upcoming clinic visits.",
+    "tabBookNew": "Book New",
+    "tabMyVisits": "My Visits ({{count}})",
+    "searchPlaceholder": "Search doctors, specialties or treatments..."
+  },
+  "specialtyFilters": {
+    "all": "All",
+    "antiAging": "Anti-Aging",
+    "laserSkin": "Laser & Skin",
+    "cosmeticDermatology": "Cosmetic Dermatology",
+    "clinicalDermatology": "Clinical Dermatology"
+  },
+  "doctorList": {
+    "availableDoctors": "Available Dermatologists & Surgeons ({{count}})",
+    "reviewCount": "({{count}} Reviews)",
+    "yearsExp": "{{years}} yrs exp",
+    "consultationFeeLabel": "Consultation Fee",
+    "feeAmount": "SAR {{amount}}",
+    "selectAndBook": "Select & Book"
+  },
+  "history": {
+    "emptyTitle": "No Appointment Records Found",
+    "emptySubtitle": "Book your first consultation using the 'Book New' tab.",
+    "pendingConfirmation": "Pending Confirmation",
+    "feeWithMethod": "SAR {{fee}} ({{method}})",
+    "voucherApplied": "Voucher {{code}} applied (-SAR {{amount}})",
+    "cancelConfirm": "Are you sure you want to cancel this appointment?",
+    "cancel": "Cancel",
+    "reschedule": "Reschedule",
+    "ratedOutOf5": "Rated {{rating}}/5",
+    "rateVisit": "Rate Your Visit",
+    "paidLabel": "Paid",
+    "payAtClinicLabel": "Pay at Clinic"
+  },
+  "paymentMethods": {
+    "payAtClinic": "Pay at Clinic",
+    "payOnline": "Pay Online",
+    "buyNowPayLater": "Buy Now Pay Later",
+    "payOnlineFull": "Pay Online (Mada / Apple Pay / Visa)",
+    "bnplFull": "Buy Now, Pay Later (BNPL)",
+    "paidOnline": "Paid Online"
+  },
+  "consultationTypes": {
+    "inClinic": "In-Clinic Consultation",
+    "followUp": "Follow-up Checkup",
+    "procedure": "Procedure"
+  },
+  "booking": {
+    "sheetTitle": "Book Appointment - {{doctorName}}",
+    "subtitleForm": "Select consultation type, date & time slot.",
+    "subtitleCardDetails": "Enter your card details to complete payment.",
+    "subtitleSummary": "Review booking summary & select payment option.",
+    "consultationTypeLabel": "Consultation Type",
+    "selectTreatmentLabel": "Select Treatment Service",
+    "treatmentOption": "{{name}} (SAR {{price}} • {{duration}} mins)",
+    "consultationFeeFor": "Consultation Fee ({{type}}):",
+    "appointmentDateLabel": "Appointment Date",
+    "availableSlotsLabel": "Available Time Slots",
+    "notesLabel": "Notes for Doctor (Optional)",
+    "notesPlaceholder": "Mention skin concerns or allergies...",
+    "totalFeeLabel": "Total Appointment Fee",
+    "proceedToSummary": "Proceed to Booking Summary"
+  },
+  "summary": {
+    "title": "Booking Summary",
+    "doctorLabel": "Doctor:",
+    "typeLabel": "Type:",
+    "treatmentLabel": "Treatment:",
+    "dateTimeLabel": "Date & Time:",
+    "dateAtSlot": "{{date}} at {{slot}}",
+    "subtotalLabel": "Subtotal:",
+    "voucherLabel": "Voucher ({{code}}):",
+    "voucherAmount": "-SAR {{amount}}",
+    "totalDueLabel": "Total Due:",
+    "feeAmount": "SAR {{amount}}",
+    "haveVoucherCode": "Have a Voucher Code?",
+    "voucherAppliedInline": "{{code}} applied — -SAR {{amount}}",
+    "voucherPlaceholder": "e.g. GLOW10",
+    "invalidVoucher": "Invalid or expired voucher code.",
+    "viewAvailableVouchers": "View Available Vouchers",
+    "selectPaymentOption": "Select Payment Option",
+    "payAtClinicDesc": "Pay cash or card upon arrival at the clinic counter",
+    "payOnlineDesc": "Instant secure online payment & immediate confirmation",
+    "bnplDesc": "Split into installments with Tabby — approved instantly, nothing due today",
+    "confirmBookingWithFee": "Confirm Booking — SAR {{amount}}",
+    "selectPaymentToContinue": "Select a Payment Option to Continue",
+    "backToDetails": "Back to Appointment Details"
+  },
+  "success": {
+    "title": "Appointment Confirmation",
+    "messages": {
+      "payAtClinic": "Your appointment slot has been reserved. Your booking will be confirmed once the payment is completed at the clinic.",
+      "payOnline": "Your appointment has been successfully booked and your payment has been received. A confirmation has been sent to you.",
+      "buyNowPayLater": "Your appointment is confirmed! Your Buy Now, Pay Later plan has been set up — nothing is due today."
+    },
+    "doctorLabel": "Doctor:",
+    "dateLabel": "Date:",
+    "locationLabel": "Location:",
+    "feeStatusLabel": "Fee / Status:",
+    "voucherLabel": "Voucher:",
+    "dateAtSlot": "{{date}} at {{slot}}",
+    "feeStatusValue": "SAR {{fee}} ({{method}})",
+    "voucherValue": "{{code}} (-SAR {{amount}})",
+    "doneButton": "Done & Return to Appointments"
+  },
+  "rescheduleSheet": {
+    "title": "Reschedule Appointment",
+    "subtitle": "Doctor: {{name}}",
+    "newDateLabel": "New Date",
+    "newSlotLabel": "New Time Slot",
+    "confirmButton": "Confirm New Appointment Slot"
+  },
+  "feedbackSheet": {
+    "title": "Doctor Feedback",
+    "subtitle": "Rate your procedure with {{name}}",
+    "placeholder": "How was your procedure experience and care quality?",
+    "submitButton": "Submit Patient Review"
+  }
+}

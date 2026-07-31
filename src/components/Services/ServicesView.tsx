@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TreatmentService, TreatmentPackage, Doctor, Appointment } from '../../types';
 import { Sparkles, Check, Clock, CheckCircle2 } from 'lucide-react';
 import { BottomSheet } from '../PWA/BottomSheet';
@@ -35,6 +36,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
   onBookAppointment,
   onPurchasePackage
 }) => {
+  const { t } = useTranslation('services');
   const [activeCategory, setActiveCategory] = useState<string>('All');
 
   // Single Treatment booking wizard
@@ -110,7 +112,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
     if (!code) return;
     const discount = calculateVoucherDiscount(code, fee);
     if (discount === null) {
-      setTreatmentVoucherError('Invalid or expired voucher code.');
+      setTreatmentVoucherError(t('errors.invalidVoucher'));
       setTreatmentVoucher(null);
       return;
     }
@@ -124,7 +126,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
     if (!code) return;
     const discount = calculateVoucherDiscount(code, fee);
     if (discount === null) {
-      setPackageVoucherError('Invalid or expired voucher code.');
+      setPackageVoucherError(t('errors.invalidVoucher'));
       setPackageVoucher(null);
       return;
     }
@@ -194,8 +196,8 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
       {/* Header & Categories */}
       <div className="bg-white rounded-3xl p-5 border border-slate-200/80 shadow-xs space-y-3">
         <div>
-          <h1 className="text-lg font-bold text-slate-900">Treatments, Services & Packages</h1>
-          <p className="text-xs text-slate-500">Explore FDA-approved dermatology & aesthetic procedures.</p>
+          <h1 className="text-lg font-bold text-slate-900">{t('header.title')}</h1>
+          <p className="text-xs text-slate-500">{t('header.subtitle')}</p>
         </div>
 
         {/* Category Tabs */}
@@ -211,7 +213,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
               }`}
             >
-              {cat}
+              {t(`categories.${cat}`)}
             </button>
           ))}
         </div>
@@ -221,10 +223,10 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
       <div className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <h2 className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-sky-500" /> Treatment Packages & Savings Packs
+            <Sparkles className="w-4 h-4 text-sky-500" /> {t('packagesSection.title')}
           </h2>
           <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-            Save up to 22%
+            {t('packagesSection.saveBadge')}
           </span>
         </div>
 
@@ -238,12 +240,12 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               className="text-left bg-gradient-to-b from-slate-900 via-slate-900 to-blue-950 text-white rounded-3xl p-5 border border-slate-800 shadow-lg flex flex-col justify-between relative overflow-hidden hover:shadow-xl hover:-translate-y-0.5 transition"
             >
               <div className="absolute top-3 right-3 bg-emerald-500 text-slate-950 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full">
-                SAVE {pack.savingsPercentage}%
+                {t('packagesSection.saveTag', { percentage: pack.savingsPercentage })}
               </div>
 
               <div className="space-y-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400">
-                  {pack.totalSessions} Sessions Pack
+                  {t('packagesSection.sessionsPack', { count: pack.totalSessions })}
                 </span>
                 <h3 className="font-bold text-base text-white">{pack.name}</h3>
                 <p className="text-xs text-slate-300 leading-tight">{pack.tagline}</p>
@@ -260,11 +262,11 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
 
               <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-slate-400 line-through block">SAR {pack.originalValue}</span>
-                  <span className="font-extrabold text-white text-lg">SAR {pack.price}</span>
+                  <span className="text-[10px] text-slate-400 line-through block">{t('packagesSection.originalValue', { amount: pack.originalValue })}</span>
+                  <span className="font-extrabold text-white text-lg">{t('packagesSection.price', { amount: pack.price })}</span>
                 </div>
                 <span className="bg-sky-400 text-slate-950 font-bold px-4 py-2 rounded-2xl text-xs shadow-md">
-                  Purchase Package
+                  {t('packagesSection.purchaseButton')}
                 </span>
               </div>
             </button>
@@ -275,7 +277,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
       {/* SECTION 2: INDIVIDUAL TREATMENTS GRID */}
       <div className="space-y-3 pt-2">
         <h2 className="text-sm font-bold text-slate-900 px-1">
-          Single Treatments & Clinical Procedures ({filteredTreatments.length})
+          {t('treatmentsSection.title', { count: filteredTreatments.length })}
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -295,7 +297,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                     <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full uppercase">
                       {treat.categoryName}
                     </span>
-                    <span className="font-extrabold text-slate-900 text-sm">SAR {treat.price}</span>
+                    <span className="font-extrabold text-slate-900 text-sm">{t('treatmentsSection.price', { amount: treat.price })}</span>
                   </div>
                   <h3 className="font-bold text-slate-900 text-sm mt-1">{treat.name}</h3>
                   <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{treat.shortDescription}</p>
@@ -304,7 +306,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
 
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                 <span className="text-slate-500 flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-blue-500" /> {treat.durationMinutes} Minutes
+                  <Clock className="w-3.5 h-3.5 text-blue-500" /> {t('treatmentsSection.duration', { minutes: treat.durationMinutes })}
                 </span>
                 <div className="flex items-center gap-2">
                   <button
@@ -312,7 +314,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                     onClick={() => setSelectedTreatment(treat)}
                     className="text-slate-600 hover:text-slate-900 font-bold px-2 py-1"
                   >
-                    Details
+                    {t('treatmentsSection.detailsButton')}
                   </button>
                   <button
                     id={`services-book-now-${treat.id}-btn`}
@@ -322,7 +324,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                     }}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-xl transition shadow-xs"
                   >
-                    Book
+                    {t('treatmentsSection.bookButton')}
                   </button>
                 </div>
               </div>
@@ -340,11 +342,11 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
           treatmentStep === 'details'
             ? selectedTreatment?.categoryName
             : treatmentStep === 'doctor_slot'
-              ? 'Choose a doctor, date & time slot.'
+              ? t('treatmentSheet.subtitleDoctorSlot')
               : treatmentStep === 'card_details'
-                ? 'Enter your card details to complete payment.'
+                ? t('treatmentSheet.subtitleCardDetails')
                 : treatmentStep === 'payment'
-                  ? 'Review booking summary & select payment option.'
+                  ? t('treatmentSheet.subtitlePayment')
                   : undefined
         }
       >
@@ -358,7 +360,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
             <p className="text-xs text-slate-600 leading-relaxed">{selectedTreatment.fullDescription}</p>
 
             <div className="bg-blue-50 p-3 rounded-2xl border border-blue-200/60 space-y-1.5">
-              <h4 className="font-bold text-blue-900 text-xs">Key Treatment Benefits</h4>
+              <h4 className="font-bold text-blue-900 text-xs">{t('treatmentSheet.details.benefitsTitle')}</h4>
               {selectedTreatment.benefits.map((b, i) => (
                 <div key={i} className="flex items-center gap-2 text-xs text-slate-700">
                   <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> {b}
@@ -368,23 +370,23 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
 
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <strong className="block text-slate-800 text-[11px]">Pre-Care Guidance:</strong>
+                <strong className="block text-slate-800 text-[11px]">{t('treatmentSheet.details.preCareLabel')}</strong>
                 <span className="text-slate-600 text-[11px]">{selectedTreatment.preCare}</span>
               </div>
               <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <strong className="block text-slate-800 text-[11px]">Post-Care Guidance:</strong>
+                <strong className="block text-slate-800 text-[11px]">{t('treatmentSheet.details.postCareLabel')}</strong>
                 <span className="text-slate-600 text-[11px]">{selectedTreatment.postCare}</span>
               </div>
             </div>
 
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-              <span className="font-extrabold text-slate-900 text-lg">SAR {selectedTreatment.price}</span>
+              <span className="font-extrabold text-slate-900 text-lg">{t('treatmentSheet.details.price', { amount: selectedTreatment.price })}</span>
               <button
                 id="services-sheet-book-btn"
                 onClick={() => setTreatmentStep('doctor_slot')}
                 className="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl text-xs shadow-md"
               >
-                Schedule Appointment
+                {t('treatmentSheet.details.scheduleButton')}
               </button>
             </div>
           </div>
@@ -413,7 +415,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              Continue to Payment
+              {t('treatmentSheet.doctorSlot.continueButton')}
             </button>
           </div>
         )}
@@ -422,26 +424,26 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
           <div className="space-y-4">
             <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-2 text-xs">
               <div className="flex justify-between">
-                <span>Treatment:</span>
+                <span>{t('treatmentSheet.payment.summary.treatment')}</span>
                 <span className="font-bold">{selectedTreatment.name}</span>
               </div>
               <div className="flex justify-between">
-                <span>Doctor:</span>
+                <span>{t('treatmentSheet.payment.summary.doctor')}</span>
                 <span className="font-bold">{treatmentDoctor.name}</span>
               </div>
               <div className="flex justify-between">
-                <span>Date & Time:</span>
-                <span className="font-bold">{treatmentDate} at {treatmentSlot}</span>
+                <span>{t('treatmentSheet.payment.summary.dateTime')}</span>
+                <span className="font-bold">{t('treatmentSheet.payment.summary.dateTimeValue', { date: treatmentDate, timeSlot: treatmentSlot })}</span>
               </div>
               {treatmentVoucher && (
                 <div className="flex justify-between text-emerald-400 pt-1 border-t border-slate-800">
-                  <span>Voucher Discount:</span>
-                  <span>-SAR {treatmentVoucher.discount}</span>
+                  <span>{t('treatmentSheet.payment.summary.voucherDiscount')}</span>
+                  <span>{t('treatmentSheet.payment.summary.voucherDiscountValue', { amount: treatmentVoucher.discount })}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold pt-1 border-t border-slate-800">
-                <span>Total:</span>
-                <span className="text-sky-400">SAR {getTreatmentFinalFee()}</span>
+                <span>{t('treatmentSheet.payment.summary.total')}</span>
+                <span className="text-sky-400">{t('treatmentSheet.payment.summary.totalValue', { amount: getTreatmentFinalFee() })}</span>
               </div>
             </div>
 
@@ -482,7 +484,9 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              {treatmentPaymentMethod ? `Confirm Booking — SAR ${getTreatmentFinalFee()}` : 'Select a Payment Option to Continue'}
+              {treatmentPaymentMethod
+                ? t('treatmentSheet.payment.confirmButton', { amount: getTreatmentFinalFee() })
+                : t('treatmentSheet.payment.selectPaymentPrompt')}
             </button>
 
             <button
@@ -490,7 +494,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               onClick={() => setTreatmentStep('doctor_slot')}
               className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition"
             >
-              Back
+              {t('treatmentSheet.payment.backButton')}
             </button>
           </div>
         )}
@@ -508,14 +512,14 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
             <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <p className="text-sm font-bold text-slate-900">Appointment Booked!</p>
+            <p className="text-sm font-bold text-slate-900">{t('treatmentSheet.confirmed.title')}</p>
             <div className="bg-slate-50 p-4 rounded-2xl text-xs space-y-1.5 text-left border border-slate-200">
-              <div>💉 <strong>Treatment:</strong> {confirmedTreatmentAppt.treatmentName}</div>
-              <div>👨‍⚕️ <strong>Doctor:</strong> {confirmedTreatmentAppt.doctorName}</div>
-              <div>🗓️ <strong>Date:</strong> {confirmedTreatmentAppt.date} at {confirmedTreatmentAppt.timeSlot}</div>
-              <div>💳 <strong>Fee / Method:</strong> SAR {confirmedTreatmentAppt.fee} ({confirmedTreatmentAppt.paymentMethod})</div>
+              <div>💉 <strong>{t('treatmentSheet.confirmed.treatmentLabel')}</strong> {confirmedTreatmentAppt.treatmentName}</div>
+              <div>👨‍⚕️ <strong>{t('treatmentSheet.confirmed.doctorLabel')}</strong> {confirmedTreatmentAppt.doctorName}</div>
+              <div>🗓️ <strong>{t('treatmentSheet.confirmed.dateLabel')}</strong> {t('treatmentSheet.confirmed.dateValue', { date: confirmedTreatmentAppt.date, timeSlot: confirmedTreatmentAppt.timeSlot })}</div>
+              <div>💳 <strong>{t('treatmentSheet.confirmed.feeMethodLabel')}</strong> {t('treatmentSheet.confirmed.feeMethodValue', { amount: confirmedTreatmentAppt.fee, method: confirmedTreatmentAppt.paymentMethod })}</div>
               {confirmedTreatmentAppt.voucherCode && (
-                <div>🏷️ <strong>Voucher:</strong> {confirmedTreatmentAppt.voucherCode} (-SAR {confirmedTreatmentAppt.discountAmount})</div>
+                <div>🏷️ <strong>{t('treatmentSheet.confirmed.voucherLabel')}</strong> {t('treatmentSheet.confirmed.voucherValue', { code: confirmedTreatmentAppt.voucherCode, amount: confirmedTreatmentAppt.discountAmount })}</div>
               )}
             </div>
             <button
@@ -524,7 +528,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               onClick={resetTreatmentFlow}
               className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
             >
-              Done
+              {t('treatmentSheet.confirmed.doneButton')}
             </button>
           </div>
         )}
@@ -547,13 +551,13 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
         title={selectedPackage?.name}
         subtitle={
           packageStep === 'details'
-            ? 'Package Details'
+            ? t('packageSheet.subtitleDetails')
             : packageStep === 'doctor_slot'
-              ? 'Choose a doctor, date & time slot for your first session.'
+              ? t('packageSheet.subtitleDoctorSlot')
               : packageStep === 'card_details'
-                ? 'Enter your card details to complete payment.'
+                ? t('packageSheet.subtitleCardDetails')
                 : packageStep === 'payment'
-                  ? 'Review booking summary & select payment option.'
+                  ? t('packageSheet.subtitlePayment')
                   : undefined
         }
       >
@@ -570,22 +574,28 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                 ))}
               </div>
               <div className="flex justify-between text-xs pt-2 border-t border-slate-800">
-                <span>Total Package Price:</span>
-                <span className="font-bold text-sky-400">SAR {selectedPackage.price}</span>
+                <span>{t('packageSheet.details.totalPriceLabel')}</span>
+                <span className="font-bold text-sky-400">{t('packageSheet.details.totalPriceValue', { amount: selectedPackage.price })}</span>
               </div>
               <div className="flex justify-between text-xs">
-                <span>Original Value:</span>
-                <span className="line-through text-slate-400">SAR {selectedPackage.originalValue}</span>
+                <span>{t('packageSheet.details.originalValueLabel')}</span>
+                <span className="line-through text-slate-400">{t('packageSheet.details.originalValueValue', { amount: selectedPackage.originalValue })}</span>
               </div>
               <div className="flex justify-between text-xs font-bold text-emerald-400 pt-1 border-t border-slate-800">
-                <span>Your Total Savings:</span>
-                <span>SAR {selectedPackage.originalValue - selectedPackage.price} ({selectedPackage.savingsPercentage}%)</span>
+                <span>{t('packageSheet.details.savingsLabel')}</span>
+                <span>{t('packageSheet.details.savingsValue', { amount: selectedPackage.originalValue - selectedPackage.price, percentage: selectedPackage.savingsPercentage })}</span>
               </div>
             </div>
 
-            <p className="text-xs text-slate-500">
-              Purchasing this package adds <strong>{selectedPackage.totalSessions} sessions</strong> to your active user account, valid for {selectedPackage.validityMonths} months across all Reveal Clinic locations.
-            </p>
+            <p
+              className="text-xs text-slate-500"
+              dangerouslySetInnerHTML={{
+                __html: t('packageSheet.details.purchaseNote', {
+                  sessions: selectedPackage.totalSessions,
+                  months: selectedPackage.validityMonths
+                })
+              }}
+            />
 
             <button
               type="button"
@@ -593,7 +603,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               onClick={() => setPackageStep('doctor_slot')}
               className="w-full bg-blue-600 text-white font-bold py-3.5 rounded-2xl text-xs shadow-md shadow-blue-500/25"
             >
-              Book First Session
+              {t('packageSheet.details.bookFirstSessionButton')}
             </button>
           </div>
         )}
@@ -621,14 +631,14 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              Continue to Payment
+              {t('packageSheet.doctorSlot.continueButton')}
             </button>
             <button
               type="button"
               onClick={() => setPackageStep('details')}
               className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition"
             >
-              Back
+              {t('packageSheet.doctorSlot.backButton')}
             </button>
           </div>
         )}
@@ -637,26 +647,26 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
           <div className="space-y-4">
             <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-2 text-xs">
               <div className="flex justify-between">
-                <span>Package:</span>
+                <span>{t('packageSheet.payment.summary.package')}</span>
                 <span className="font-bold">{selectedPackage.name}</span>
               </div>
               <div className="flex justify-between">
-                <span>Doctor:</span>
+                <span>{t('packageSheet.payment.summary.doctor')}</span>
                 <span className="font-bold">{packageDoctor.name}</span>
               </div>
               <div className="flex justify-between">
-                <span>First Session:</span>
-                <span className="font-bold">{packageDate} at {packageSlot}</span>
+                <span>{t('packageSheet.payment.summary.firstSession')}</span>
+                <span className="font-bold">{t('packageSheet.payment.summary.firstSessionValue', { date: packageDate, timeSlot: packageSlot })}</span>
               </div>
               {packageVoucher && (
                 <div className="flex justify-between text-emerald-400 pt-1 border-t border-slate-800">
-                  <span>Voucher Discount:</span>
-                  <span>-SAR {packageVoucher.discount}</span>
+                  <span>{t('packageSheet.payment.summary.voucherDiscount')}</span>
+                  <span>{t('packageSheet.payment.summary.voucherDiscountValue', { amount: packageVoucher.discount })}</span>
                 </div>
               )}
               <div className="flex justify-between font-bold pt-1 border-t border-slate-800">
-                <span>Total:</span>
-                <span className="text-sky-400">SAR {getPackageFinalFee()}</span>
+                <span>{t('packageSheet.payment.summary.total')}</span>
+                <span className="text-sky-400">{t('packageSheet.payment.summary.totalValue', { amount: getPackageFinalFee() })}</span>
               </div>
             </div>
 
@@ -697,7 +707,9 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              {packagePaymentMethod ? `Confirm Purchase — SAR ${getPackageFinalFee()}` : 'Select a Payment Option to Continue'}
+              {packagePaymentMethod
+                ? t('packageSheet.payment.confirmButton', { amount: getPackageFinalFee() })
+                : t('packageSheet.payment.selectPaymentPrompt')}
             </button>
 
             <button
@@ -705,7 +717,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               onClick={() => setPackageStep('doctor_slot')}
               className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition"
             >
-              Back
+              {t('packageSheet.payment.backButton')}
             </button>
           </div>
         )}
@@ -723,12 +735,12 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
             <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8" />
             </div>
-            <p className="text-sm font-bold text-slate-900">Package Purchased!</p>
+            <p className="text-sm font-bold text-slate-900">{t('packageSheet.confirmed.title')}</p>
             <div className="bg-slate-50 p-4 rounded-2xl text-xs space-y-1.5 text-left border border-slate-200">
-              <div>📦 <strong>Package:</strong> {confirmedPackagePurchase.pack.name} ({confirmedPackagePurchase.pack.totalSessions} sessions)</div>
-              <div>👨‍⚕️ <strong>First Session Doctor:</strong> {confirmedPackagePurchase.doctor.name}</div>
-              <div>🗓️ <strong>Date:</strong> {confirmedPackagePurchase.date} at {confirmedPackagePurchase.slot}</div>
-              <div>💳 <strong>Fee / Method:</strong> SAR {confirmedPackagePurchase.finalPrice} ({confirmedPackagePurchase.paymentMethod})</div>
+              <div>📦 <strong>{t('packageSheet.confirmed.packageLabel')}</strong> {t('packageSheet.confirmed.packageValue', { packageName: confirmedPackagePurchase.pack.name, sessions: confirmedPackagePurchase.pack.totalSessions })}</div>
+              <div>👨‍⚕️ <strong>{t('packageSheet.confirmed.doctorLabel')}</strong> {confirmedPackagePurchase.doctor.name}</div>
+              <div>🗓️ <strong>{t('packageSheet.confirmed.dateLabel')}</strong> {t('packageSheet.confirmed.dateValue', { date: confirmedPackagePurchase.date, timeSlot: confirmedPackagePurchase.slot })}</div>
+              <div>💳 <strong>{t('packageSheet.confirmed.feeMethodLabel')}</strong> {t('packageSheet.confirmed.feeMethodValue', { amount: confirmedPackagePurchase.finalPrice, method: confirmedPackagePurchase.paymentMethod })}</div>
             </div>
             <button
               type="button"
@@ -736,7 +748,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
               onClick={resetPackageFlow}
               className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
             >
-              Done
+              {t('packageSheet.confirmed.doneButton')}
             </button>
           </div>
         )}

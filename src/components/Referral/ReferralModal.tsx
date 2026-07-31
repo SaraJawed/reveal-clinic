@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { UserProfile } from '../../types';
 import { Share2, Copy, Check, Gift, Sparkles, X } from 'lucide-react';
 
@@ -9,6 +10,7 @@ interface ReferralModalProps {
 }
 
 export const ReferralModal: React.FC<ReferralModalProps> = ({ isOpen, onClose, user }) => {
+  const { t } = useTranslation('payments');
   const [copied, setCopied] = useState(false);
 
   if (!isOpen) return null;
@@ -29,8 +31,8 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ isOpen, onClose, u
               <Share2 className="w-6 h-6 text-emerald-100" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base">Invite Friends & Earn $50</h3>
-              <p className="text-xs text-emerald-100">Share your personal referral link</p>
+              <h3 className="font-extrabold text-base">{t('referral.headerTitle')}</h3>
+              <p className="text-xs text-emerald-100">{t('referral.headerSubtitle')}</p>
             </div>
           </div>
           <button
@@ -44,11 +46,11 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ isOpen, onClose, u
 
         <div className="p-6 space-y-4 text-center">
           <div className="bg-emerald-50 p-4 rounded-2xl border border-emerald-200 text-xs text-emerald-900 leading-relaxed">
-            Give your friends <strong>$50 credit</strong> toward their first treatment, and get <strong>$50 clinic credit</strong> added to your account after their first visit!
+            <Trans t={t} i18nKey="referral.promoText" components={{ strong: <strong /> }} />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1 text-left">Your Personal Referral Code</label>
+            <label className="block text-xs font-bold text-slate-700 mb-1 text-left">{t('referral.referralCodeLabel')}</label>
             <div className="flex items-center gap-2">
               <div className="flex-1 bg-slate-100 p-3 rounded-2xl font-mono font-bold text-slate-800 text-sm border border-slate-200">
                 {user.referralCode}
@@ -59,13 +61,13 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({ isOpen, onClose, u
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-2xl text-xs flex items-center gap-1.5 shadow-xs shrink-0"
               >
                 {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4" />}
-                <span>{copied ? 'Copied!' : 'Copy Link'}</span>
+                <span>{copied ? t('referral.copied') : t('referral.copyLink')}</span>
               </button>
             </div>
           </div>
 
           <div className="pt-2 text-[11px] text-slate-400">
-            No limits on referral earnings • Credits apply automatically at checkout
+            {t('referral.footerNote')}
           </div>
         </div>
       </div>

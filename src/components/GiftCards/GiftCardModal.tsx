@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { GiftCard, UserProfile } from '../../types';
 import { Gift, CheckCircle2, Sparkles, X } from 'lucide-react';
 
@@ -19,13 +20,14 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
   onPurchaseGiftCard,
   onRedeemGiftCardCode
 }) => {
+  const { t } = useTranslation('payments');
   const [activeTab, setActiveTab] = useState<'buy' | 'mycards' | 'redeem'>('buy');
 
   // Purchase Form
   const [amount, setAmount] = useState(250);
   const [recipientName, setRecipientName] = useState('');
   const [recipientEmail, setRecipientEmail] = useState('');
-  const [personalMessage, setPersonalMessage] = useState('Enjoy a luxurious skin rejuvenation experience at Reveal Clinic!');
+  const [personalMessage, setPersonalMessage] = useState(t('giftCards.defaultPersonalMessage'));
   const [theme, setTheme] = useState<'gold_luxury' | 'rose_glow' | 'serene_blue'>('gold_luxury');
 
   // Redeem
@@ -53,14 +55,14 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
     };
 
     onPurchaseGiftCard(newCard);
-    setSuccessMsg(`Digital Gift Card of SAR ${amount} purchased successfully! Sent to ${recipientEmail}`);
+    setSuccessMsg(t('giftCards.purchaseSuccess', { amount, email: recipientEmail }));
   };
 
   const handleRedeemSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!redeemCodeInput.trim()) return;
     onRedeemGiftCardCode(redeemCodeInput.trim());
-    setSuccessMsg(`Gift Card code "${redeemCodeInput}" redeemed to your account!`);
+    setSuccessMsg(t('giftCards.redeemSuccess', { code: redeemCodeInput }));
     setRedeemCodeInput('');
   };
 
@@ -74,8 +76,8 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
               <Gift className="w-6 h-6 text-rose-100" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base">Reveal Digital Gift Cards</h3>
-              <p className="text-xs text-rose-100">Luxury e-gift vouchers for treatments</p>
+              <h3 className="font-extrabold text-base">{t('giftCards.headerTitle')}</h3>
+              <p className="text-xs text-rose-100">{t('giftCards.headerSubtitle')}</p>
             </div>
           </div>
           <button
@@ -96,7 +98,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
               activeTab === 'buy' ? 'border-rose-600 text-rose-600 bg-white' : 'border-transparent'
             }`}
           >
-            Buy Gift Card
+            {t('giftCards.tabBuy')}
           </button>
           <button
             id="giftcards-tab-mycards-btn"
@@ -105,7 +107,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
               activeTab === 'mycards' ? 'border-rose-600 text-rose-600 bg-white' : 'border-transparent'
             }`}
           >
-            My Cards ({giftCards.length})
+            {t('giftCards.tabMyCards', { count: giftCards.length })}
           </button>
           <button
             id="giftcards-tab-redeem-btn"
@@ -114,7 +116,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
               activeTab === 'redeem' ? 'border-rose-600 text-rose-600 bg-white' : 'border-transparent'
             }`}
           >
-            Redeem Code
+            {t('giftCards.tabRedeem')}
           </button>
         </div>
 
@@ -131,7 +133,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
             <form onSubmit={handleBuySubmit} className="space-y-3">
               {/* Card Amount Preset Pills */}
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Select Gift Voucher Amount</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('giftCards.selectAmountLabel')}</label>
                 <div className="grid grid-cols-4 gap-2">
                   {[100, 250, 500, 1000].map((amt) => (
                     <button
@@ -144,38 +146,38 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
                           : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
-                      SAR {amt}
+                      {t('giftCards.amountOption', { amount: amt })}
                     </button>
                   ))}
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Recipient Name</label>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('giftCards.recipientNameLabel')}</label>
                 <input
                   type="text"
                   value={recipientName}
                   onChange={(e) => setRecipientName(e.target.value)}
-                  placeholder="e.g. Hessa Al-Qahtani"
+                  placeholder={t('giftCards.recipientNamePlaceholder')}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Recipient Email</label>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('giftCards.recipientEmailLabel')}</label>
                 <input
                   type="email"
                   value={recipientEmail}
                   onChange={(e) => setRecipientEmail(e.target.value)}
-                  placeholder="jessica@example.com"
+                  placeholder={t('giftCards.recipientEmailPlaceholder')}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Personal Message</label>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('giftCards.personalMessageLabel')}</label>
                 <textarea
                   value={personalMessage}
                   onChange={(e) => setPersonalMessage(e.target.value)}
@@ -189,7 +191,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
                 id="giftcards-buy-submit-btn"
                 className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-2xl text-xs shadow-md shadow-rose-500/25 transition"
               >
-                Purchase & E-Mail Gift Card (SAR {amount})
+                {t('giftCards.purchaseButton', { amount })}
               </button>
             </form>
           )}
@@ -198,7 +200,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
           {activeTab === 'mycards' && (
             <div className="space-y-3">
               {giftCards.length === 0 ? (
-                <div className="text-center py-8 text-slate-400 text-xs">No gift cards issued yet.</div>
+                <div className="text-center py-8 text-slate-400 text-xs">{t('giftCards.noCardsYet')}</div>
               ) : (
                 giftCards.map((card) => (
                   <div
@@ -206,13 +208,13 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
                     className="bg-gradient-to-r from-rose-900 to-pink-950 text-white p-4 rounded-2xl border border-rose-800 shadow-md space-y-2"
                   >
                     <div className="flex justify-between items-center text-xs">
-                      <span className="font-bold text-rose-200">For: {card.recipientName}</span>
-                      <span className="font-extrabold text-white text-sm">SAR {card.balance} Balance</span>
+                      <span className="font-bold text-rose-200">{t('giftCards.cardForRecipient', { name: card.recipientName })}</span>
+                      <span className="font-extrabold text-white text-sm">{t('giftCards.cardBalance', { balance: card.balance })}</span>
                     </div>
                     <div className="text-[11px] text-slate-300 italic">"{card.personalMessage}"</div>
                     <div className="flex justify-between items-center text-[10px] text-rose-300 font-mono pt-1 border-t border-rose-800">
-                      <span>Code: {card.code}</span>
-                      <span>Issued: {card.purchaseDate}</span>
+                      <span>{t('giftCards.cardCode', { code: card.code })}</span>
+                      <span>{t('giftCards.cardIssued', { date: card.purchaseDate })}</span>
                     </div>
                   </div>
                 ))
@@ -224,12 +226,12 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
           {activeTab === 'redeem' && (
             <form onSubmit={handleRedeemSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Enter Gift Card Voucher Code</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1">{t('giftCards.redeemCodeLabel')}</label>
                 <input
                   type="text"
                   value={redeemCodeInput}
                   onChange={(e) => setRedeemCodeInput(e.target.value)}
-                  placeholder="e.g. REVEAL-GIFT-9921"
+                  placeholder={t('giftCards.redeemCodePlaceholder')}
                   className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold uppercase outline-hidden"
                   required
                 />
@@ -240,7 +242,7 @@ export const GiftCardModal: React.FC<GiftCardModalProps> = ({
                 id="giftcards-redeem-submit-btn"
                 className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 rounded-2xl text-xs shadow-md transition"
               >
-                Redeem Gift Voucher
+                {t('giftCards.redeemButton')}
               </button>
             </form>
           )}

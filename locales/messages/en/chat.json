@@ -1,0 +1,57 @@
+{
+  "aiChatBot": {
+    "assistantName": "Reveal AI Assistant",
+    "assistantTagline": "24/7 Skin Care, Treatments & Clinic Guidance",
+    "faqPromptsLabel": "FAQ Prompts:",
+    "quickPrompts": {
+      "hours": "What are the clinic working hours?",
+      "bookHydrafacial": "How do I book HydraFacial with Dr. Fatima Al-Zahrani?",
+      "packages": "What packages are available for skin rejuvenation?",
+      "postLaserCare": "Post-laser care instructions for sensitive skin",
+      "loyaltyPoints": "How do I earn and redeem loyalty points?"
+    },
+    "generatingResponse": "Reveal AI is generating response...",
+    "meLabel": "Me",
+    "inputPlaceholder": "Ask Reveal Assistant about skin treatments, doctors or bookings..."
+  },
+  "floatingChatWidget": {
+    "launcherTitle": "Open AI Clinic Chatbot",
+    "backTitle": "Return to Application",
+    "closeTitle": "Close Chatbot",
+    "assistantName": "Reveal AI Assistant",
+    "assistantTagline": "24/7 Clinical & Treatment Guidance",
+    "faqsLabel": "FAQs:",
+    "quickPrompts": {
+      "hours": "What are the clinic working hours?",
+      "bookHydrafacial": "Book HydraFacial with Dr. Maha Al-Otaibi",
+      "postLaserCare": "Post-laser care instructions",
+      "redeemRewards": "Redeem rewards & special offers"
+    },
+    "generatingResponse": "Generating response...",
+    "youLabel": "You",
+    "inputPlaceholder": "Ask AI about treatments, skincare, or doctor availability...",
+    "sendButton": "Send"
+  },
+  "chatBookingCard": {
+    "dismissTitle": "Dismiss",
+    "reviewsCount": "{{count}} Reviews",
+    "consultationFeeLabel": "Consultation Fee:",
+    "sarAmount": "SAR {{amount}}",
+    "bookAppointment": "Book Appointment",
+    "availableSlotsToday": "Available Time Slots Today",
+    "dateAtSlot": "🗓️ {{date}} at {{slot}}",
+    "haveVoucher": "Have a Voucher Code?",
+    "voucherApplied": "{{code}} applied (-SAR {{discount}})",
+    "voucherPlaceholder": "e.g. GLOW10",
+    "viewAvailableVouchers": "View Available Vouchers",
+    "invalidVoucher": "Invalid or expired voucher code.",
+    "payAtClinic": "🏥 Pay at Clinic",
+    "payOnline": "💳 Pay Online",
+    "buyNowPayLater": "🛍️ Buy Now, Pay Later",
+    "confirmAppointment": "Confirm Appointment — SAR {{amount}}",
+    "selectPaymentOption": "Select a Payment Option",
+    "appointmentConfirmed": "Appointment Confirmed!",
+    "confirmedDateWithDoctor": "{{date}} at {{slot}} with {{doctorName}}",
+    "confirmedFeeMethod": "SAR {{fee}} ({{method}})"
+  }
+}

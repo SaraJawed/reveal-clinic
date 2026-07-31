@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { Download, X, Smartphone, WifiOff } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -22,6 +23,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
   isOffline: isOfflineProp,
   onToggleOffline
 }) => {
+  const { t } = useTranslation('navigation');
   const [dismissed, setDismissed] = useState(false);
   const [installed, setInstalled] = useState(() => isStandalone());
   const [detectedOffline, setDetectedOffline] = useState(
@@ -87,14 +89,16 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
         <div className="bg-amber-500 text-white px-4 py-2.5 rounded-2xl flex items-center justify-between text-xs shadow-md animate-fade-in">
           <div className="flex items-center gap-2">
             <WifiOff className="w-4 h-4 shrink-0" />
-            <span>You are currently browsing in <strong>Offline Mode</strong>. Cached appointments and reports are available.</span>
+            <span>
+              <Trans i18nKey="pwaInstallBanner.offlineNotice" ns="navigation" components={{ strong: <strong /> }} />
+            </span>
           </div>
           <button
             id="pwa-reconnect-btn"
             onClick={handleReconnect}
             className="bg-white text-amber-900 px-3 py-1 rounded-full text-xs font-bold shadow-xs hover:bg-amber-50"
           >
-            Reconnect
+            {t('pwaInstallBanner.reconnect')}
           </button>
         </div>
       )}
@@ -108,12 +112,12 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
             </div>
             <div>
               <div className="font-bold text-xs sm:text-sm flex items-center gap-1.5">
-                Install Reveal Clinic App <span className="bg-blue-500/30 text-blue-300 text-[10px] px-2 py-0.5 rounded-full uppercase">PWA</span>
+                {t('pwaInstallBanner.installAppTitle')} <span className="bg-blue-500/30 text-blue-300 text-[10px] px-2 py-0.5 rounded-full uppercase">{t('pwaInstallBanner.pwaBadge')}</span>
               </div>
               <div className="text-[11px] text-slate-300 leading-tight">
                 {isIOS && !deferredPrompt
-                  ? 'Tap the Share icon, then "Add to Home Screen" for offline check-in & reports.'
-                  : 'Add to your home screen for quick digital check-in & offline medical reports.'}
+                  ? t('pwaInstallBanner.installStepsIOS')
+                  : t('pwaInstallBanner.installStepsDefault')}
               </div>
             </div>
           </div>
@@ -125,7 +129,7 @@ export const PWAInstallBanner: React.FC<PWAInstallBannerProps> = ({
                 onClick={handleInstallClick}
                 className="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs"
               >
-                <Download className="w-3.5 h-3.5" /> Install
+                <Download className="w-3.5 h-3.5" /> {t('pwaInstallBanner.installButton')}
               </button>
             )}
             <button

@@ -1,0 +1,293 @@
+{
+  "dashboard": {
+    "banner": {
+      "tag": "مركز الاستقبال ومكتب الاستعلامات",
+      "greeting": "صباح الخير، {{name}} 👋",
+      "subtitle": "العيادة تسير بسلاسة اليوم. تابع حالات تسجيل الوصول، وسجّل زيارات الحضور المباشر، وأدر جداول الأطباء بكفاءة.",
+      "qrScanner": "ماسح رمز QR",
+      "addWalkIn": "إضافة حضور مباشر"
+    },
+    "stats": {
+      "todayAppts": "مواعيد اليوم",
+      "todayApptsNote": "مجدولة عبر 3 أطباء",
+      "checkedIn": "تم تسجيل الوصول",
+      "checkedInNote": "بالانتظار أو داخل الغرفة",
+      "pendingCheckIn": "بانتظار تسجيل الوصول",
+      "pendingCheckInNote": "يُتوقع وصولهم قريبًا",
+      "walkInQueue": "طابور الحضور المباشر",
+      "walkInQueueNote": "حالات حضور مباشر غير مجدولة"
+    },
+    "quickActions": {
+      "title": "لوحة الإجراءات السريعة للمنسق",
+      "bookAppt": "حجز موعد",
+      "bookApptNote": "موعد جديد",
+      "walkInPatient": "مريض حضور مباشر",
+      "walkInPatientNote": "تسجيل حالة حضور مباشر",
+      "receivePayment": "استلام دفعة",
+      "receivePaymentNote": "معالجة فواتير الاستقبال"
+    },
+    "pendingCheckIns": {
+      "title": "بانتظار تسجيل الوصول",
+      "viewAll": "عرض الكل ({{count}})",
+      "emptyTitle": "تم تسجيل وصول جميع المرضى المجدولين!",
+      "emptySubtitle": "لا توجد حالات وصول بانتظار التسجيل في الفترة الحالية.",
+      "doctorRoom": "د. {{doctorName}} • {{roomNumber}}",
+      "checkInButton": "تسجيل الوصول",
+      "toastCheckedIn": "تم تسجيل وصول {{patientName}}!"
+    },
+    "walkInQueue": {
+      "title": "طابور الحضور المباشر",
+      "registerButton": "تسجيل حضور مباشر",
+      "emptyTitle": "لا يوجد مرضى حضور مباشر حاليًا",
+      "emptySubtitle": "انقر على تسجيل حضور مباشر لإضافة زيارة غير مجدولة.",
+      "arrived": "وقت الوصول: {{time}}",
+      "assigned": "الطبيب المعيّن: {{doctorName}}",
+      "waitMins": "~{{mins}} دقيقة انتظار"
+    },
+    "walkInModal": {
+      "title": "تسجيل مريض حضور مباشر",
+      "patientName": "الاسم الكامل للمريض *",
+      "patientNamePlaceholder": "مثال: نادية منصور",
+      "mobileContact": "رقم التواصل *",
+      "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "assignDoctor": "تعيين الطبيب",
+      "requestedService": "الخدمة المطلوبة / السبب",
+      "requestedServicePlaceholder": "مثال: تحليل البشرة أو تعديل بسيط",
+      "notes": "ملاحظات المنسق (اختياري)",
+      "notesPlaceholder": "أي طلبات أو تعليمات إضافية...",
+      "confirm": "تأكيد الحضور المباشر",
+      "toastRegistered": "تم تسجيل المريض {{name}} في طابور الحضور المباشر!"
+    }
+  },
+  "appointments": {
+    "header": {
+      "title": "إدارة المواعيد",
+      "subtitle": "ابحث عن المواعيد، أو جدولها، أو أعد جدولتها، أو سجّل وصول المرضى.",
+      "bookNew": "حجز موعد جديد"
+    },
+    "search": {
+      "placeholder": "ابحث باسم المريض، رقم الملف (مثال: RC-99841)، الخدمة، أو الطبيب...",
+      "clear": "مسح"
+    },
+    "filters": {
+      "all": "جميع المواعيد",
+      "scheduled": "مجدولة",
+      "checkedIn": "تم تسجيل الوصول / نشطة",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
+    },
+    "status": {
+      "checkedIn": "تم تسجيل الوصول",
+      "scheduled": "مجدولة",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
+    },
+    "empty": {
+      "title": "لا توجد مواعيد مطابقة",
+      "subtitle": "حاول تعديل كلمات البحث أو عوامل تصفية الحالة."
+    },
+    "card": {
+      "doctorRoom": "الطبيب: {{doctorName}} • الغرفة: {{roomNumber}}",
+      "reason": "السبب:",
+      "confirmArrival": "تأكيد الحضور",
+      "reschedule": "إعادة الجدولة",
+      "toastCheckedIn": "تم تسجيل وصول {{patientName}}!"
+    },
+    "bookModal": {
+      "title": "حجز موعد بالعيادة",
+      "patientName": "اسم المريض *",
+      "patientNamePlaceholder": "مثال: لمى الراشدي",
+      "patientFileNo": "رقم ملف المريض",
+      "patientFileNoPlaceholder": "مثال: RC-88120",
+      "mobileContact": "رقم التواصل",
+      "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "selectService": "اختر الخدمة / العلاج",
+      "selectDoctor": "اختر الطبيب المعالج",
+      "date": "التاريخ",
+      "timeSlot": "الفترة الزمنية",
+      "notes": "ملاحظات / تعليمات",
+      "notesPlaceholder": "طلبات خاصة أو تفضيلات المريض...",
+      "today": "اليوم",
+      "tomorrow": "غدًا",
+      "confirm": "تأكيد الحجز",
+      "toastBooked": "تم حجز موعد جديد لـ {{name}}!"
+    },
+    "cancelModal": {
+      "title": "إلغاء الموعد",
+      "confirmText": "هل أنت متأكد من رغبتك في إلغاء موعد {{name}}؟",
+      "reasonLabel": "سبب الإلغاء *",
+      "reasonPatientRequest": "إلغاء بطلب من المريض",
+      "reasonDoctorEmergency": "طارئ للطبيب / تغيير في الجدول",
+      "reasonWeather": "ازدحام مروري أو سوء أحوال جوية",
+      "reasonPayment": "مشكلة في الدفع / الباقة",
+      "reasonNoShow": "تغيّب المريض عن الموعد",
+      "dismiss": "تجاهل",
+      "confirm": "تأكيد الإلغاء",
+      "toastCancelled": "تم إلغاء موعد {{name}} ({{reason}})."
+    },
+    "rescheduleModal": {
+      "title": "إعادة جدولة الموعد",
+      "selectText": "اختر تاريخًا ووقتًا جديدين لموعد {{name}}.",
+      "newDate": "التاريخ الجديد",
+      "availableTimeSlot": "الفترة الزمنية المتاحة",
+      "assignedDoctor": "الطبيب المعيّن",
+      "tomorrow": "غدًا",
+      "confirm": "تحديث الجدول"
+    }
+  },
+  "checkin": {
+    "header": {
+      "title": "مكتب تسجيل الوصول الرقمي",
+      "subtitle": "امسح رمز QR من تطبيق المريض أو أدخل رقم الملف للتحقق من الوصول."
+    },
+    "scanner": {
+      "title": "محطة ماسح QR",
+      "liveFeed": "بث كاميرا مباشر",
+      "scanning": "جارٍ مسح رمز QR...",
+      "positionFrame": "ضع رمز QR داخل الإطار",
+      "processing": "جارٍ المعالجة...",
+      "simulateTest": "تجربة مسح QR وهمي",
+      "manualLookupLabel": "أو البحث اليدوي عن الملف",
+      "manualPlaceholder": "أدخل رقم الملف (مثال: RC-20410) أو الاسم...",
+      "toastScanned": "تم مسح رمز QR بنجاح! تم العثور على تذكرة {{name}}."
+    },
+    "manual": {
+      "toastFound": "تم استرجاع موعد {{name}}.",
+      "toastNotFound": "لم يُعثر على موعد لـ \"{{query}}\"."
+    },
+    "verification": {
+      "title": "التحقق من تسجيل الوصول",
+      "emptyTitle": "بانتظار مسح QR أو البحث عن ملف",
+      "emptySubtitle": "امسح تذكرة على اليسار للتحقق من تفاصيل موعد المريض.",
+      "scheduledSlot": "الفترة المجدولة",
+      "paymentStatus": "حالة الدفع",
+      "paid": "مدفوع",
+      "visitReason": "سبب الزيارة",
+      "dismiss": "تجاهل",
+      "confirmCheckIn": "تأكيد تسجيل الوصول",
+      "toastConfirmed": "تم تسجيل وصول {{name}}! تم إصدار رقم الطابور #{{token}}."
+    },
+    "doctorRoom": "د. {{doctorName}} • {{roomNumber}}",
+    "queue": {
+      "title": "طابور غرفة الانتظار",
+      "waitingCount": "{{count}} مريضًا وصلوا وينتظرون",
+      "emptyTitle": "غرفة الانتظار فارغة",
+      "emptySubtitle": "لا يوجد مرضى مسجّلون حاليًا في الصالة.",
+      "inRoom": "داخل الغرفة",
+      "waiting": "بالانتظار",
+      "doctor": "د. {{doctorName}}",
+      "suite": "الجناح: {{roomNumber}}"
+    }
+  },
+  "patientLookup": {
+    "header": {
+      "title": "ملف المريض ومدفوعات الاستقبال",
+      "subtitle": "ابحث عن ملفات المرضى برقم الملف أو الهاتف أو الاسم، وعالِج مدفوعات الاستقبال وأصدر الإيصالات."
+    },
+    "search": {
+      "placeholder": "ابحث برقم الملف (مثال: RC-99841)، رقم الجوال، أو الاسم الكامل...",
+      "button": "البحث عن المريض",
+      "toastFound": "تم تحميل ملف المريض {{name}}.",
+      "toastNotFound": "لم يُعثر على مريض مطابق لـ \"{{query}}\"."
+    },
+    "receivePayment": "استلام دفعة من الاستقبال",
+    "lastTreatment": {
+      "label": "آخر علاج",
+      "dateDoctor": "التاريخ: {{date}} • {{doctorName}}"
+    },
+    "financial": {
+      "label": "الحالة المالية للحساب",
+      "outstandingBalance": "الرصيد المستحق:",
+      "fullySettled": "0.00$ (مسدد بالكامل)",
+      "loyaltyPointsLabel": "إجمالي نقاط الولاء:",
+      "loyaltyPointsValue": "1,450 نقطة (الفئة الذهبية)"
+    },
+    "history": {
+      "title": "سجل المواعيد والفواتير",
+      "doctorRoom": "د. {{doctorName}} • {{roomNumber}}",
+      "paid": "مدفوع 280$"
+    },
+    "paymentModal": {
+      "title": "استلام دفعة من الاستقبال",
+      "fileNo": "رقم الملف: {{id}}",
+      "todaysVisit": "زيارة اليوم",
+      "amountLabel": "مبلغ الدفعة ($) *",
+      "methodLabel": "اختر طريقة الدفع",
+      "creditCard": "بطاقة ائتمان",
+      "cash": "نقدًا",
+      "tabby": "تابي",
+      "cashTendered": "المبلغ النقدي المُسلَّم ($)",
+      "changeDue": "الباقي المستحق:",
+      "confirm": "تأكيد الدفع وإصدار الإيصال",
+      "toastProcessed": "تمت معالجة دفعة بقيمة {{amount}}$ لـ {{name}}!"
+    },
+    "paymentMethodLabels": {
+      "card": "بطاقة ائتمان / خصم",
+      "cash": "نقدًا في الاستقبال",
+      "tabby": "تابي - دفع بالتقسيط"
+    },
+    "receiptModal": {
+      "title": "تمت عملية الدفع بنجاح!",
+      "subtitle": "تم إصدار الإيصال الرقمي وحفظه في حساب المريض.",
+      "receiptRef": "مرجع الإيصال",
+      "item": "البند:",
+      "paidAmount": "المبلغ المدفوع:",
+      "method": "طريقة الدفع:",
+      "close": "إغلاق الإيصال"
+    }
+  },
+  "notifications": {
+    "title": "مركز إشعارات الاستقبال",
+    "subtitle": "تحديثات مباشرة حول وصول المرضى، الحضور المباشر، تغييرات الجدول، والطلبات",
+    "categories": {
+      "all": "جميع التنبيهات",
+      "arrivals": "وصول المرضى",
+      "newBookings": "حجوزات جديدة",
+      "cancellations": "الإلغاءات وإعادة الجدولة",
+      "followUps": "المتابعات"
+    },
+    "toastAllRead": "تم تمييز جميع الإشعارات كمقروءة."
+  },
+  "profile": {
+    "header": {
+      "title": "حساب المنسق والتفضيلات",
+      "subtitle": "أدر بيانات اعتماد ملف الاستقبال، ولغة التطبيق، وإعدادات الأمان."
+    },
+    "badge": "منسق استقبال",
+    "employeeInfo": "رقم الموظف: COORD-8820 • الوردية: صباحية (08:30 ص - 05:30 م)",
+    "contact": {
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف"
+    },
+    "security": {
+      "title": "الأمان والمصادقة",
+      "changePassword": "تغيير كلمة المرور",
+      "changePasswordNote": "تحديث كلمة مرور تسجيل الدخول للاستقبال",
+      "offlineMode": "وضع العمل دون اتصال (PWA)",
+      "offlineModeStatus": "مفعّل ومخزَّن مؤقتًا",
+      "active": "نشط"
+    },
+    "language": {
+      "title": "تفضيلات اللغة",
+      "english": "الإنجليزية",
+      "arabic": "العربية"
+    },
+    "logout": {
+      "button": "إنهاء جلسة الاستقبال (تسجيل الخروج)"
+    },
+    "passwordModal": {
+      "title": "تغيير كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية *",
+      "newPassword": "كلمة المرور الجديدة *",
+      "confirmPassword": "تأكيد كلمة المرور الجديدة *",
+      "update": "تحديث كلمة المرور",
+      "toastMismatch": "كلمتا المرور غير متطابقتين.",
+      "toastSuccess": "تم تحديث كلمة المرور بنجاح!"
+    },
+    "logoutModal": {
+      "title": "تأكيد تسجيل الخروج",
+      "confirmText": "هل أنت متأكد من رغبتك في إنهاء جلسة الاستقبال الحالية؟"
+    },
+    "toastLanguageSet": "تم ضبط لغة التطبيق إلى {{lang}}."
+  }
+}

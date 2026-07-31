@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { CoordinatorTabType } from '../../types';
 import { LayoutDashboard, Calendar, QrCode, Search, Bell, User } from 'lucide-react';
 
@@ -13,11 +14,12 @@ export const CoordinatorBottomNav: React.FC<CoordinatorBottomNavProps> = ({
   onChangeTab,
   unreadNotificationsCount = 0
 }) => {
+  const { t } = useTranslation('navigation');
   const navItems: Array<{ id: CoordinatorTabType; label: string; icon: React.ComponentType<{ className?: string }>; badge?: number }> = [
-    { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-    { id: 'appointments', label: 'Appts', icon: Calendar },
-    { id: 'patients', label: 'Patients', icon: Search },
-    { id: 'profile', label: 'Profile', icon: User }
+    { id: 'dashboard', label: t('coordinatorBottomNav.overview'), icon: LayoutDashboard },
+    { id: 'appointments', label: t('coordinatorBottomNav.appointments'), icon: Calendar },
+    { id: 'patients', label: t('coordinatorBottomNav.patients'), icon: Search },
+    { id: 'profile', label: t('coordinatorBottomNav.profile'), icon: User }
   ];
 
   return (

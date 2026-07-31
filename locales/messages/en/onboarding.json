@@ -1,0 +1,25 @@
+{
+  "brand": "REVEAL",
+  "skip": "Skip",
+  "slides": {
+    "welcome": {
+      "title": "Welcome to Reveal Clinic",
+      "subtitle": "Premium skin, laser & aesthetic care tailored to your unique elegance.",
+      "badge": "Luxury Medical Care"
+    },
+    "booking": {
+      "title": "Instant Booking & Digital Check-In",
+      "subtitle": "Choose top board-certified dermatologists, select time slots, and skip waiting lines with QR check-in.",
+      "badge": "Seamless Convenience"
+    },
+    "packages": {
+      "title": "Packages, Reports & Rewards",
+      "subtitle": "Access PDF skin diagnostic reports, track session packages, and earn loyalty credits on every treatment.",
+      "badge": "All-In-One PWA Portal"
+    }
+  },
+  "cta": {
+    "next": "Next",
+    "getStarted": "Get Started Now"
+  }
+}

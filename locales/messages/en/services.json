@@ -1,0 +1,121 @@
+{
+  "errors": {
+    "invalidVoucher": "Invalid or expired voucher code."
+  },
+  "header": {
+    "title": "Treatments, Services & Packages",
+    "subtitle": "Explore FDA-approved dermatology & aesthetic procedures."
+  },
+  "categories": {
+    "All": "All",
+    "Medical Aesthetics": "Medical Aesthetics",
+    "Laser Treatments": "Laser Treatments",
+    "Injectables": "Injectables",
+    "Anti-Aging": "Anti-Aging",
+    "Body Contouring": "Body Contouring"
+  },
+  "packagesSection": {
+    "title": "Treatment Packages & Savings Packs",
+    "saveBadge": "Save up to 22%",
+    "sessionsPack": "{{count}} Sessions Pack",
+    "saveTag": "SAVE {{percentage}}%",
+    "originalValue": "SAR {{amount}}",
+    "price": "SAR {{amount}}",
+    "purchaseButton": "Purchase Package"
+  },
+  "treatmentsSection": {
+    "title": "Single Treatments & Clinical Procedures ({{count}})",
+    "price": "SAR {{amount}}",
+    "duration": "{{minutes}} Minutes",
+    "detailsButton": "Details",
+    "bookButton": "Book"
+  },
+  "treatmentSheet": {
+    "subtitleDoctorSlot": "Choose a doctor, date & time slot.",
+    "subtitleCardDetails": "Enter your card details to complete payment.",
+    "subtitlePayment": "Review booking summary & select payment option.",
+    "details": {
+      "benefitsTitle": "Key Treatment Benefits",
+      "preCareLabel": "Pre-Care Guidance:",
+      "postCareLabel": "Post-Care Guidance:",
+      "price": "SAR {{amount}}",
+      "scheduleButton": "Schedule Appointment"
+    },
+    "doctorSlot": {
+      "continueButton": "Continue to Payment"
+    },
+    "payment": {
+      "summary": {
+        "treatment": "Treatment:",
+        "doctor": "Doctor:",
+        "dateTime": "Date & Time:",
+        "dateTimeValue": "{{date}} at {{timeSlot}}",
+        "voucherDiscount": "Voucher Discount:",
+        "voucherDiscountValue": "-SAR {{amount}}",
+        "total": "Total:",
+        "totalValue": "SAR {{amount}}"
+      },
+      "confirmButton": "Confirm Booking — SAR {{amount}}",
+      "selectPaymentPrompt": "Select a Payment Option to Continue",
+      "backButton": "Back"
+    },
+    "confirmed": {
+      "title": "Appointment Booked!",
+      "treatmentLabel": "Treatment:",
+      "doctorLabel": "Doctor:",
+      "dateLabel": "Date:",
+      "dateValue": "{{date}} at {{timeSlot}}",
+      "feeMethodLabel": "Fee / Method:",
+      "feeMethodValue": "SAR {{amount}} ({{method}})",
+      "voucherLabel": "Voucher:",
+      "voucherValue": "{{code}} (-SAR {{amount}})",
+      "doneButton": "Done"
+    }
+  },
+  "packageSheet": {
+    "subtitleDetails": "Package Details",
+    "subtitleDoctorSlot": "Choose a doctor, date & time slot for your first session.",
+    "subtitleCardDetails": "Enter your card details to complete payment.",
+    "subtitlePayment": "Review booking summary & select payment option.",
+    "details": {
+      "totalPriceLabel": "Total Package Price:",
+      "totalPriceValue": "SAR {{amount}}",
+      "originalValueLabel": "Original Value:",
+      "originalValueValue": "SAR {{amount}}",
+      "savingsLabel": "Your Total Savings:",
+      "savingsValue": "SAR {{amount}} ({{percentage}}%)",
+      "purchaseNote": "Purchasing this package adds <strong>{{sessions}} sessions</strong> to your active user account, valid for {{months}} months across all Reveal Clinic locations.",
+      "bookFirstSessionButton": "Book First Session"
+    },
+    "doctorSlot": {
+      "continueButton": "Continue to Payment",
+      "backButton": "Back"
+    },
+    "payment": {
+      "summary": {
+        "package": "Package:",
+        "doctor": "Doctor:",
+        "firstSession": "First Session:",
+        "firstSessionValue": "{{date}} at {{timeSlot}}",
+        "voucherDiscount": "Voucher Discount:",
+        "voucherDiscountValue": "-SAR {{amount}}",
+        "total": "Total:",
+        "totalValue": "SAR {{amount}}"
+      },
+      "confirmButton": "Confirm Purchase — SAR {{amount}}",
+      "selectPaymentPrompt": "Select a Payment Option to Continue",
+      "backButton": "Back"
+    },
+    "confirmed": {
+      "title": "Package Purchased!",
+      "packageLabel": "Package:",
+      "packageValue": "{{packageName}} ({{sessions}} sessions)",
+      "doctorLabel": "First Session Doctor:",
+      "dateLabel": "Date:",
+      "dateValue": "{{date}} at {{timeSlot}}",
+      "feeMethodLabel": "Fee / Method:",
+      "feeMethodValue": "SAR {{amount}} ({{method}})",
+      "doneButton": "Done"
+    }
+  }
+}

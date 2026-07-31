@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserProfile, Appointment, ClinicBranch } from '../../types';
 import { QrCode, AlertCircle, ShieldCheck, FileText, User } from 'lucide-react';
 
@@ -15,6 +16,7 @@ export const DigitalCheckInView: React.FC<DigitalCheckInViewProps> = ({
   upcomingAppointments,
   onOpenPayment
 }) => {
+  const { t } = useTranslation('checkin');
   const appt = upcomingAppointments[0];
   const hasUnpaid = appt && !appt.paid;
 
@@ -26,8 +28,8 @@ export const DigitalCheckInView: React.FC<DigitalCheckInViewProps> = ({
           <QrCode className="w-6 h-6" />
         </div>
         <div>
-          <h1 className="text-lg font-bold text-slate-900">Clinic Digital Check-In</h1>
-          <p className="text-xs text-slate-500">Present your patient QR code or File Number at reception desk upon arrival.</p>
+          <h1 className="text-lg font-bold text-slate-900">{t('header.title')}</h1>
+          <p className="text-xs text-slate-500">{t('header.subtitle')}</p>
         </div>
 
         {/* Location chip */}
@@ -42,7 +44,7 @@ export const DigitalCheckInView: React.FC<DigitalCheckInViewProps> = ({
           <div className="flex items-center gap-2">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <div className="text-xs">
-              <strong>Outstanding Payment Alert:</strong> You have an unpaid consultation fee of ${appt.fee}.
+              <strong>{t('unpaidAlert.label')}</strong> {t('unpaidAlert.message', { amount: appt.fee })}
             </div>
           </div>
           <button
@@ -50,7 +52,7 @@ export const DigitalCheckInView: React.FC<DigitalCheckInViewProps> = ({
             onClick={onOpenPayment}
             className="bg-white text-slate-900 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-slate-100 shrink-0"
           >
-            Pay Now
+            {t('unpaidAlert.payNow')}
           </button>
         </div>
       )}
@@ -91,19 +93,19 @@ export const DigitalCheckInView: React.FC<DigitalCheckInViewProps> = ({
         <div className="bg-slate-50 border border-slate-200/80 p-4 rounded-2xl text-center space-y-1.5 max-w-sm mx-auto shadow-2xs">
           <div className="flex items-center justify-center gap-1.5 text-slate-500">
             <FileText className="w-4 h-4 text-blue-600" />
-            <span className="text-[11px] font-bold uppercase tracking-wider">Patient File Number</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider">{t('qrCard.patientFileNumber')}</span>
           </div>
           <div className="text-2xl font-black text-slate-900 font-mono tracking-widest selection:bg-blue-200">
             {user.patientId}
           </div>
           <p className="text-[11px] text-slate-500 font-medium">
-            Present this file number or show your QR code to reception staff for instant check-in.
+            {t('qrCard.instructions')}
           </p>
         </div>
 
         <div className="flex items-center justify-center gap-2 text-[11px] font-semibold text-slate-500 pt-2 border-t border-slate-100">
           <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          <span>Verified Active Patient Profile • {selectedBranch.city}</span>
+          <span>{t('qrCard.verifiedProfile', { city: selectedBranch.city })}</span>
         </div>
       </div>
     </div>

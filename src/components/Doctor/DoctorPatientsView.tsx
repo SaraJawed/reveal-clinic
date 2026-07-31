@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ClinicalPatientRecord, MedicalReport } from '../../types';
 import {
   Users,
@@ -30,6 +31,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
   patients,
   onAddClinicalNote
 }) => {
+  const { t } = useTranslation('doctor');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
   const [expandedSection, setExpandedSection] = useState<'history' | 'visits' | 'treatments' | 'reports' | 'notes'>('history');
@@ -60,10 +62,10 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
           </div>
           <div>
             <h1 className="font-extrabold text-lg text-slate-900 tracking-tight">
-              Patient Medical Records
+              {t('patients.header.title')}
             </h1>
             <p className="text-xs text-slate-500">
-              Access comprehensive patient history, clinical skin profiles, allergies, and visits
+              {t('patients.header.subtitle')}
             </p>
           </div>
         </div>
@@ -75,7 +77,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search patient name or ID..."
+            placeholder={t('patients.header.searchPlaceholder')}
             className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-xs font-semibold focus:bg-white focus:border-blue-500 outline-hidden"
           />
         </div>
@@ -84,7 +86,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
       {!selectedPatient ? (
         <div className="space-y-3">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider px-1">
-            Registered Patients ({filteredPatients.length})
+            {t('patients.list.registeredCount', { count: filteredPatients.length })}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -108,7 +110,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                         </h3>
                       </div>
                       <p className="text-[10px] font-bold text-[#4F8EF7] truncate">
-                        ID: {patient.patientId} • {patient.age}y ({patient.gender})
+                        {t('patients.list.idAgeGender', { patientId: patient.patientId, age: patient.age, gender: patient.gender })}
                       </p>
                       <p className="text-[10px] text-slate-500 truncate">
                         {patient.skinType}
@@ -117,7 +119,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                   </div>
 
                   {patient.allergies.length > 0 && (
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" title="Has allergy flags" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" title={t('patients.list.allergyFlagTitle')} />
                   )}
                 </div>
               );
@@ -132,7 +134,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               onClick={() => setSelectedPatientId(null)}
               className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl text-xs font-bold transition cursor-pointer"
             >
-              ← Back to Patient List
+              {t('patients.detail.backButton')}
             </button>
           </div>
 
@@ -157,7 +159,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                     </div>
 
                     <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                      {selectedPatient.age} years old • {selectedPatient.gender.toUpperCase()} • Blood Group: <strong className="text-slate-800">{selectedPatient.bloodGroup}</strong>
+                      {t('patients.detail.ageGenderBlood', { age: selectedPatient.age, gender: selectedPatient.gender.toUpperCase() })} <strong className="text-slate-800">{selectedPatient.bloodGroup}</strong>
                     </p>
 
                     <p className="text-xs text-[#4F8EF7] font-bold mt-1">
@@ -173,7 +175,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                     className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5 text-sky-300" />
-                    <span>Add Note</span>
+                    <span>{t('patients.detail.addNoteButton')}</span>
                   </button>
                 </div>
               </div>
@@ -181,16 +183,16 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               {/* Quick Info Badges */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
                 <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-100">
-                  <span className="text-[10px] text-slate-400 font-bold block">Registered Branch</span>
+                  <span className="text-[10px] text-slate-400 font-bold block">{t('patients.detail.registeredBranch')}</span>
                   <span className="font-extrabold text-slate-800 truncate block">{selectedPatient.registeredBranch}</span>
                 </div>
                 <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-100">
-                  <span className="text-[10px] text-slate-400 font-bold block">Active Packages</span>
-                  <span className="font-extrabold text-[#4F8EF7]">{selectedPatient.activePackagesCount} Active Package(s)</span>
+                  <span className="text-[10px] text-slate-400 font-bold block">{t('patients.detail.activePackages')}</span>
+                  <span className="font-extrabold text-[#4F8EF7]">{t('patients.detail.activePackagesValue', { count: selectedPatient.activePackagesCount })}</span>
                 </div>
                 <div className="bg-slate-50 p-2.5 rounded-2xl border border-slate-100 col-span-2 sm:col-span-1">
-                  <span className="text-[10px] text-slate-400 font-bold block">Total Visited</span>
-                  <span className="font-extrabold text-slate-800">{selectedPatient.previousVisits.length} Recorded Visit(s)</span>
+                  <span className="text-[10px] text-slate-400 font-bold block">{t('patients.detail.totalVisited')}</span>
+                  <span className="font-extrabold text-slate-800">{t('patients.detail.totalVisitedValue', { count: selectedPatient.previousVisits.length })}</span>
                 </div>
               </div>
             </div>
@@ -207,7 +209,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  Medical Notes
+                  {t('patients.tabs.history')}
                 </button>
                 <button
                   type="button"
@@ -218,7 +220,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  Previous Visits ({selectedPatient.previousVisits.length})
+                  {t('patients.tabs.visits', { count: selectedPatient.previousVisits.length })}
                 </button>
                 <button
                   type="button"
@@ -229,7 +231,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  Treatment History
+                  {t('patients.tabs.treatments')}
                 </button>
                 <button
                   type="button"
@@ -240,7 +242,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                       : 'text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  Medical Reports ({selectedPatient.reports.length})
+                  {t('patients.tabs.reports', { count: selectedPatient.reports.length })}
                 </button>
               </div>
 
@@ -248,7 +250,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               {expandedSection === 'history' && (
                 <div className="space-y-3">
                   <h3 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider">
-                    Dermatology & Clinical History Summary
+                    {t('patients.history.sectionTitle')}
                   </h3>
                   <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl text-xs text-slate-700 leading-relaxed font-medium whitespace-pre-wrap">
                     {selectedPatient.medicalHistoryNotes}
@@ -260,7 +262,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               {expandedSection === 'visits' && (
                 <div className="space-y-3">
                   <h3 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider">
-                    Clinical Visit History
+                    {t('patients.visits.sectionTitle')}
                   </h3>
                   {selectedPatient.previousVisits.map((vis) => (
                     <div key={vis.id} className="p-4 bg-slate-50 border border-slate-100 rounded-2xl space-y-2">
@@ -272,14 +274,14 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                         {vis.clinicalNotes}
                       </p>
                       <p className="text-[11px] text-slate-400 font-semibold">
-                        Physician: {vis.doctorName} • {vis.clinicBranch}
+                        {t('patients.visits.physicianLine', { doctor: vis.doctorName, branch: vis.clinicBranch })}
                       </p>
                       {vis.prescriptions && vis.prescriptions.length > 0 && (
                         <div className="mt-2 pt-2 border-t border-slate-200/60 text-xs">
-                          <span className="font-bold text-slate-700 block mb-1">Prescriptions Issued:</span>
+                          <span className="font-bold text-slate-700 block mb-1">{t('patients.visits.prescriptionsLabel')}</span>
                           {vis.prescriptions.map((p, i) => (
                             <span key={i} className="inline-block bg-white px-2.5 py-1 rounded-lg border border-slate-200/80 mr-2 text-[11px] font-semibold text-slate-800">
-                              💊 {p.medication} ({p.dosage} - {p.frequency})
+                              {t('patients.visits.prescriptionItem', { medication: p.medication, dosage: p.dosage, frequency: p.frequency })}
                             </span>
                           ))}
                         </div>
@@ -293,17 +295,17 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               {expandedSection === 'treatments' && (
                 <div className="space-y-3">
                   <h3 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider">
-                    Subscribed Packages & Procedures
+                    {t('patients.treatments.sectionTitle')}
                   </h3>
                   {selectedPatient.treatmentHistory.map((th) => (
                     <div key={th.id} className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-3">
                       <div>
                         <h4 className="font-bold text-xs text-slate-900">{th.treatmentName}</h4>
-                        <p className="text-[11px] text-slate-500 font-medium">Started: {th.startDate} • Last: {th.lastSessionDate}</p>
+                        <p className="text-[11px] text-slate-500 font-medium">{t('patients.treatments.datesLine', { startDate: th.startDate, lastDate: th.lastSessionDate })}</p>
                       </div>
                       <div className="text-right shrink-0">
                         <span className="px-3 py-1 bg-blue-100 text-[#4F8EF7] font-extrabold rounded-full text-xs">
-                          {th.completedSessions} / {th.totalSessions} Sessions
+                          {t('patients.treatments.sessionsCount', { completed: th.completedSessions, total: th.totalSessions })}
                         </span>
                         <p className="text-[10px] text-emerald-600 font-bold mt-1 uppercase">{th.status}</p>
                       </div>
@@ -316,10 +318,10 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               {expandedSection === 'reports' && (
                 <div className="space-y-3">
                   <h3 className="font-extrabold text-xs text-slate-800 uppercase tracking-wider">
-                    Diagnostic Reports & Skin Analysis
+                    {t('patients.reports.sectionTitle')}
                   </h3>
                   {selectedPatient.reports.length === 0 ? (
-                    <p className="text-xs text-slate-400 italic">No diagnostic PDF reports attached yet.</p>
+                    <p className="text-xs text-slate-400 italic">{t('patients.reports.empty')}</p>
                   ) : (
                     selectedPatient.reports.map((rep) => (
                       <div key={rep.id} className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-between gap-3">
@@ -334,11 +336,11 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                         </div>
                         <button
                           type="button"
-                          onClick={() => alert(`Downloading ${rep.downloadPdfName}...`)}
+                          onClick={() => alert(t('patients.reports.downloadingAlert', { fileName: rep.downloadPdfName }))}
                           className="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold rounded-xl text-xs transition flex items-center gap-1.5 shrink-0"
                         >
                           <Download className="w-3.5 h-3.5 text-[#4F8EF7]" />
-                          <span>PDF</span>
+                          <span>{t('patients.reports.pdfButton')}</span>
                         </button>
                       </div>
                     ))
@@ -356,7 +358,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-6 space-y-4 border border-slate-100">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="font-extrabold text-sm text-slate-900">
-                Add Medical Note ({selectedPatient.fullName})
+                {t('patients.noteModal.title', { name: selectedPatient.fullName })}
               </h3>
               <button onClick={() => setShowAddNoteModal(false)}>
                 <X className="w-5 h-5 text-slate-400" />
@@ -367,7 +369,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
               rows={4}
               value={newNoteText}
               onChange={(e) => setNewNoteText(e.target.value)}
-              placeholder="e.g. Patient requested ice cooling before injections due to mild needle sensitivity..."
+              placeholder={t('patients.noteModal.placeholder')}
               className="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-800 outline-hidden focus:bg-white focus:border-blue-500"
             />
 
@@ -377,7 +379,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                 onClick={() => setShowAddNoteModal(false)}
                 className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl font-bold text-xs"
               >
-                Cancel
+                {t('common:buttons.cancel')}
               </button>
               <button
                 type="button"
@@ -395,7 +397,7 @@ export const DoctorPatientsView: React.FC<DoctorPatientsViewProps> = ({
                 }}
                 className="px-4 py-2 bg-[#4F8EF7] text-white rounded-xl font-bold text-xs"
               >
-                Save Note
+                {t('patients.noteModal.saveButton')}
               </button>
             </div>
           </div>

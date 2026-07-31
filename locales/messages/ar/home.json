@@ -1,0 +1,45 @@
+{
+  "welcome": {
+    "greeting": "طاب يومك، {{name}}",
+    "subtitle": "مرحبًا بعودتك إلى عيادة ريفيل.",
+    "fileId": "رقم الملف: {{id}}"
+  },
+  "quickAction": {
+    "bookAppointment": "حجز موعد",
+    "subtitle": "احجز زيارتك القادمة في ثوانٍ"
+  },
+  "nextAppointment": {
+    "title": "الموعد القادم",
+    "myVisits": "زياراتي",
+    "confirmed": "مؤكد",
+    "noAppointments": "لا توجد مواعيد قادمة مجدولة.",
+    "scheduleAppointment": "جدولة موعد"
+  },
+  "myPackages": {
+    "title": "باقاتي",
+    "currentlyTaking": "قيد الاستخدام حاليًا",
+    "noActivePackage": "لا توجد باقة نشطة"
+  },
+  "recentReports": {
+    "title": "التقارير الأخيرة",
+    "viewAll": "عرض الكل",
+    "dateLabel": "التاريخ: {{date}}",
+    "viewReportPdf": "عرض ملف التقرير PDF"
+  },
+  "popularTreatments": {
+    "title": "العلاجات التجميلية المميزة",
+    "subtitle": "خدمات مختارة للعناية بالبشرة والتجميل الجلدي",
+    "exploreAll": "استكشاف الكل",
+    "durationMinutes": "{{minutes}} دقيقة",
+    "bookNow": "احجز الآن"
+  },
+  "packageDetail": {
+    "currentlyTaking": "قيد الاستخدام حاليًا",
+    "sessionsUsed": "الجلسات المستخدمة",
+    "purchasedOn": "تاريخ الشراء",
+    "validUntil": "صالح حتى",
+    "includedInPackage": "يشمل هذه الباقة",
+    "qrCheckInCode": "رمز الاستجابة السريعة لتسجيل الوصول",
+    "browseMorePackages": "تصفح المزيد من الباقات"
+  }
+}
