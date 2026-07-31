@@ -59,6 +59,7 @@
     "consultationFeeFor": "Consultation Fee ({{type}}):",
     "appointmentDateLabel": "Appointment Date",
     "availableSlotsLabel": "Available Time Slots",
+    "selectSlotPlaceholder": "Select a time slot",
     "notesLabel": "Notes for Doctor (Optional)",
     "notesPlaceholder": "Mention skin concerns or allergies...",
     "totalFeeLabel": "Total Appointment Fee",

@@ -59,6 +59,7 @@
     "consultationFeeFor": "رسوم الاستشارة ({{type}}):",
     "appointmentDateLabel": "تاريخ الموعد",
     "availableSlotsLabel": "الأوقات المتاحة",
+    "selectSlotPlaceholder": "اختر وقتًا",
     "notesLabel": "ملاحظات للطبيب (اختياري)",
     "notesPlaceholder": "اذكر مشاكل البشرة أو الحساسية إن وجدت...",
     "totalFeeLabel": "إجمالي رسوم الموعد",

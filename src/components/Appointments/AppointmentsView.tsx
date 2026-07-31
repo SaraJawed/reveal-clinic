@@ -529,22 +529,18 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             {/* Time Slot Selector */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">{t('booking.availableSlotsLabel')}</label>
-              <div className="grid grid-cols-3 gap-2">
+              <select
+                value={selectedSlot}
+                onChange={(e) => setSelectedSlot(e.target.value)}
+                className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden"
+              >
+                <option value="" disabled>{t('booking.selectSlotPlaceholder')}</option>
                 {selectedDoctor.availableTimeSlots.map((slot) => (
-                  <button
-                    key={slot}
-                    type="button"
-                    onClick={() => setSelectedSlot(slot)}
-                    className={`py-2 px-2 rounded-xl text-xs font-bold border transition text-center ${
-                      selectedSlot === slot
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                    }`}
-                  >
+                  <option key={slot} value={slot}>
                     {slot}
-                  </button>
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
 
             {/* Medical Notes */}
