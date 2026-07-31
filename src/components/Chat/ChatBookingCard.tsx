@@ -3,6 +3,7 @@ import { Doctor, ClinicBranch, Appointment, AppointmentStatus } from '../../type
 import { Star, Clock, CheckCircle2, Tag, X, ArrowRight, CalendarCheck } from 'lucide-react';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
 import { AvailableVouchersModal } from '../Vouchers/AvailableVouchersModal';
+import { CardDetailsForm } from '../Payments/CardDetailsForm';
 
 interface ChatBookingCardProps {
   doctor: Doctor;
@@ -11,7 +12,7 @@ interface ChatBookingCardProps {
   onDismiss: () => void;
 }
 
-type Step = 'suggestion' | 'slots' | 'payment' | 'confirmed';
+type Step = 'suggestion' | 'slots' | 'payment' | 'card_details' | 'confirmed';
 
 export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
   doctor,
@@ -270,7 +271,13 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
               type="button"
               id="chat-booking-confirm-btn"
               disabled={!paymentMethod}
-              onClick={handleConfirm}
+              onClick={() => {
+                if (paymentMethod === 'Pay Online') {
+                  setStep('card_details');
+                } else {
+                  handleConfirm();
+                }
+              }}
               className={`w-full font-bold py-2.5 rounded-xl text-xs transition ${
                 paymentMethod
                   ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white shadow-md shadow-blue-500/30'
@@ -288,6 +295,14 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
               Back
             </button>
           </>
+        )}
+
+        {step === 'card_details' && (
+          <CardDetailsForm
+            amount={finalFee}
+            onBack={() => setStep('payment')}
+            onPay={handleConfirm}
+          />
         )}
 
         {step === 'confirmed' && confirmedAppt && (

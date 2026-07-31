@@ -22,6 +22,7 @@ import {
 import { BottomSheet } from '../PWA/BottomSheet';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
 import { AvailableVouchersModal } from '../Vouchers/AvailableVouchersModal';
+import { CardDetailsForm } from '../Payments/CardDetailsForm';
 
 interface AppointmentsViewProps {
   doctors: Doctor[];
@@ -33,7 +34,8 @@ interface AppointmentsViewProps {
   onCancelAppointment: (id: string) => void;
   onRescheduleAppointment: (id: string, newDate: string, newSlot: string) => void;
   onSubmitFeedback: (id: string, rating: number, comment: string) => void;
-  onOpenCheckIn: () => void;
+  activeSubTab: 'book' | 'history';
+  onChangeSubTab: (tab: 'book' | 'history') => void;
 }
 
 export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
@@ -46,9 +48,9 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   onCancelAppointment,
   onRescheduleAppointment,
   onSubmitFeedback,
-  onOpenCheckIn
+  activeSubTab,
+  onChangeSubTab: setActiveSubTab
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'book' | 'history'>('book');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>('All');
 
@@ -59,7 +61,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const [selectedDate, setSelectedDate] = useState('2026-07-29');
   const [selectedSlot, setSelectedSlot] = useState('11:00 AM');
   const [notes, setNotes] = useState('');
-  const [bookingStep, setBookingStep] = useState<'form' | 'summary'>('form');
+  const [bookingStep, setBookingStep] = useState<'form' | 'summary' | 'card_details'>('form');
   const [bookingSuccess, setBookingSuccess] = useState<Appointment | null>(null);
   const [customSuccessMessage, setCustomSuccessMessage] = useState<string>('');
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<Appointment['paymentMethod'] | null>(null);
@@ -77,12 +79,26 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const [starRating, setStarRating] = useState(5);
   const [feedbackComment, setFeedbackComment] = useState('');
 
-  const specialties = ['All', 'Anti-Aging', 'Laser & Skin', 'Cosmetic Dermatology', 'Clinical Dermatology'];
+  // Each filter maps to keywords found in the doctors' actual specialty text
+  // rather than matching the filter label itself, since specialty wording
+  // (e.g. "Laser Hair Removal & Skin Resurfacing") rarely contains the whole
+  // label ("Laser & Skin") as a contiguous substring.
+  const specialtyFilters: { id: string; label: string; keywords: string[] }[] = [
+    { id: 'All', label: 'All', keywords: [] },
+    { id: 'Anti-Aging', label: 'Anti-Aging', keywords: ['anti-aging'] },
+    { id: 'Laser & Skin', label: 'Laser & Skin', keywords: ['laser', 'resurfacing'] },
+    { id: 'Cosmetic Dermatology', label: 'Cosmetic Dermatology', keywords: ['hydrafacial', 'filler', 'biostimulator'] },
+    { id: 'Clinical Dermatology', label: 'Clinical Dermatology', keywords: ['oncology', 'medical dermatology'] }
+  ];
+  const specialties = specialtyFilters.map((f) => f.id);
 
   const filteredDoctors = doctors.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.specialty.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesSpecialty = selectedSpecialty === 'All' || doc.specialty.toLowerCase().includes(selectedSpecialty.toLowerCase());
+    const activeFilter = specialtyFilters.find((f) => f.id === selectedSpecialty);
+    const matchesSpecialty = selectedSpecialty === 'All' || !activeFilter
+      ? selectedSpecialty === 'All'
+      : activeFilter.keywords.some((kw) => doc.specialty.toLowerCase().includes(kw));
     return matchesSearch && matchesSpecialty;
   });
 
@@ -385,15 +401,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                       >
                         <RotateCcw className="w-3.5 h-3.5" /> Reschedule
                       </button>
-                      {appt.status === 'upcoming' && (
-                        <button
-                          id={`appointments-checkin-${appt.id}-btn`}
-                          onClick={onOpenCheckIn}
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-xl font-bold transition shadow-xs"
-                        >
-                          Check-In
-                        </button>
-                      )}
                     </div>
                   )}
 
@@ -426,7 +433,13 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
         isOpen={!!selectedDoctor}
         onClose={resetBookingFlowState}
         title={selectedDoctor ? `Book Appointment - ${selectedDoctor.name}` : ''}
-        subtitle={bookingStep === 'form' ? "Select consultation type, date & time slot." : "Review booking summary & select payment option."}
+        subtitle={
+          bookingStep === 'form'
+            ? "Select consultation type, date & time slot."
+            : bookingStep === 'card_details'
+              ? "Enter your card details to complete payment."
+              : "Review booking summary & select payment option."
+        }
       >
         {selectedDoctor && bookingStep === 'form' && (
           <div className="space-y-4">
@@ -729,7 +742,13 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
               type="button"
               id="appointments-confirm-booking-btn"
               disabled={!selectedPaymentMethod}
-              onClick={handleConfirmPayment}
+              onClick={() => {
+                if (selectedPaymentMethod === 'Pay Online') {
+                  setBookingStep('card_details');
+                } else {
+                  handleConfirmPayment();
+                }
+              }}
               className={`w-full font-bold py-3.5 rounded-2xl text-xs shadow-md transition ${
                 selectedPaymentMethod
                   ? 'bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white shadow-blue-500/30'
@@ -746,6 +765,16 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             >
               Back to Appointment Details
             </button>
+          </div>
+        )}
+
+        {selectedDoctor && bookingStep === 'card_details' && (
+          <div className="p-4 space-y-4">
+            <CardDetailsForm
+              amount={getDiscountedFee()}
+              onBack={() => setBookingStep('summary')}
+              onPay={handleConfirmPayment}
+            />
           </div>
         )}
       </BottomSheet>

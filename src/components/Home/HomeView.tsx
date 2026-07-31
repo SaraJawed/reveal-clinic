@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   UserProfile,
   ClinicBranch,
@@ -22,7 +22,9 @@ import {
   Sparkles,
   Calendar,
   MapPin,
-  CheckCircle2
+  CheckCircle2,
+  Check,
+  X
 } from 'lucide-react';
 
 interface HomeViewProps {
@@ -34,7 +36,7 @@ interface HomeViewProps {
   popularTreatments: TreatmentService[];
   featuredPackages: TreatmentPackage[];
   onChangeTab: (tab: TabType) => void;
-  onOpenCheckIn: () => void;
+  onViewMyVisits: () => void;
   onSelectDoctorOrTreatment?: (item: any) => void;
   onOpenGiftCards: () => void;
 }
@@ -46,11 +48,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
   activePackages,
   recentReports,
   popularTreatments,
+  featuredPackages,
   onChangeTab,
-  onOpenCheckIn,
+  onViewMyVisits,
   onOpenGiftCards
 }) => {
   const nextAppt = upcomingAppointments[0];
+  const [selectedActivePackage, setSelectedActivePackage] = useState<ActiveUserPackage | null>(null);
 
   return (
     <div className="space-y-8 pb-20 md:pb-8">
@@ -101,10 +105,10 @@ export const HomeView: React.FC<HomeViewProps> = ({
               <h2 className="text-lg font-bold text-slate-800">Next Appointment</h2>
               <button
                 id="home-view-calendar-btn"
-                onClick={() => onChangeTab('appointments')}
+                onClick={onViewMyVisits}
                 className="text-[#4F8EF7] text-sm font-semibold cursor-pointer hover:underline"
               >
-                View Calendar
+                My Visits
               </button>
             </div>
 
@@ -131,15 +135,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="pt-3 mt-3 border-t border-blue-100/60 flex justify-end">
-                  <button
-                    id="home-appt-checkin-btn"
-                    onClick={onOpenCheckIn}
-                    className="px-4 py-2 bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer"
-                  >
-                    Check In Now
-                  </button>
-                </div>
               </div>
             ) : (
               <div className="p-6 bg-slate-50 rounded-2xl text-center">
@@ -159,13 +154,6 @@ export const HomeView: React.FC<HomeViewProps> = ({
           <div className="bg-white rounded-[32px] p-6 sm:p-8 shadow-xs border border-slate-100">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold text-slate-800">My Packages</h2>
-              <button
-                id="home-browse-packages-btn"
-                onClick={() => onChangeTab('services')}
-                className="text-xs font-bold text-[#4F8EF7] hover:underline cursor-pointer"
-              >
-                Browse All
-              </button>
             </div>
 
             <div className="space-y-4">
@@ -175,7 +163,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   const sessionsUsed = pack.totalSessions - pack.remainingSessions;
                   const progressPercent = Math.min(100, Math.round((sessionsUsed / pack.totalSessions) * 100));
                   return (
-                    <div key={pack.id} className="p-4 border border-blue-100/80 bg-gradient-to-r from-blue-50/60 via-sky-50/40 to-indigo-50/20 rounded-2xl space-y-3">
+                    <button
+                      key={pack.id}
+                      type="button"
+                      id={`home-package-${pack.id}-btn`}
+                      onClick={() => setSelectedActivePackage(pack)}
+                      className="w-full text-left p-4 border border-blue-100/80 bg-gradient-to-r from-blue-50/60 via-sky-50/40 to-indigo-50/20 rounded-2xl space-y-3 hover:shadow-md hover:border-blue-200 transition cursor-pointer"
+                    >
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
                           <div className="w-10 h-10 rounded-2xl bg-[#4F8EF7] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
@@ -196,7 +190,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
                           style={{ width: `${progressPercent}%` }}
                         />
                       </div>
-                    </div>
+                    </button>
                   );
                 })
               ) : (
@@ -309,6 +303,93 @@ export const HomeView: React.FC<HomeViewProps> = ({
           ))}
         </div>
       </div>
+
+      {/* MY PACKAGE DETAIL MODAL */}
+      {selectedActivePackage && (() => {
+        const fullPackage = featuredPackages.find((p) => p.id === selectedActivePackage.packageId);
+        const sessionsUsed = selectedActivePackage.totalSessions - selectedActivePackage.remainingSessions;
+        const progressPercent = Math.min(100, Math.round((sessionsUsed / selectedActivePackage.totalSessions) * 100));
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs">
+            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden border border-slate-100 max-h-[85vh] flex flex-col">
+              {fullPackage?.imageUrl && (
+                <img
+                  src={fullPackage.imageUrl}
+                  alt={selectedActivePackage.packageName}
+                  className="w-full h-36 object-cover shrink-0"
+                />
+              )}
+              <div className="p-5 space-y-4 overflow-y-auto flex-1">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
+                    <h3 className="font-extrabold text-slate-900 text-base leading-tight">{selectedActivePackage.packageName}</h3>
+                  </div>
+                  <button
+                    id="home-package-detail-close-btn"
+                    onClick={() => setSelectedActivePackage(null)}
+                    className="text-slate-400 hover:text-slate-600 shrink-0"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {fullPackage?.description && (
+                  <p className="text-xs text-slate-500 leading-relaxed">{fullPackage.description}</p>
+                )}
+
+                <div>
+                  <div className="flex items-center justify-between text-xs font-bold text-slate-700 mb-1.5">
+                    <span>Sessions Used</span>
+                    <span className="text-[#4F8EF7]">{sessionsUsed}/{selectedActivePackage.totalSessions}</span>
+                  </div>
+                  <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#4F8EF7] rounded-full" style={{ width: `${progressPercent}%` }} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Purchased On</span>
+                    <span className="font-bold text-slate-800">{selectedActivePackage.purchaseDate}</span>
+                  </div>
+                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <span className="block text-[10px] text-slate-400 font-bold uppercase">Valid Until</span>
+                    <span className="font-bold text-slate-800">{selectedActivePackage.expiryDate}</span>
+                  </div>
+                </div>
+
+                {fullPackage?.includedTreatments && fullPackage.includedTreatments.length > 0 && (
+                  <div className="bg-blue-50/70 p-3.5 rounded-2xl border border-blue-100 space-y-1.5">
+                    <h4 className="font-bold text-blue-900 text-xs">Included in this Package</h4>
+                    {fullPackage.includedTreatments.map((t, i) => (
+                      <div key={i} className="flex items-center gap-2 text-xs text-slate-700">
+                        <Check className="w-3.5 h-3.5 text-blue-600 shrink-0" /> {t}
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <div className="bg-slate-900 p-3.5 rounded-2xl text-center">
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">QR Check-In Code</span>
+                  <span className="font-mono font-bold text-sky-300 text-sm">{selectedActivePackage.qrCodeValue}</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedActivePackage(null);
+                    onChangeTab('services');
+                  }}
+                  className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl text-xs transition"
+                >
+                  Browse More Packages
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

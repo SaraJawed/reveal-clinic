@@ -126,6 +126,20 @@ export function App() {
 
   // Active Tab for Patient Navigation
   const [patientActiveTab, setPatientActiveTab] = useState<TabType>('home');
+  const [appointmentsSubTab, setAppointmentsSubTab] = useState<'book' | 'history'>('book');
+
+  // Switching to the Appointments tab through the normal nav path always
+  // lands on "Book New"; only the dedicated "My Visits" links jump straight
+  // to the history sub-tab (see handleViewMyVisits below).
+  const handleChangeTab = (tab: TabType) => {
+    if (tab === 'appointments') setAppointmentsSubTab('book');
+    setPatientActiveTab(tab);
+  };
+
+  const handleViewMyVisits = () => {
+    setAppointmentsSubTab('history');
+    setPatientActiveTab('appointments');
+  };
 
   // Active Tab for Doctor / Nurse / Staff Navigation
   const [staffActiveTab, setStaffActiveTab] = useState<StaffTabType>('dashboard');
@@ -184,7 +198,6 @@ export function App() {
   // Modal & Widget Visibility States
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [pendingAppointmentForPay, setPendingAppointmentForPay] = useState<Appointment | null>(null);
-  const [pendingPackageForPay, setPendingPackageForPay] = useState<TreatmentPackage | null>(null);
 
   const [isLoyaltyOpen, setIsLoyaltyOpen] = useState(false);
   const [isReferralOpen, setIsReferralOpen] = useState(false);
@@ -345,10 +358,79 @@ export function App() {
     triggerToast("Thank you for rating your doctor!");
   };
 
-  const handlePurchasePackage = (pack: TreatmentPackage, doctor: Doctor, date: string, timeSlot: string) => {
-    setPendingPackageForPay(pack);
-    setIsPaymentOpen(true);
-    triggerToast(`Package selected with Dr. ${doctor.name} for ${date} at ${timeSlot}. Complete payment.`);
+  const mapToPaymentRecordMethod = (
+    method: NonNullable<Appointment['paymentMethod']>
+  ): PaymentRecord['paymentMethod'] => {
+    if (method === 'Pay Online') return 'Credit / Debit Card';
+    if (method === 'Buy Now Pay Later') return 'Installments (Tabby)';
+    return 'Pay at Clinic';
+  };
+
+  const handleCompletePackagePurchase = (
+    pack: TreatmentPackage,
+    doctor: Doctor,
+    date: string,
+    timeSlot: string,
+    paymentMethod: NonNullable<Appointment['paymentMethod']>,
+    voucher: { code: string; discount: number } | null
+  ) => {
+    const finalPrice = Math.max(0, pack.price - (voucher?.discount || 0));
+    const purchaseDate = new Date().toISOString().split('T')[0];
+    const expiry = new Date();
+    expiry.setMonth(expiry.getMonth() + pack.validityMonths);
+
+    const newActivePackage: ActiveUserPackage = {
+      id: `pkg_${Date.now()}`,
+      packageId: pack.id,
+      packageName: pack.name,
+      totalSessions: pack.totalSessions,
+      remainingSessions: pack.totalSessions,
+      expiryDate: expiry.toISOString().split('T')[0],
+      purchaseDate,
+      qrCodeValue: `REVEAL-PKG-${Date.now()}`
+    };
+    setPackages(prev => [newActivePackage, ...prev]);
+
+    const paid = paymentMethod !== 'Pay at Clinic';
+    const firstSessionAppt: Appointment = {
+      id: `apt_${Date.now()}`,
+      doctorId: doctor.id,
+      doctorName: doctor.name,
+      doctorSpecialty: doctor.specialty,
+      doctorAvatar: doctor.avatarUrl,
+      clinicId: doctor.clinicId,
+      clinicName: doctor.clinicName,
+      treatmentName: pack.name,
+      consultationType: 'Procedure',
+      date,
+      timeSlot,
+      status: paymentMethod === 'Pay at Clinic' ? 'pending' : 'upcoming',
+      fee: finalPrice,
+      paid,
+      paymentMethod,
+      voucherCode: voucher?.code,
+      discountAmount: voucher?.discount,
+      checkInStatus: 'pending'
+    };
+    handleBookAppointment(firstSessionAppt);
+
+    const newPayment: PaymentRecord = {
+      id: `pay_${Date.now()}`,
+      packageId: pack.id,
+      title: `Package: ${pack.name}`,
+      amount: finalPrice,
+      date: purchaseDate,
+      paymentMethod: mapToPaymentRecordMethod(paymentMethod),
+      status: paymentMethod === 'Pay at Clinic' ? 'Pending' : 'Paid',
+      invoicePdfUrl: '#',
+      receiptNumber: `RC-PKG-2026-${Math.floor(1000 + Math.random() * 9000)}`
+    };
+    setPayments(prev => [newPayment, ...prev]);
+    if (paid) {
+      setUser(prev => ({ ...prev, loyaltyPoints: prev.loyaltyPoints + Math.floor(finalPrice / 10) }));
+    }
+
+    triggerToast(`Package "${pack.name}" purchased! First session booked with ${doctor.name} on ${date} at ${timeSlot}.`);
   };
 
   const handlePaymentSuccess = (newPayment: PaymentRecord) => {
@@ -758,7 +840,7 @@ export function App() {
           selectedBranch={selectedBranch}
           onSelectBranch={setSelectedBranch}
           activeTab={patientActiveTab}
-          onChangeTab={setPatientActiveTab}
+          onChangeTab={handleChangeTab}
           onOpenAuth={() => setShowAuthModal(true)}
           isAuthenticated={isAuthenticated}
           unreadCount={upcomingCount}
@@ -778,8 +860,8 @@ export function App() {
               recentReports={reports}
               popularTreatments={treatmentServices.slice(0, 4)}
               featuredPackages={treatmentPackages}
-              onChangeTab={setPatientActiveTab}
-              onOpenCheckIn={() => setPatientActiveTab('checkin')}
+              onChangeTab={handleChangeTab}
+              onViewMyVisits={handleViewMyVisits}
               onOpenGiftCards={() => setIsGiftCardsOpen(true)}
             />
           )}
@@ -795,7 +877,8 @@ export function App() {
               onCancelAppointment={handleCancelAppointment}
               onRescheduleAppointment={handleRescheduleAppointment}
               onSubmitFeedback={handleSubmitFeedback}
-              onOpenCheckIn={() => setPatientActiveTab('checkin')}
+              activeSubTab={appointmentsSubTab}
+              onChangeSubTab={setAppointmentsSubTab}
             />
           )}
 
@@ -804,10 +887,8 @@ export function App() {
               treatments={treatmentServices}
               packages={treatmentPackages}
               doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
-              onSelectTreatmentForBooking={() => {
-                setPatientActiveTab('appointments');
-              }}
-              onPurchasePackage={handlePurchasePackage}
+              onBookAppointment={handleBookAppointment}
+              onPurchasePackage={handleCompletePackagePurchase}
             />
           )}
 
@@ -831,7 +912,7 @@ export function App() {
             <AIChatBot
               messages={chatMessages}
               onSendMessage={handleSendMessageToAI}
-              onChangeTab={setPatientActiveTab}
+              onChangeTab={handleChangeTab}
               doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
               selectedBranch={selectedBranch}
               onBookAppointment={handleBookAppointment}
@@ -857,7 +938,7 @@ export function App() {
       </div>
 
       {/* Mobile Bottom Bar Navigation */}
-      <BottomNav activeTab={patientActiveTab} onChangeTab={setPatientActiveTab} />
+      <BottomNav activeTab={patientActiveTab} onChangeTab={handleChangeTab} />
 
       {/* MODALS */}
       <AuthModal
@@ -881,10 +962,8 @@ export function App() {
         onClose={() => {
           setIsPaymentOpen(false);
           setPendingAppointmentForPay(null);
-          setPendingPackageForPay(null);
         }}
         pendingAppointment={pendingAppointmentForPay}
-        pendingPackage={pendingPackageForPay}
         paymentHistory={payments}
         onPaymentSuccess={handlePaymentSuccess}
       />
@@ -913,7 +992,7 @@ export function App() {
       <FloatingChatWidget
         messages={chatMessages}
         onSendMessage={handleSendMessageToAI}
-        onChangeTab={setPatientActiveTab}
+        onChangeTab={handleChangeTab}
         isOpen={isFloatingChatOpen}
         onToggleOpen={() => setIsFloatingChatOpen(prev => !prev)}
         doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
