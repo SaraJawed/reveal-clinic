@@ -26,7 +26,8 @@ import {
   Syringe,
   MapPin,
   Check,
-  Heart
+  Heart,
+  X
 } from 'lucide-react';
 
 interface DoctorDashboardViewProps {
@@ -52,12 +53,13 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
 }) => {
   const { t } = useTranslation('doctor');
   const [quickSearchQuery, setQuickSearchQuery] = useState('');
+  const [showRequestedItemsModal, setShowRequestedItemsModal] = useState(false);
 
   // Statistics calculation
   const totalToday = schedule.length;
-  const inConsultationCount = schedule.filter(s => s.status === 'in_consultation' || s.status === 'procedure').length;
   const checkedInCount = schedule.filter(s => s.status === 'checked_in').length;
   const completedCount = schedule.filter(s => s.status === 'completed').length;
+  const requestedItems = sessions.flatMap(s => (s.itemsRequested || []).map(item => ({ item, session: s })));
 
   // Active current patient
   const currentScheduleItem = schedule.find(
@@ -135,17 +137,22 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
           <p className="text-[11px] text-amber-700/80 mt-1 font-medium">{t('dashboard.stats.checkedInSub')}</p>
         </div>
 
-        {/* In Consultation / Procedure */}
-        <div className="bg-white p-4 rounded-3xl border border-blue-100 shadow-2xs hover:shadow-md transition bg-blue-50/20">
+        {/* Requested Items */}
+        <button
+          type="button"
+          id="dash-requested-items-btn"
+          onClick={() => setShowRequestedItemsModal(true)}
+          className="text-left bg-white p-4 rounded-3xl border border-blue-100 shadow-2xs hover:shadow-md transition bg-blue-50/20"
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-bold text-[#4F8EF7] uppercase tracking-wider">{t('dashboard.stats.activeLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-blue-100 text-[#4F8EF7] flex items-center justify-center">
               <Activity className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-blue-900">{inConsultationCount}</div>
+          <div className="text-2xl font-black text-blue-900">{requestedItems.length}</div>
           <p className="text-[11px] text-blue-700/80 mt-1 font-medium">{t('dashboard.stats.activeSub')}</p>
-        </div>
+        </button>
 
         {/* Completed */}
         <div className="bg-white p-4 rounded-3xl border border-emerald-100 shadow-2xs hover:shadow-md transition bg-emerald-50/20">
@@ -174,9 +181,6 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
                     {t('dashboard.currentPatient.title')}
                   </h2>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-blue-50 text-[#4F8EF7] text-xs font-bold border border-blue-100">
-                  {currentScheduleItem.roomNumber}
-                </span>
               </div>
 
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -346,6 +350,48 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Requested Items Modal */}
+      {showRequestedItemsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md max-h-[80vh] flex flex-col border border-slate-100">
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between shrink-0">
+              <h3 className="font-extrabold text-sm text-slate-900">{t('dashboard.requestedItemsModal.title')}</h3>
+              <button
+                type="button"
+                id="dash-requested-items-close-btn"
+                onClick={() => setShowRequestedItemsModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-2 overflow-y-auto flex-1">
+              {requestedItems.length === 0 ? (
+                <p className="text-center text-slate-400 text-xs py-6">{t('dashboard.requestedItemsModal.empty')}</p>
+              ) : (
+                requestedItems.map(({ item, session }) => (
+                  <div key={item.id} className="p-3 bg-amber-50/40 border border-amber-200/60 rounded-2xl text-xs space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-amber-900">{item.name}</span>
+                      <span className="px-2 py-0.5 bg-white border border-amber-200 font-extrabold rounded-lg text-[10px] text-amber-800">
+                        {t(`sessions.requested.statusLabels.${item.status.toLowerCase().replace(' ', '')}`, item.status)}
+                      </span>
+                    </div>
+                    <p className="text-slate-500 font-medium">
+                      {t('dashboard.requestedItemsModal.context', { patientName: session.patientName, treatmentName: session.treatmentName })}
+                    </p>
+                    <span className="text-[10px] text-amber-700 font-semibold uppercase">
+                      {t('sessions.requested.urgencyLabel', { urgency: item.urgency })}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

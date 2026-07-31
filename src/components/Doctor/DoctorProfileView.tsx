@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { UserProfile, ClinicBranch } from '../../types';
-import { DEFAULT_LOCALE, isSupportedLocale, type Locale } from '../../i18n/locales';
 import {
   User,
   ShieldCheck,
   Lock,
-  Globe,
   Smartphone,
   LogOut,
   X,
@@ -36,10 +33,6 @@ export const DoctorProfileView: React.FC<DoctorProfileViewProps> = ({
   onLogout
 }) => {
   const { t } = useTranslation('doctor');
-  const { locale: rawLocale } = useParams<{ locale: string }>();
-  const locale: Locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const location = useLocation();
-  const navigate = useNavigate();
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -135,40 +128,6 @@ export const DoctorProfileView: React.FC<DoctorProfileViewProps> = ({
               >
                 <span>{b.name}</span>
                 {selectedBranch.id === b.id && <CheckCircle2 className="w-4 h-4 text-[#4F8EF7]" />}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Language Selection */}
-        <div className="bg-white border border-slate-100 rounded-3xl p-5 shadow-2xs space-y-3">
-          <h3 className="font-extrabold text-sm text-slate-900 flex items-center gap-2">
-            <Globe className="w-4 h-4 text-[#4F8EF7]" />
-            <span>{t('profile.language.title')}</span>
-          </h3>
-
-          <p className="text-xs text-slate-500">
-            {t('profile.language.description')}
-          </p>
-
-          <div className="grid grid-cols-2 gap-2 pt-1">
-            {(['en', 'ar'] as const).map((lang) => (
-              <button
-                key={lang}
-                type="button"
-                onClick={() => {
-                  if (lang === locale) return;
-                  const rest = location.pathname.replace(new RegExp(`^/${locale}`), '');
-                  navigate(`/${lang}${rest}${location.search}`);
-                }}
-                className={`py-3 rounded-2xl border text-xs font-bold transition flex flex-col items-center justify-center gap-1 ${
-                  locale === lang
-                    ? 'bg-[#4F8EF7] text-white border-[#4F8EF7] shadow-xs'
-                    : 'bg-slate-50 border-slate-100 text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                <span>{t(`profile.language.options.${lang === 'en' ? 'english' : 'arabic'}`)}</span>
-                {locale === lang && <span className="text-[9px] opacity-80 uppercase font-extrabold">{t('profile.language.activeBadge')}</span>}
               </button>
             ))}
           </div>

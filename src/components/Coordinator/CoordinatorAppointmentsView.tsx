@@ -333,19 +333,6 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                 </div>
 
                 <div className="flex items-center gap-2 ml-auto">
-                  {item.status === 'scheduled' && (
-                    <button
-                      onClick={() => {
-                        onUpdateStatus(item.id, 'checked_in');
-                        onTriggerToast(t('appointments.card.toastCheckedIn', { patientName: item.patientName }));
-                      }}
-                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-extrabold shadow-xs flex items-center gap-1"
-                    >
-                      <UserCheck className="w-3.5 h-3.5" />
-                      <span>{t('appointments.card.confirmArrival')}</span>
-                    </button>
-                  )}
-
                   {item.status !== 'cancelled' && item.status !== 'completed' && (
                     <button
                       onClick={() => {

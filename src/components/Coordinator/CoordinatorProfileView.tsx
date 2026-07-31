@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { UserProfile, ClinicBranch } from '../../types';
-import { DEFAULT_LOCALE, isSupportedLocale, type Locale } from '../../i18n/locales';
 import {
   User,
-  ShieldCheck,
-  Lock,
-  Globe,
   LogOut,
   Building2,
   Mail,
   Phone,
-  Key,
-  Wifi,
-  CheckCircle2,
-  X,
   Sparkles
 } from 'lucide-react';
 
@@ -33,38 +24,7 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
   onTriggerToast
 }) => {
   const { t } = useTranslation('coordinator');
-  const { locale: rawLocale } = useParams<{ locale: string }>();
-  const locale: Locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-
-  // Password fields
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleChangePassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newPassword || newPassword !== confirmPassword) {
-      onTriggerToast(t('profile.passwordModal.toastMismatch'));
-      return;
-    }
-    onTriggerToast(t('profile.passwordModal.toastSuccess'));
-    setShowPasswordModal(false);
-    setOldPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-  };
-
-  const handleLanguageSelect = (lang: Locale) => {
-    if (lang === locale) return;
-    onTriggerToast(t('profile.toastLanguageSet', { lang: t(`profile.language.${lang === 'en' ? 'english' : 'arabic'}`) }));
-    const rest = location.pathname.replace(new RegExp(`^/${locale}`), '');
-    navigate(`/${lang}${rest}${location.search}`);
-  };
 
   return (
     <div className="space-y-6 pb-12">
@@ -119,75 +79,6 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
         </div>
       </div>
 
-      {/* Preferences & Security Options */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Security & Credentials */}
-        <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-2xs space-y-4">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-[#4F8EF7]" />
-            <h3 className="font-extrabold text-slate-900 text-base">{t('profile.security.title')}</h3>
-          </div>
-
-          <div className="space-y-3">
-            <button
-              onClick={() => setShowPasswordModal(true)}
-              className="w-full p-3.5 bg-slate-50 hover:bg-slate-100 rounded-2xl border border-slate-100 flex items-center justify-between text-xs transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#4F8EF7] flex items-center justify-center">
-                  <Lock className="w-4 h-4" />
-                </div>
-                <div className="text-left">
-                  <div className="font-extrabold text-slate-900">{t('profile.security.changePassword')}</div>
-                  <div className="text-[10px] text-slate-400">{t('profile.security.changePasswordNote')}</div>
-                </div>
-              </div>
-              <Key className="w-4 h-4 text-slate-400" />
-            </button>
-
-            <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                  <Wifi className="w-4 h-4" />
-                </div>
-                <div>
-                  <div className="font-extrabold text-slate-900">{t('profile.security.offlineMode')}</div>
-                  <div className="text-[10px] text-emerald-600 font-bold">{t('profile.security.offlineModeStatus')}</div>
-                </div>
-              </div>
-              <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-black rounded-full">
-                {t('profile.security.active')}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Regional & Language Settings */}
-        <div className="bg-white rounded-3xl border border-slate-100 p-5 shadow-2xs space-y-4">
-          <div className="flex items-center gap-2">
-            <Globe className="w-5 h-5 text-purple-600" />
-            <h3 className="font-extrabold text-slate-900 text-base">{t('profile.language.title')}</h3>
-          </div>
-
-          <div className="space-y-2">
-            {(['en', 'ar'] as const).map((lang) => (
-              <button
-                key={lang}
-                onClick={() => handleLanguageSelect(lang)}
-                className={`w-full p-3 rounded-2xl border text-xs font-extrabold flex items-center justify-between transition-all ${
-                  locale === lang
-                    ? 'bg-blue-50 border-[#4F8EF7] text-[#4F8EF7]'
-                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                }`}
-              >
-                <span>{lang === 'en' ? t('profile.language.english') : t('profile.language.arabic')}</span>
-                {locale === lang && <CheckCircle2 className="w-4 h-4 text-[#4F8EF7]" />}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Logout Action */}
       <div className="pt-4">
         <button
@@ -198,80 +89,6 @@ export const CoordinatorProfileView: React.FC<CoordinatorProfileViewProps> = ({
           <span>{t('profile.logout.button')}</span>
         </button>
       </div>
-
-      {/* Change Password Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <Lock className="w-5 h-5 text-[#4F8EF7]" />
-                <h3 className="font-black text-slate-900 text-base">{t('profile.passwordModal.title')}</h3>
-              </div>
-              <button
-                onClick={() => setShowPasswordModal(false)}
-                className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <form onSubmit={handleChangePassword} className="space-y-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.currentPassword')}</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.newPassword')}</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">{t('profile.passwordModal.confirmPassword')}</label>
-                <input
-                  type="password"
-                  required
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordModal(false)}
-                  className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
-                >
-                  {t('common:buttons.cancel')}
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white text-xs font-extrabold shadow-md shadow-blue-500/20"
-                >
-                  {t('profile.passwordModal.update')}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Logout Confirmation Modal */}
       {showLogoutModal && (

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { UserProfile, ClinicBranch, PaymentRecord } from '../../types';
-import { DEFAULT_LOCALE, isSupportedLocale, type Locale } from '../../i18n/locales';
 import {
   User,
   Phone,
@@ -13,7 +11,6 @@ import {
   Share2,
   Gift,
   Lock,
-  Globe,
   Settings,
   Camera,
   Save,
@@ -47,10 +44,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onLogout
 }) => {
   const { t } = useTranslation('profile');
-  const { locale: rawLocale } = useParams<{ locale: string }>();
-  const locale: Locale = isSupportedLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
-  const location = useLocation();
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<UserProfile>(user);
   const [newAllergy, setNewAllergy] = useState('');
@@ -396,28 +389,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         <h2 className="font-bold text-slate-900 text-sm border-b border-slate-100 pb-2">{t('preferences.title')}</h2>
 
         <div className="space-y-3 text-xs">
-          {/* Language Switcher */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-blue-600" />
-              <span className="font-semibold text-slate-800">{t('preferences.language')}</span>
-            </div>
-            <select
-              value={locale}
-              onChange={(e) => {
-                const next = e.target.value as Locale;
-                const rest = location.pathname.replace(new RegExp(`^/${locale}`), '');
-                navigate(`/${next}${rest}${location.search}`);
-              }}
-              className="bg-slate-50 border border-slate-200 p-1.5 rounded-xl font-bold text-slate-700 outline-hidden"
-            >
-              <option value="en">{t('preferences.languageEnglish')}</option>
-              <option value="ar">{t('preferences.languageArabic')}</option>
-            </select>
-          </div>
-
           {/* Password Change */}
-          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+          <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-blue-600" />
               <span className="font-semibold text-slate-800">{t('preferences.security')}</span>

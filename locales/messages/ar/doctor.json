@@ -3,7 +3,7 @@
     "hero": {
       "roleBadge": {
         "nurse": "بوابة التمريض التجميلي",
-        "coordinator": "منسق العيادة",
+        "coordinator": "استقبال العيادة",
         "doctor": "بوابة الطبيب"
       },
       "greeting": "نهارك سعيد، {{name}}",
@@ -18,10 +18,15 @@
       "totalSub": "المواعيد المجدولة",
       "checkedInLabel": "تم تسجيل الوصول",
       "checkedInSub": "جاهز في الاستقبال / الجناح",
-      "activeLabel": "الغرفة النشطة",
-      "activeSub": "في جناح الإجراء",
+      "activeLabel": "العناصر المطلوبة",
+      "activeSub": "اضغط لعرض التفاصيل",
       "completedLabel": "مكتمل",
       "completedSub": "أُنجز اليوم"
+    },
+    "requestedItemsModal": {
+      "title": "العناصر المطلوبة",
+      "empty": "لم يتم طلب أي عناصر بعد.",
+      "context": "لـ {{patientName}} — {{treatmentName}}"
     },
     "currentPatient": {
       "title": "تركيز المريض الحالي",
@@ -303,7 +308,7 @@
       "currentBadge": "الحالية"
     },
     "logout": {
-      "signOutButton": "تسجيل الخروج من بوابة الطاقم"
+      "signOutButton": "تسجيل الخروج"
     },
     "passwordModal": {
       "title": "تغيير كلمة مرور حساب الطاقم",

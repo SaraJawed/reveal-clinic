@@ -1,23 +1,16 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ClinicalPatientRecord, ClinicalScheduleItem, PaymentRecord } from '../../types';
+import { ClinicalScheduleItem } from '../../types';
 import {
   Search,
-  User,
   CreditCard,
   DollarSign,
-  Calendar,
-  FileText,
-  CheckCircle2,
   Phone,
   Mail,
-  MapPin,
-  Clock,
-  Printer,
-  Sparkles,
   X,
   Receipt,
-  Download
+  CheckCircle2,
+  Star
 } from 'lucide-react';
 import { initialClinicalPatients } from '../../data/mockData';
 
@@ -39,51 +32,84 @@ interface ReceiptItem {
   transactionRef: string;
 }
 
+interface PatientListEntry {
+  patientId: string;
+  patientName: string;
+  patientAvatar: string;
+  patientAge: number;
+  patientGender: string;
+  phone?: string;
+  email?: string;
+  latestTreatment: string;
+  latestDoctorName: string;
+  visitsCount: number;
+  hasUnpaidBalance: boolean;
+}
+
+function buildPatientList(schedule: ClinicalScheduleItem[]): PatientListEntry[] {
+  const byPatient = new Map<string, ClinicalScheduleItem[]>();
+  schedule.forEach((item) => {
+    const existing = byPatient.get(item.patientId) || [];
+    existing.push(item);
+    byPatient.set(item.patientId, existing);
+  });
+
+  return Array.from(byPatient.entries()).map(([patientId, items]) => {
+    const latest = items[0];
+    const record = initialClinicalPatients.find((p) => p.patientId === patientId);
+    return {
+      patientId,
+      patientName: latest.patientName,
+      patientAvatar: latest.patientAvatar,
+      patientAge: latest.patientAge,
+      patientGender: latest.patientGender,
+      phone: record?.phone,
+      email: record?.email,
+      latestTreatment: latest.treatmentName,
+      latestDoctorName: latest.doctorName,
+      visitsCount: items.length + (record?.previousVisits.length || 0),
+      hasUnpaidBalance: items.some((i) => i.paymentStatus === 'Pending Deposit')
+    };
+  });
+}
+
 export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupViewProps> = ({
   schedule,
   onTriggerToast
 }) => {
   const { t } = useTranslation('coordinator');
 
-  const [searchQuery, setSearchQuery] = useState('RC-99841');
-  const [selectedPatient, setSelectedPatient] = useState<ClinicalPatientRecord | null>(initialClinicalPatients[0]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Payment Modal States
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [paymentTarget, setPaymentTarget] = useState<PatientListEntry | null>(null);
   const [paymentAmount, setPaymentAmount] = useState('150');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash' | 'tabby'>('card');
   const [cashTendered, setCashTendered] = useState('200');
   const [paymentSuccessReceipt, setPaymentSuccessReceipt] = useState<ReceiptItem | null>(null);
 
-  // Search logic
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!searchQuery.trim()) return;
+  const patientList = buildPatientList(schedule);
+  const maxVisits = patientList.reduce((max, p) => Math.max(max, p.visitsCount), 0);
 
-    const found = initialClinicalPatients.find(
-      (p) =>
-        p.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (p.phone && p.phone.includes(searchQuery))
+  const filteredList = patientList.filter((p) => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      p.patientName.toLowerCase().includes(q) ||
+      p.patientId.toLowerCase().includes(q) ||
+      (p.phone && p.phone.includes(searchQuery))
     );
-
-    if (found) {
-      setSelectedPatient(found);
-      onTriggerToast(t('patientLookup.search.toastFound', { name: found.fullName }));
-    } else {
-      onTriggerToast(t('patientLookup.search.toastNotFound', { query: searchQuery }));
-    }
-  };
+  });
 
   const handleProcessPayment = () => {
-    if (!selectedPatient) return;
+    if (!paymentTarget) return;
 
     const amt = parseFloat(paymentAmount) || 150;
     const newReceipt: ReceiptItem = {
       id: `rcpt_${Date.now().toString().slice(-6)}`,
-      appointmentId: 'cs_101',
-      treatmentName: 'HydraFacial Elite + LED Therapy',
-      doctorName: 'Dr. Fatima Al-Zahrani',
+      appointmentId: paymentTarget.patientId,
+      treatmentName: paymentTarget.latestTreatment,
+      doctorName: paymentTarget.latestDoctorName,
       amountPaid: amt,
       paymentDate: new Date().toISOString().split('T')[0],
       paymentMethod: paymentMethod === 'card' ? t('patientLookup.paymentMethodLabels.card') : paymentMethod === 'cash' ? t('patientLookup.paymentMethodLabels.cash') : t('patientLookup.paymentMethodLabels.tabby'),
@@ -93,8 +119,8 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
     };
 
     setPaymentSuccessReceipt(newReceipt);
-    setShowPaymentModal(false);
-    onTriggerToast(t('patientLookup.paymentModal.toastProcessed', { amount: amt, name: selectedPatient.fullName }));
+    setPaymentTarget(null);
+    onTriggerToast(t('patientLookup.paymentModal.toastProcessed', { amount: amt, name: paymentTarget.patientName }));
   };
 
   const cashChange = (parseFloat(cashTendered) || 0) - (parseFloat(paymentAmount) || 0);
@@ -114,139 +140,93 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
 
       {/* Search Input Bar */}
       <div className="bg-white rounded-3xl border border-slate-100 p-4 shadow-2xs">
-        <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input
-              type="text"
-              placeholder={t('patientLookup.search.placeholder')}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
-            />
-          </div>
-          <button
-            type="submit"
-            className="px-6 py-2.5 rounded-2xl bg-[#4F8EF7] hover:bg-blue-600 text-white font-extrabold text-xs transition-all shadow-md shadow-blue-500/20 shrink-0"
-          >
-            {t('patientLookup.search.button')}
-          </button>
-        </form>
+        <div className="relative">
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            placeholder={t('patientLookup.search.placeholder')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+          />
+        </div>
       </div>
 
-      {/* Patient File Overview */}
-      {selectedPatient && (
-        <div className="space-y-6">
-          {/* Patient Card & Summary */}
-          <div className="bg-white rounded-3xl border border-slate-100 p-5 sm:p-6 shadow-2xs space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <img
-                  src={selectedPatient.avatarUrl}
-                  alt={selectedPatient.fullName}
-                  className="w-16 h-16 rounded-2xl object-cover ring-2 ring-[#4F8EF7]/20 shadow-xs"
-                />
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-lg font-black text-slate-900">{selectedPatient.fullName}</h2>
-                    <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#4F8EF7] text-xs font-black border border-blue-100">
-                      {selectedPatient.id}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 font-medium mt-1">
-                    <span className="flex items-center gap-1">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" /> {selectedPatient.phone}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Mail className="w-3.5 h-3.5 text-slate-400" /> {selectedPatient.email}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" /> {selectedPatient.preferredBranch}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action: Receive Payment */}
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => setShowPaymentModal(true)}
-                  className="px-5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 flex items-center gap-2"
-                >
-                  <DollarSign className="w-4 h-4" />
-                  <span>{t('patientLookup.receivePayment')}</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Appointment & Last Treatment Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-slate-100">
-              {/* Last Treatment Summary */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-                <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-[#4F8EF7]" /> {t('patientLookup.lastTreatment.label')}
-                </div>
-                <div className="font-extrabold text-slate-900 text-sm">
-                  HydraFacial Elite + LED Therapy
-                </div>
-                <div className="text-xs text-slate-500">
-                  {t('patientLookup.lastTreatment.dateDoctor', { date: 'July 10, 2026', doctorName: 'Dr. Fatima Al-Zahrani' })}
-                </div>
-              </div>
-
-              {/* Outstanding Balance */}
-              <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-                <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                  <CreditCard className="w-3.5 h-3.5 text-emerald-600" /> {t('patientLookup.financial.label')}
-                </div>
-                <div className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-                  <span>{t('patientLookup.financial.outstandingBalance')}</span>
-                  <span className="text-emerald-600">{t('patientLookup.financial.fullySettled')}</span>
-                </div>
-                <div className="text-xs text-slate-500">
-                  {t('patientLookup.financial.loyaltyPointsLabel')} <span className="font-bold text-[#4F8EF7]">{t('patientLookup.financial.loyaltyPointsValue')}</span>
-                </div>
-              </div>
-            </div>
+      {/* Patient Listing */}
+      <div className="space-y-3">
+        {filteredList.length === 0 ? (
+          <div className="bg-white rounded-3xl border border-slate-100 p-8 text-center text-slate-400 text-xs shadow-2xs">
+            {t('patientLookup.list.empty')}
           </div>
-
-          {/* Appointment History Timeline */}
-          <div className="bg-white rounded-3xl border border-slate-100 p-5 sm:p-6 shadow-2xs space-y-4">
-            <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-[#4F8EF7]" />
-              {t('patientLookup.history.title')}
-            </h3>
-
-            <div className="space-y-3">
-              {schedule.map((appt) => (
-                <div
-                  key={appt.id}
-                  className="p-3.5 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-xs text-slate-900">{appt.treatmentName}</span>
-                      <span className="px-2 py-0.5 rounded-md bg-blue-100 text-[#4F8EF7] text-[10px] font-bold">
-                        {appt.date} • {appt.timeSlot}
+        ) : (
+          filteredList.map((patient) => {
+            const isMostVisited = maxVisits > 1 && patient.visitsCount === maxVisits;
+            return (
+              <div
+                key={patient.patientId}
+                className="bg-white rounded-3xl border border-slate-100 p-4 sm:p-5 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-4 min-w-0">
+                  <img
+                    src={patient.patientAvatar}
+                    alt={patient.patientName}
+                    className="w-14 h-14 rounded-2xl object-cover ring-2 ring-[#4F8EF7]/20 shadow-xs shrink-0"
+                  />
+                  <div className="min-w-0">
+                    <div className="flex items-center flex-wrap gap-2">
+                      <h3 className="font-black text-slate-900 text-sm">{patient.patientName}</h3>
+                      <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#4F8EF7] text-[10px] font-black border border-blue-100">
+                        {patient.patientId}
                       </span>
+                      {isMostVisited && (
+                        <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold border border-amber-200">
+                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                          {t('patientLookup.list.mostVisitedBadge')}
+                        </span>
+                      )}
                     </div>
-                    <p className="text-xs text-slate-500 mt-0.5">{t('patientLookup.history.doctorRoom', { doctorName: appt.doctorName, roomNumber: appt.roomNumber })}</p>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold">
-                      {t('patientLookup.history.paid')}
-                    </span>
+                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 font-medium mt-1">
+                      {patient.phone && (
+                        <span className="flex items-center gap-1">
+                          <Phone className="w-3 h-3 text-slate-400" /> {patient.phone}
+                        </span>
+                      )}
+                      {patient.email && (
+                        <span className="flex items-center gap-1 truncate">
+                          <Mail className="w-3 h-3 text-slate-400" /> {patient.email}
+                        </span>
+                      )}
+                      <span>{t('patientLookup.list.visitsCount', { count: patient.visitsCount })}</span>
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+
+                <div className="shrink-0">
+                  {patient.hasUnpaidBalance ? (
+                    <button
+                      type="button"
+                      id={`patient-take-payment-${patient.patientId}-btn`}
+                      onClick={() => setPaymentTarget(patient)}
+                      className="w-full sm:w-auto px-4 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2"
+                    >
+                      <DollarSign className="w-4 h-4" />
+                      <span>{t('patientLookup.list.takePaymentButton')}</span>
+                    </button>
+                  ) : (
+                    <span className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-2xl bg-emerald-50 text-emerald-700 border border-emerald-100 font-extrabold text-xs">
+                      <CheckCircle2 className="w-4 h-4" />
+                      {t('patientLookup.list.paidBadge')}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
 
       {/* Receive Payment Modal */}
-      {showPaymentModal && selectedPatient && (
+      {paymentTarget && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -255,7 +235,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
                 <h3 className="font-black text-slate-900 text-base">{t('patientLookup.paymentModal.title')}</h3>
               </div>
               <button
-                onClick={() => setShowPaymentModal(false)}
+                onClick={() => setPaymentTarget(null)}
                 className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100"
               >
                 <X className="w-5 h-5" />
@@ -265,8 +245,8 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
             <div className="space-y-3">
               <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-between text-xs">
                 <div>
-                  <span className="font-bold text-slate-900 block">{selectedPatient.fullName}</span>
-                  <span className="text-[10px] text-slate-400">{t('patientLookup.paymentModal.fileNo', { id: selectedPatient.id })}</span>
+                  <span className="font-bold text-slate-900 block">{paymentTarget.patientName}</span>
+                  <span className="text-[10px] text-slate-400">{t('patientLookup.paymentModal.fileNo', { id: paymentTarget.patientId })}</span>
                 </div>
                 <span className="font-black text-[#4F8EF7]">{t('patientLookup.paymentModal.todaysVisit')}</span>
               </div>
@@ -339,7 +319,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
 
             <div className="pt-2 flex items-center justify-end gap-2">
               <button
-                onClick={() => setShowPaymentModal(false)}
+                onClick={() => setPaymentTarget(null)}
                 className="px-4 py-2 rounded-2xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
               >
                 {t('common:buttons.cancel')}

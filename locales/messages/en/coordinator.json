@@ -1,7 +1,7 @@
 {
   "dashboard": {
     "banner": {
-      "tag": "Reception & Front Desk Center",
+      "tag": "Reception and Nurse",
       "greeting": "Good Morning, {{name}} 👋",
       "subtitle": "Clinic is running smoothly today. Track check-ins, process walk-ins, and manage doctor schedules efficiently.",
       "qrScanner": "QR Scanner",
@@ -18,7 +18,7 @@
       "walkInQueueNote": "Unscheduled walk-ins"
     },
     "quickActions": {
-      "title": "Coordinator Quick Action Hub",
+      "title": "Reception Quick Action Hub",
       "bookAppt": "Book Appt",
       "bookApptNote": "New appointment",
       "walkInPatient": "Walk-In Patient",
@@ -53,7 +53,7 @@
       "assignDoctor": "Assign Doctor",
       "requestedService": "Requested Service / Reason",
       "requestedServicePlaceholder": "e.g. Skin Analysis or Touch-up",
-      "notes": "Coordinator Notes (Optional)",
+      "notes": "Reception Notes (Optional)",
       "notesPlaceholder": "Additional requests or instructions...",
       "confirm": "Confirm Walk-In",
       "toastRegistered": "Walk-in patient {{name}} registered in queue!"
@@ -182,13 +182,20 @@
   "patientLookup": {
     "header": {
       "title": "Patient File & Desk Payments",
-      "subtitle": "Lookup patient files by File Number, Phone, or Name. Process desk payments and issue receipts."
+      "subtitle": "Browse all patients, process desk payments, and track your most frequent visitors."
     },
     "search": {
-      "placeholder": "Search by File Number (e.g. RC-99841), Mobile Number, or Full Name...",
+      "placeholder": "Search patients by name, file number, or phone...",
       "button": "Lookup Patient",
       "toastFound": "Patient file loaded for {{name}}.",
       "toastNotFound": "No patient found matching \"{{query}}\"."
+    },
+    "list": {
+      "mostVisitedBadge": "Most Visited",
+      "visitsCount": "{{count}} visits",
+      "paidBadge": "Paid",
+      "takePaymentButton": "Take Payment",
+      "empty": "No patients match your search."
     },
     "receivePayment": "Receive Desk Payment",
     "lastTreatment": {
@@ -250,10 +257,10 @@
   },
   "profile": {
     "header": {
-      "title": "Coordinator Account & Preferences",
+      "title": "Reception Account & Preferences",
       "subtitle": "Manage your reception profile credentials, app language, and security settings."
     },
-    "badge": "Front Desk Coordinator",
+    "badge": "Reception",
     "employeeInfo": "Employee ID: COORD-8820 • Shift: Morning (08:30 AM - 05:30 PM)",
     "contact": {
       "email": "Email Address",
@@ -286,7 +293,7 @@
     },
     "logoutModal": {
       "title": "Confirm Logout",
-      "confirmText": "Are you sure you want to end your current receptionist session?"
+      "confirmText": "Are you sure you want to end your current reception session?"
     },
     "toastLanguageSet": "App language set to {{lang}}."
   }

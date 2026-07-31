@@ -68,7 +68,7 @@
     "setClinicalStatus": "تحديد الحالة السريرية",
     "roleTitles": {
       "nurse": "أخصائية تمريض تجميلي",
-      "coordinator": "منسق العيادة",
+      "coordinator": "استقبال العيادة",
       "doctor": "طبيب جلدية معالج"
     },
     "status": {

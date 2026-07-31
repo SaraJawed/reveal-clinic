@@ -68,7 +68,7 @@
     "setClinicalStatus": "Set Clinical Status",
     "roleTitles": {
       "nurse": "Aesthetic Nurse Specialist",
-      "coordinator": "Clinic Coordinator",
+      "coordinator": "Clinic Reception",
       "doctor": "Attending Dermatologist"
     },
     "status": {

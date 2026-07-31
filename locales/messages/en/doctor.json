@@ -3,7 +3,7 @@
     "hero": {
       "roleBadge": {
         "nurse": "Aesthetic Nursing Portal",
-        "coordinator": "Clinic Coordinator",
+        "coordinator": "Clinic Reception",
         "doctor": "Physician Portal"
       },
       "greeting": "Good day, {{name}}",
@@ -18,10 +18,15 @@
       "totalSub": "Scheduled appointments",
       "checkedInLabel": "Checked-In",
       "checkedInSub": "Ready in lobby / pod",
-      "activeLabel": "Active Room",
-      "activeSub": "In procedure suite",
+      "activeLabel": "Requested Items",
+      "activeSub": "Tap to view details",
       "completedLabel": "Completed",
       "completedSub": "Finished today"
+    },
+    "requestedItemsModal": {
+      "title": "Requested Items",
+      "empty": "No items have been requested yet.",
+      "context": "For {{patientName}} — {{treatmentName}}"
     },
     "currentPatient": {
       "title": "Current Patient Focus",
@@ -303,7 +308,7 @@
       "currentBadge": "Current"
     },
     "logout": {
-      "signOutButton": "Sign Out of Staff Portal"
+      "signOutButton": "Sign Out"
     },
     "passwordModal": {
       "title": "Change Staff Account Password",
