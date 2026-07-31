@@ -11,7 +11,6 @@ import {
 } from '../../types';
 import {
   Plus,
-  QrCode,
   CreditCard,
   Gift,
   FileText,
@@ -55,43 +54,29 @@ export const HomeView: React.FC<HomeViewProps> = ({
       {/* Welcome Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            Good day, {user.fullName}
-          </h1>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              Good day, {user.fullName}
+            </h1>
+            <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full whitespace-nowrap">
+              File ID: {user.patientId}
+            </span>
+          </div>
           <p className="text-xs sm:text-sm text-slate-500">Welcome back to Reveal Clinic.</p>
         </div>
       </div>
 
-      {/* 1. Top Row: Quick Actions & Verified Patient Card */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-        <button
-          id="home-action-book-btn"
-          onClick={() => onChangeTab('appointments')}
-          className="bg-[#4F8EF7] text-white p-5 sm:p-6 rounded-3xl flex flex-col items-center justify-center gap-3 shadow-lg shadow-blue-100 hover:opacity-90 transition-opacity text-center cursor-pointer"
-        >
-          <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
-            <Plus className="w-6 h-6 text-white" />
-          </div>
-          <span className="font-semibold text-sm">Book Appointment</span>
-        </button>
-
-        {/* Verified Patient Card */}
-        <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white rounded-[32px] p-5 sm:p-6 flex items-center justify-between shadow-md">
-          <div className="space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-sky-400">Verified Patient</span>
-            <h3 className="text-base font-bold text-white">{user.fullName}</h3>
-            <p className="text-xs text-slate-300">File ID: <span className="font-mono font-bold text-sky-200">{user.patientId}</span></p>
-          </div>
-          <button
-            id="home-checkin-pass-btn"
-            onClick={onOpenCheckIn}
-            className="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-2xl text-xs transition shadow-xs flex items-center gap-1.5 cursor-pointer"
-          >
-            <QrCode className="w-4 h-4" />
-            Check-In Pass
-          </button>
+      {/* 1. Quick Action: Book Appointment */}
+      <button
+        id="home-action-book-btn"
+        onClick={() => onChangeTab('appointments')}
+        className="w-full bg-[#4F8EF7] text-white p-5 sm:p-6 rounded-3xl flex items-center justify-center gap-3 shadow-lg shadow-blue-100 hover:opacity-90 transition-opacity cursor-pointer"
+      >
+        <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
+          <Plus className="w-6 h-6 text-white" />
         </div>
-      </div>
+        <span className="font-semibold text-base">Book Appointment</span>
+      </button>
 
       {/* 2. Main Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -161,15 +146,21 @@ export const HomeView: React.FC<HomeViewProps> = ({
               {activePackages.length > 0 ? (
                 activePackages.slice(0, 1).map((pack) => {
                   const initial = pack.packageName.charAt(0);
+                  const sessionsUsed = pack.totalSessions - pack.remainingSessions;
                   return (
-                    <div key={pack.id} className="p-4 border border-blue-100/80 bg-gradient-to-r from-blue-50/60 via-sky-50/40 to-indigo-50/20 rounded-2xl flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-2xl bg-[#4F8EF7] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
-                        {initial}
+                    <div key={pack.id} className="p-4 border border-blue-100/80 bg-gradient-to-r from-blue-50/60 via-sky-50/40 to-indigo-50/20 rounded-2xl flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-2xl bg-[#4F8EF7] text-white flex items-center justify-center font-bold text-base shrink-0 shadow-xs">
+                          {initial}
+                        </div>
+                        <div className="min-w-0">
+                          <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
+                          <p className="text-sm font-bold text-slate-800 truncate">{pack.packageName}</p>
+                        </div>
                       </div>
-                      <div className="min-w-0">
-                        <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Currently Taking</span>
-                        <p className="text-sm font-bold text-slate-800 truncate">{pack.packageName}</p>
-                      </div>
+                      <span className="text-xs font-black text-[#4F8EF7] bg-white px-2.5 py-1 rounded-xl shrink-0 border border-blue-100">
+                        {sessionsUsed}/{pack.totalSessions}
+                      </span>
                     </div>
                   );
                 })
