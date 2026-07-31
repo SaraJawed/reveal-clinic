@@ -308,7 +308,7 @@ export function App() {
       allergyAlerts: user.skinAllergies,
       visitReason: newAppt.treatmentName,
       notes: newAppt.notes,
-      paymentStatus: newAppt.paymentMethod === 'Pay Half Now' ? 'Partial Payment' : newAppt.paid ? 'Paid' : 'Pending Deposit',
+      paymentStatus: newAppt.paid ? 'Paid' : 'Pending Deposit',
     };
     setClinicalSchedule(prev => [scheduleItem, ...prev]);
 
@@ -389,11 +389,6 @@ export function App() {
       };
       setChatMessages(prev => [...prev, fallbackMsg]);
     }
-  };
-
-  const handleRedeemReward = (pointsCost: number, rewardTitle: string) => {
-    setUser(prev => ({ ...prev, loyaltyPoints: Math.max(0, prev.loyaltyPoints - pointsCost) }));
-    triggerToast(`Redeemed ${rewardTitle}! Code generated.`);
   };
 
   const handlePurchaseGiftCard = (card: GiftCard) => {
@@ -897,8 +892,6 @@ export function App() {
       <LoyaltyRewardsModal
         isOpen={isLoyaltyOpen}
         onClose={() => setIsLoyaltyOpen(false)}
-        user={user}
-        onRedeemReward={handleRedeemReward}
       />
 
       <ReferralModal

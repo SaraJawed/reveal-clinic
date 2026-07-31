@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { BottomSheet } from '../PWA/BottomSheet';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
+import { AvailableVouchersModal } from '../Vouchers/AvailableVouchersModal';
 
 interface AppointmentsViewProps {
   doctors: Doctor[];
@@ -65,6 +66,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const [voucherInput, setVoucherInput] = useState('');
   const [appliedVoucher, setAppliedVoucher] = useState<{ code: string; discount: number } | null>(null);
   const [voucherError, setVoucherError] = useState('');
+  const [showVoucherList, setShowVoucherList] = useState(false);
 
   // Reschedule / Feedback Modals
   const [rescheduleAppt, setRescheduleAppt] = useState<Appointment | null>(null);
@@ -104,10 +106,11 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     setVoucherInput('');
     setAppliedVoucher(null);
     setVoucherError('');
+    setShowVoucherList(false);
   };
 
-  const handleApplyVoucher = () => {
-    const code = voucherInput.trim().toUpperCase();
+  const applyVoucherCode = (rawCode: string) => {
+    const code = rawCode.trim().toUpperCase();
     if (!code) return;
     const discount = calculateVoucherDiscount(code, getAppointmentFee());
     if (discount === null) {
@@ -116,8 +119,11 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
       return;
     }
     setAppliedVoucher({ code, discount });
+    setVoucherInput(code);
     setVoucherError('');
   };
+
+  const handleApplyVoucher = () => applyVoucherCode(voucherInput);
 
   const handleRemoveVoucher = () => {
     setAppliedVoucher(null);
@@ -156,7 +162,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
 
     const successMessages: Record<NonNullable<Appointment['paymentMethod']>, string> = {
       'Pay at Clinic': "Your appointment slot has been reserved. Your booking will be confirmed once the payment is completed at the clinic.",
-      'Pay Half Now': "Your appointment is confirmed! You've paid 50% now — the remaining balance is due at the clinic.",
       'Pay Online': "Your appointment has been successfully booked and your payment has been received. A confirmation has been sent to you.",
       'Buy Now Pay Later': "Your appointment is confirmed! Your Buy Now, Pay Later plan has been set up — nothing is due today."
     };
@@ -623,6 +628,16 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                 </div>
               )}
               {voucherError && <p className="text-[11px] text-rose-600 font-semibold">{voucherError}</p>}
+              {!appliedVoucher && (
+                <button
+                  type="button"
+                  id="appointments-view-vouchers-btn"
+                  onClick={() => setShowVoucherList(true)}
+                  className="text-[11px] font-bold text-emerald-700 hover:underline"
+                >
+                  View Available Vouchers
+                </button>
+              )}
             </div>
 
             <div className="space-y-2.5 pt-2">
@@ -651,33 +666,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   {selectedPaymentMethod === 'Pay at Clinic' && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
                   <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay at Clinic' ? 'bg-slate-800' : 'bg-slate-100'}`}>
                     SAR {getDiscountedFee()}
-                  </span>
-                </div>
-              </button>
-
-              <button
-                type="button"
-                id="appointments-pay-half-btn"
-                onClick={() => setSelectedPaymentMethod('Pay Half Now')}
-                className={`w-full font-bold py-3.5 px-4 rounded-2xl text-xs flex items-center justify-between transition ${
-                  selectedPaymentMethod === 'Pay Half Now'
-                    ? 'bg-teal-600 text-white shadow-md shadow-teal-500/25 ring-2 ring-offset-2 ring-teal-600'
-                    : 'bg-white text-slate-700 border-2 border-slate-200 hover:border-slate-300'
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <span className="text-base">💰</span>
-                  <div className="text-left">
-                    <div className="font-bold">Pay Half Now & Pay Remaining at Clinic</div>
-                    <div className={`text-[10px] font-normal ${selectedPaymentMethod === 'Pay Half Now' ? 'text-teal-100' : 'text-slate-500'}`}>
-                      Pay 50% now online, settle the rest at the clinic counter
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 shrink-0">
-                  {selectedPaymentMethod === 'Pay Half Now' && <CheckCircle2 className="w-4 h-4 text-white" />}
-                  <span className={`text-xs px-2.5 py-1 rounded-xl ${selectedPaymentMethod === 'Pay Half Now' ? 'bg-teal-700' : 'bg-slate-100'}`}>
-                    SAR {Math.round(getDiscountedFee() / 2)}
                   </span>
                 </div>
               </button>
@@ -748,7 +736,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed shadow-none'
               }`}
             >
-              {selectedPaymentMethod ? `Confirm Booking — SAR ${selectedPaymentMethod === 'Pay Half Now' ? Math.round(getDiscountedFee() / 2) : getDiscountedFee()}` : 'Select a Payment Option to Continue'}
+              {selectedPaymentMethod ? `Confirm Booking — SAR ${getDiscountedFee()}` : 'Select a Payment Option to Continue'}
             </button>
 
             <button
@@ -761,6 +749,17 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
           </div>
         )}
       </BottomSheet>
+
+      {/* AVAILABLE VOUCHERS LIST */}
+      {showVoucherList && (
+        <AvailableVouchersModal
+          onSelect={(code) => {
+            applyVoucherCode(code);
+            setShowVoucherList(false);
+          }}
+          onClose={() => setShowVoucherList(false)}
+        />
+      )}
 
       {/* BOOKING SUCCESS MODAL */}
       {bookingSuccess && (

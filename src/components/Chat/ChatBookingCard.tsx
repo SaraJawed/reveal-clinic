@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Doctor, ClinicBranch, Appointment, AppointmentStatus } from '../../types';
 import { Star, Clock, CheckCircle2, Tag, X, ArrowRight, CalendarCheck } from 'lucide-react';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
+import { AvailableVouchersModal } from '../Vouchers/AvailableVouchersModal';
 
 interface ChatBookingCardProps {
   doctor: Doctor;
@@ -24,14 +25,15 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
   const [voucherInput, setVoucherInput] = useState('');
   const [appliedVoucher, setAppliedVoucher] = useState<{ code: string; discount: number } | null>(null);
   const [voucherError, setVoucherError] = useState('');
+  const [showVoucherList, setShowVoucherList] = useState(false);
   const [confirmedAppt, setConfirmedAppt] = useState<Appointment | null>(null);
 
   const baseFee = doctor.consultationFee;
   const finalFee = appliedVoucher ? Math.max(0, baseFee - appliedVoucher.discount) : baseFee;
   const today = new Date().toISOString().split('T')[0];
 
-  const handleApplyVoucher = () => {
-    const code = voucherInput.trim().toUpperCase();
+  const applyVoucherCode = (rawCode: string) => {
+    const code = rawCode.trim().toUpperCase();
     if (!code) return;
     const discount = calculateVoucherDiscount(code, baseFee);
     if (discount === null) {
@@ -40,8 +42,11 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
       return;
     }
     setAppliedVoucher({ code, discount });
+    setVoucherInput(code);
     setVoucherError('');
   };
+
+  const handleApplyVoucher = () => applyVoucherCode(voucherInput);
 
   const handleRemoveVoucher = () => {
     setAppliedVoucher(null);
@@ -195,6 +200,16 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                 </div>
               )}
               {voucherError && <p className="text-[10px] text-rose-600 font-semibold">{voucherError}</p>}
+              {!appliedVoucher && (
+                <button
+                  type="button"
+                  id="chat-booking-view-vouchers-btn"
+                  onClick={() => setShowVoucherList(true)}
+                  className="text-[10px] font-bold text-emerald-700 hover:underline"
+                >
+                  View Available Vouchers
+                </button>
+              )}
             </div>
 
             {/* Payment methods */}
@@ -213,23 +228,6 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                 <span className="flex items-center gap-1">
                   {paymentMethod === 'Pay at Clinic' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />}
                   SAR {finalFee}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                id="chat-booking-pay-half-btn"
-                onClick={() => setPaymentMethod('Pay Half Now')}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-bold transition ${
-                  paymentMethod === 'Pay Half Now'
-                    ? 'bg-teal-600 text-white ring-2 ring-offset-1 ring-teal-600'
-                    : 'bg-white text-slate-700 border border-slate-200'
-                }`}
-              >
-                <span>💰 Pay Half Now</span>
-                <span className="flex items-center gap-1">
-                  {paymentMethod === 'Pay Half Now' && <CheckCircle2 className="w-3.5 h-3.5 text-white" />}
-                  SAR {Math.round(finalFee / 2)}
                 </span>
               </button>
 
@@ -279,7 +277,7 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
                   : 'bg-slate-100 text-slate-400 cursor-not-allowed'
               }`}
             >
-              {paymentMethod ? `Confirm Appointment — SAR ${paymentMethod === 'Pay Half Now' ? Math.round(finalFee / 2) : finalFee}` : 'Select a Payment Option'}
+              {paymentMethod ? `Confirm Appointment — SAR ${finalFee}` : 'Select a Payment Option'}
             </button>
 
             <button
@@ -314,6 +312,16 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
           </div>
         )}
       </div>
+
+      {showVoucherList && (
+        <AvailableVouchersModal
+          onSelect={(code) => {
+            applyVoucherCode(code);
+            setShowVoucherList(false);
+          }}
+          onClose={() => setShowVoucherList(false)}
+        />
+      )}
     </div>
   );
 };

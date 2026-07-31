@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
-import { LoyaltyReward, UserProfile } from '../../types';
 import { loyaltyRewards } from '../../data/mockData';
-import { Award, CheckCircle2, Gift, Sparkles, X } from 'lucide-react';
+import { Award, Check, Copy, Tag, X } from 'lucide-react';
 
 interface LoyaltyRewardsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  user: UserProfile;
-  onRedeemReward: (pointsCost: number, rewardTitle: string) => void;
 }
 
 export const LoyaltyRewardsModal: React.FC<LoyaltyRewardsModalProps> = ({
   isOpen,
-  onClose,
-  user,
-  onRedeemReward
+  onClose
 }) => {
-  const [redeemedCode, setRedeemedCode] = useState<string | null>(null);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   if (!isOpen) return null;
+
+  const handleCopyCode = (code: string) => {
+    navigator.clipboard?.writeText(code).catch(() => {});
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 1500);
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-xs">
@@ -44,65 +45,45 @@ export const LoyaltyRewardsModal: React.FC<LoyaltyRewardsModalProps> = ({
         </div>
 
         <div className="p-6 overflow-y-auto flex-1 space-y-4">
-          {redeemedCode ? (
-            <div className="text-center space-y-4 py-4">
-              <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-10 h-10" />
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Available Rewards Catalog</div>
+          {loyaltyRewards.map((rew) => (
+            <div
+              key={rew.id}
+              className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-2.5"
+            >
+              <div>
+                <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase">
+                  {rew.category}
+                </span>
+                <h4 className="font-bold text-slate-900 text-xs mt-1.5">{rew.title}</h4>
+                <p className="text-[11px] text-slate-500 mt-0.5">{rew.description}</p>
               </div>
-              <h4 className="font-extrabold text-slate-900 text-lg">Reward Voucher Redeemed!</h4>
-              <div className="bg-slate-900 text-amber-300 p-4 rounded-2xl text-base font-mono font-bold tracking-widest">
-                {redeemedCode}
-              </div>
-              <p className="text-xs text-slate-500">
-                Show this voucher code at clinic reception or apply during online checkout.
-              </p>
-              <button
-                id="loyalty-code-close-btn"
-                onClick={() => setRedeemedCode(null)}
-                className="w-full bg-slate-900 text-white font-bold py-3 rounded-2xl text-xs"
-              >
-                Back to Rewards Catalog
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">Available Rewards Catalog</div>
-              {loyaltyRewards.map((rew) => {
-                const canAfford = user.loyaltyPoints >= rew.pointsRequired;
-                return (
-                  <div
-                    key={rew.id}
-                    className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex items-center justify-between gap-3"
-                  >
-                    <div>
-                      <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full uppercase">
-                        {rew.category}
-                      </span>
-                      <h4 className="font-bold text-slate-900 text-xs mt-1">{rew.title}</h4>
-                      <p className="text-[11px] text-slate-500 mt-0.5">{rew.description}</p>
-                      <div className="text-xs font-extrabold text-amber-600 mt-1">⭐ {rew.pointsRequired} Points Required</div>
-                    </div>
 
-                    <button
-                      id={`loyalty-redeem-${rew.id}-btn`}
-                      disabled={!canAfford}
-                      onClick={() => {
-                        onRedeemReward(rew.pointsRequired, rew.title);
-                        setRedeemedCode(rew.code);
-                      }}
-                      className={`px-3 py-2 rounded-xl text-xs font-bold shrink-0 transition ${
-                        canAfford
-                          ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-xs'
-                          : 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                      }`}
-                    >
-                      {canAfford ? 'Redeem' : 'Need Points'}
-                    </button>
-                  </div>
-                );
-              })}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5 bg-slate-900 text-amber-300 font-mono font-bold text-xs px-3 py-1.5 rounded-xl tracking-wider">
+                  <Tag className="w-3.5 h-3.5" />
+                  {rew.code}
+                </div>
+                <button
+                  type="button"
+                  id={`loyalty-copy-${rew.id}-btn`}
+                  onClick={() => handleCopyCode(rew.code)}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 transition bg-amber-500 hover:bg-amber-600 text-white shadow-xs flex items-center gap-1.5"
+                >
+                  {copiedCode === rew.code ? (
+                    <>
+                      <Check className="w-3.5 h-3.5" /> Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" /> Copy Code
+                    </>
+                  )}
+                </button>
+              </div>
+              <p className="text-[10px] text-slate-400">Use this voucher code during appointment booking or payment.</p>
             </div>
-          )}
+          ))}
         </div>
       </div>
     </div>

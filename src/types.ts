@@ -149,7 +149,7 @@ export interface Appointment {
   status: AppointmentStatus;
   fee: number;
   paid: boolean;
-  paymentMethod?: 'Pay at Clinic' | 'Pay Half Now' | 'Pay Online' | 'Buy Now Pay Later';
+  paymentMethod?: 'Pay at Clinic' | 'Pay Online' | 'Buy Now Pay Later';
   voucherCode?: string;
   discountAmount?: number;
   notes?: string;
@@ -198,7 +198,6 @@ export interface NotificationItem {
 export interface LoyaltyReward {
   id: string;
   title: string;
-  pointsRequired: number;
   description: string;
   discountValue: string;
   code: string;
@@ -263,7 +262,7 @@ export interface ClinicalScheduleItem {
     skinType?: string;
   };
   notes?: string;
-  paymentStatus?: 'Paid' | 'Pending Deposit' | 'Partial Payment' | 'Covered by Package';
+  paymentStatus?: 'Paid' | 'Pending Deposit' | 'Covered by Package';
   queueNumber?: number;
 }
 

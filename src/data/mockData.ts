@@ -409,17 +409,15 @@ export const loyaltyRewards: LoyaltyReward[] = [
   {
     id: 'rew_1',
     title: 'SAR 200 Off Any Medical Facial',
-    pointsRequired: 500,
-    description: 'Redeem 500 loyalty points for an instant SAR 200 discount voucher applied at checkout.',
+    description: 'Use this voucher code during appointment booking or payment for an instant SAR 200 discount.',
     discountValue: 'SAR 200',
-    code: 'REVEAL-200SAR-500PTS',
+    code: 'REVEAL200OFF',
     category: 'Treatment Discount'
   },
   {
     id: 'rew_2',
     title: 'Free LED Phototherapy Session',
-    pointsRequired: 800,
-    description: 'Complimentary 20-minute collagen-boosting LED light therapy added to any appointment.',
+    description: 'Use this voucher code during appointment booking to add a complimentary 20-minute collagen-boosting LED light therapy session.',
     discountValue: 'Free SAR 350 Value',
     code: 'REVEAL-LED-FREE',
     category: 'VIP Perks'
@@ -427,8 +425,7 @@ export const loyaltyRewards: LoyaltyReward[] = [
   {
     id: 'rew_3',
     title: 'SAR 500 Off Sculptra or Fillers',
-    pointsRequired: 1200,
-    description: 'Special high-tier reward voucher valid for biostimulator or filler rejuvenation.',
+    description: 'Use this voucher code during appointment booking or payment for SAR 500 off biostimulator or filler rejuvenation.',
     discountValue: 'SAR 500',
     code: 'REVEAL-RIYADH-500',
     category: 'Treatment Discount'

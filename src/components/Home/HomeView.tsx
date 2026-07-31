@@ -147,7 +147,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
           {/* Active Treatment Package */}
           <div className="bg-white rounded-[32px] p-6 sm:p-8 shadow-xs border border-slate-100">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-slate-800">Current Active Treatment Package</h2>
+              <h2 className="text-lg font-bold text-slate-800">My Packages</h2>
               <button
                 id="home-browse-packages-btn"
                 onClick={() => onChangeTab('services')}
