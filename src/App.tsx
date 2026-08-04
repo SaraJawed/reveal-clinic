@@ -156,7 +156,8 @@ const SCHEDULE_STATUS_NOTIFICATION: Partial<Record<ClinicalAppointmentStatus, {
 export function App() {
   // Application Lifecycle States
   const [showSplash, setShowSplash] = useState(true);
-  const [hasOnboarded, setHasOnboarded] = useState<boolean>(() => loadState('reveal_onboarded', false));
+  // Not persisted: the onboarding carousel is intended to replay on every refresh.
+  const [hasOnboarded, setHasOnboarded] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => loadState('reveal_authenticated', false));
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -259,7 +260,6 @@ export function App() {
   useEffect(() => { saveState('reveal_payments', payments); }, [payments]);
   useEffect(() => { saveState('reveal_chat', chatMessages); }, [chatMessages]);
   useEffect(() => { saveState('reveal_giftcards', giftCards); }, [giftCards]);
-  useEffect(() => { saveState('reveal_onboarded', hasOnboarded); }, [hasOnboarded]);
   useEffect(() => { saveState('reveal_authenticated', isAuthenticated); }, [isAuthenticated]);
   useEffect(() => { saveState('reveal_clinical_schedule', clinicalSchedule); }, [clinicalSchedule]);
   useEffect(() => { saveState('reveal_clinical_patients', clinicalPatients); }, [clinicalPatients]);
