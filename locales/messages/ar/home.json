@@ -12,6 +12,7 @@
     "title": "الموعد القادم",
     "myVisits": "زياراتي",
     "confirmed": "مؤكد",
+    "pendingConfirmation": "بانتظار التأكيد",
     "noAppointments": "لا توجد مواعيد قادمة مجدولة.",
     "scheduleAppointment": "جدولة موعد"
   },

@@ -12,6 +12,7 @@
     "title": "Next Appointment",
     "myVisits": "My Visits",
     "confirmed": "Confirmed",
+    "pendingConfirmation": "Pending Confirmation",
     "noAppointments": "No upcoming appointments scheduled.",
     "scheduleAppointment": "Schedule Appointment"
   },

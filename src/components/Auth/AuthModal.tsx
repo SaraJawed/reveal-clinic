@@ -11,6 +11,7 @@ interface AuthModalProps {
   user?: UserProfile;
   onLoginSuccess?: (user: UserProfile) => void;
   onSuccess?: (user: UserProfile) => void;
+  onNewPatientAccountCreated?: (user: UserProfile) => void;
   isScreen?: boolean;
 }
 
@@ -20,6 +21,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   user,
   onLoginSuccess,
   onSuccess,
+  onNewPatientAccountCreated,
   isScreen = false
 }) => {
   const { t } = useTranslation('auth');
@@ -310,6 +312,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
       if (newUser.role === 'patient') {
         registerPatientAccount(phone, password, newUser);
+        onNewPatientAccountCreated?.(newUser);
       }
 
       handleSuccessCallback(newUser);

@@ -50,6 +50,15 @@
       "patientNamePlaceholder": "e.g. Nadia Mansoor",
       "mobileContact": "Mobile Contact *",
       "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "age": "Age",
+      "agePlaceholder": "e.g. 34",
+      "gender": "Gender",
+      "genderOptions": {
+        "female": "Female",
+        "male": "Male",
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say"
+      },
       "assignDoctor": "Assign Doctor",
       "requestedService": "Requested Service / Reason",
       "requestedServicePlaceholder": "e.g. Skin Analysis or Touch-up",

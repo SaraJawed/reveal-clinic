@@ -7,6 +7,8 @@ export interface WalkInPatient {
   patientName: string;
   patientFileNo?: string;
   patientPhone: string;
+  patientAge?: number;
+  patientGender?: Gender;
   assignedDoctorId: string;
   assignedDoctorName: string;
   requestedService: string;

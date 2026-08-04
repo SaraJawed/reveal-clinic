@@ -6,8 +6,7 @@ import {
   ActiveUserPackage,
   MedicalReport,
   NotificationItem,
-  GiftCard,
-  ChatMessage
+  GiftCard
 } from '../types';
 import {
   initialUserProfile,
@@ -29,7 +28,6 @@ const KEYS = {
   REPORTS: 'reveal_medical_reports',
   NOTIFICATIONS: 'reveal_notifications',
   GIFT_CARDS: 'reveal_gift_cards',
-  CHAT_MESSAGES: 'reveal_chat_messages',
   THEME_MODE: 'reveal_theme_mode',
   LANGUAGE: 'reveal_language',
   OFFLINE_SIMULATION: 'reveal_offline_sim'
@@ -178,27 +176,6 @@ export const getStoredGiftCards = (): GiftCard[] => {
 
 export const saveStoredGiftCards = (cards: GiftCard[]) => {
   localStorage.setItem(KEYS.GIFT_CARDS, JSON.stringify(cards));
-};
-
-export const getStoredChat = (): ChatMessage[] => {
-  try {
-    const data = localStorage.getItem(KEYS.CHAT_MESSAGES);
-    if (data) return JSON.parse(data);
-  } catch {
-    // ignore
-  }
-  return [
-    {
-      id: 'msg_welcome',
-      sender: 'assistant',
-      text: 'Hello Noura! Welcome to Reveal Clinic. How may I assist your skin, aesthetic, or appointment needs today?',
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    }
-  ];
-};
-
-export const saveStoredChat = (messages: ChatMessage[]) => {
-  localStorage.setItem(KEYS.CHAT_MESSAGES, JSON.stringify(messages));
 };
 
 // ----------------------------------------------------------------------

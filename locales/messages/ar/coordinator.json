@@ -50,6 +50,15 @@
       "patientNamePlaceholder": "مثال: نادية منصور",
       "mobileContact": "رقم التواصل *",
       "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "age": "العمر",
+      "agePlaceholder": "مثال: 34",
+      "gender": "الجنس",
+      "genderOptions": {
+        "female": "أنثى",
+        "male": "ذكر",
+        "other": "أخرى",
+        "preferNotToSay": "تفضّل عدم الإفصاح"
+      },
       "assignDoctor": "تعيين الطبيب",
       "requestedService": "الخدمة المطلوبة / السبب",
       "requestedServicePlaceholder": "مثال: تحليل البشرة أو تعديل بسيط",

@@ -5,7 +5,8 @@ import {
   ClinicalScheduleItem,
   StaffNotification,
   WalkInPatient,
-  CoordinatorTabType
+  CoordinatorTabType,
+  Gender
 } from '../../types';
 import { initialDoctors, treatmentServices } from '../../data/mockData';
 import {
@@ -56,6 +57,8 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
   const [walkInName, setWalkInName] = useState('');
   const [walkInFileNo, setWalkInFileNo] = useState('');
   const [walkInPhone, setWalkInPhone] = useState('');
+  const [walkInAge, setWalkInAge] = useState('');
+  const [walkInGender, setWalkInGender] = useState<Gender>('female');
   const [walkInServiceId, setWalkInServiceId] = useState(treatmentServices[0]?.id || '');
   const [walkInDoctorId, setWalkInDoctorId] = useState(initialDoctors[0]?.id || '');
   const [walkInDate, setWalkInDate] = useState('Today');
@@ -82,6 +85,8 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
       patientName: walkInName,
       patientFileNo: walkInFileNo || undefined,
       patientPhone: walkInPhone,
+      patientAge: walkInAge ? Number(walkInAge) : undefined,
+      patientGender: walkInGender,
       assignedDoctorId: walkInDoctorId,
       assignedDoctorName: selectedDoctor?.name || walkInDoctorId,
       requestedService: selectedService?.name || walkInServiceId,
@@ -98,6 +103,8 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
     setWalkInName('');
     setWalkInFileNo('');
     setWalkInPhone('');
+    setWalkInAge('');
+    setWalkInGender('female');
     setWalkInNotes('');
   };
 
@@ -347,6 +354,34 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
                   onChange={(e) => setWalkInPhone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('dashboard.walkInModal.age')}</label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={120}
+                    placeholder={t('dashboard.walkInModal.agePlaceholder')}
+                    value={walkInAge}
+                    onChange={(e) => setWalkInAge(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('dashboard.walkInModal.gender')}</label>
+                  <select
+                    value={walkInGender}
+                    onChange={(e) => setWalkInGender(e.target.value as Gender)}
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                  >
+                    <option value="female">{t('dashboard.walkInModal.genderOptions.female')}</option>
+                    <option value="male">{t('dashboard.walkInModal.genderOptions.male')}</option>
+                    <option value="other">{t('dashboard.walkInModal.genderOptions.other')}</option>
+                    <option value="prefer_not_to_say">{t('dashboard.walkInModal.genderOptions.preferNotToSay')}</option>
+                  </select>
+                </div>
               </div>
 
               <div>

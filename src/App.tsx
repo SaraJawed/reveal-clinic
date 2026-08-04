@@ -40,7 +40,8 @@ import {
   initialClinicalPatients,
   initialTreatmentSessions,
   initialStaffNotifications,
-  initialWalkInQueue
+  initialWalkInQueue,
+  HARDCODED_AVATARS
 } from './data/mockData';
 import { loadState, saveState } from './utils/storage';
 
@@ -69,7 +70,6 @@ import { CoordinatorNotificationsView } from './components/Coordinator/Coordinat
 import { CoordinatorProfileView } from './components/Coordinator/CoordinatorProfileView';
 
 // PWA & Flow Screens
-import { PWAInstallBanner } from './components/PWA/PWAInstallBanner';
 import { Snackbar } from './components/PWA/Snackbar';
 import { SplashScreen } from './components/Splash/SplashScreen';
 import { OnboardingScreen } from './components/Onboarding/OnboardingScreen';
@@ -281,6 +281,59 @@ export function App() {
     };
     setWalkInQueue(prev => [walkIn, ...prev]);
 
+    // Walk-ins are already checked in the moment they're registered, but they
+    // previously never entered the clinicalSchedule/clinicalPatients data the
+    // Doctor's Schedule and Patients modules read from -- so a checked-in
+    // walk-in was invisible to the doctor. Mirror them into both here too.
+    const patientKey = newPatient.patientFileNo?.trim() || `WI-${walkIn.id.slice(-6)}`;
+    const scheduleItem: ClinicalScheduleItem = {
+      id: walkIn.id,
+      patientId: patientKey,
+      patientName: walkIn.patientName,
+      patientAge: newPatient.patientAge ?? 0,
+      patientGender: newPatient.patientGender ?? 'prefer_not_to_say',
+      patientAvatar: HARDCODED_AVATARS[0].url,
+      doctorId: walkIn.assignedDoctorId,
+      doctorName: walkIn.assignedDoctorName,
+      treatmentName: walkIn.requestedService,
+      consultationType: 'In-Clinic Consultation',
+      date: walkIn.requestedDate || 'Today',
+      timeSlot: walkIn.requestedTimeSlot || walkIn.arrivalTime,
+      durationMinutes: 30,
+      status: 'checked_in',
+      roomNumber: 'Unassigned',
+      allergyAlerts: [],
+      visitReason: walkIn.requestedService,
+      notes: walkIn.notes,
+      paymentStatus: 'Pending Deposit'
+    };
+    setClinicalSchedule(prev => [scheduleItem, ...prev]);
+
+    setClinicalPatients(prev => {
+      if (prev.some(p => p.patientId === patientKey)) return prev;
+      const newPatientRecord: ClinicalPatientRecord = {
+        id: `cp_${patientKey}`,
+        patientId: patientKey,
+        fullName: walkIn.patientName,
+        phone: walkIn.patientPhone,
+        preferredBranch: selectedBranch.name,
+        age: newPatient.patientAge ?? 0,
+        gender: newPatient.patientGender ?? 'prefer_not_to_say',
+        avatarUrl: HARDCODED_AVATARS[0].url,
+        bloodGroup: 'Unknown',
+        allergies: [],
+        skinType: 'Not yet assessed',
+        medicalHistoryNotes: walkIn.notes || '',
+        importantNotes: [],
+        previousVisits: [],
+        treatmentHistory: [],
+        reports: [],
+        activePackagesCount: 0,
+        registeredBranch: selectedBranch.name
+      };
+      return [newPatientRecord, ...prev];
+    });
+
     const newNotif: StaffNotification = {
       id: `notif_${Date.now()}`,
       type: 'check_in',
@@ -361,6 +414,36 @@ export function App() {
       paymentStatus: newAppt.paid ? 'Paid' : 'Pending Deposit',
     };
     setClinicalSchedule(prev => [scheduleItem, ...prev]);
+
+    // A patient booking for the first time has no ClinicalPatientRecord yet,
+    // so the Doctor's Patients module (unlike Coordinator's, which derives its
+    // list live from clinicalSchedule) would never show them. Give them a
+    // baseline record from their own profile; leave existing records alone.
+    setClinicalPatients(prev => {
+      if (prev.some(p => p.patientId === user.patientId)) return prev;
+      const newPatientRecord: ClinicalPatientRecord = {
+        id: `cp_${user.patientId}`,
+        patientId: user.patientId,
+        fullName: user.fullName,
+        phone: user.phone,
+        email: user.email,
+        preferredBranch: selectedBranch.name,
+        age: calculateAge(user.dateOfBirth),
+        gender: user.gender,
+        avatarUrl: user.avatarUrl,
+        bloodGroup: user.bloodGroup,
+        allergies: user.skinAllergies,
+        skinType: 'Not yet assessed',
+        medicalHistoryNotes: user.medicalNotes || '',
+        importantNotes: [],
+        previousVisits: [],
+        treatmentHistory: [],
+        reports: [],
+        activePackagesCount: packages.length,
+        registeredBranch: selectedBranch.name
+      };
+      return [newPatientRecord, ...prev];
+    });
 
     const newNotif: StaffNotification = {
       id: `notif_${Date.now()}`,
@@ -469,6 +552,15 @@ export function App() {
     setPayments(prev => [newPayment, ...prev]);
     setUser(prev => ({ ...prev, loyaltyPoints: prev.loyaltyPoints + Math.floor(newPayment.amount / 10) }));
     triggerToast(t('toasts.paymentConfirmed', { amount: newPayment.amount }));
+  };
+
+  // A freshly-registered patient shouldn't inherit this browser's demo/previous
+  // account's appointments, packages, payments, or chat history.
+  const handleNewPatientAccountCreated = () => {
+    setAppointments([]);
+    setPackages([]);
+    setPayments([]);
+    setChatMessages([]);
   };
 
   const handleSendMessageToAI = async (text: string) => {
@@ -620,6 +712,7 @@ export function App() {
               setShowAuthModal(false);
               triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
             }}
+            onNewPatientAccountCreated={handleNewPatientAccountCreated}
           />
         </div>
 
@@ -656,9 +749,6 @@ export function App() {
             />
 
             <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
-              {/* PWA Installation Banner */}
-              <PWAInstallBanner />
-
               {/* COORDINATOR VIEW SWITCHER */}
               {coordinatorActiveTab === 'dashboard' && (
                 <CoordinatorDashboardView
@@ -744,6 +834,7 @@ export function App() {
               setIsAuthenticated(true);
               triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
             }}
+            onNewPatientAccountCreated={handleNewPatientAccountCreated}
           />
 
           {/* Toast Notification Snackbar */}
@@ -776,9 +867,6 @@ export function App() {
           />
 
           <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
-            {/* PWA Installation Banner */}
-            <PWAInstallBanner />
-
             {/* STAFF VIEW SWITCHER */}
             {staffActiveTab === 'dashboard' && (
               <DoctorDashboardView
@@ -885,6 +973,7 @@ export function App() {
             setIsAuthenticated(true);
             triggerToast(t('toasts.loggedInWithRole', { name: loggedInUser?.fullName || 'User', role: loggedInUser?.role || 'patient' }));
           }}
+          onNewPatientAccountCreated={handleNewPatientAccountCreated}
         />
 
         {/* Toast Notification Snackbar */}
@@ -912,15 +1001,12 @@ export function App() {
         />
 
         <main className="flex-1 p-3 sm:p-6 pb-28 w-full">
-          {/* PWA Installation Banner */}
-          <PWAInstallBanner />
-
           {/* VIEW SWITCHER */}
           {patientActiveTab === 'home' && (
             <HomeView
               user={user}
               selectedBranch={selectedBranch}
-              upcomingAppointments={appointments.filter(a => a.status === 'upcoming')}
+              upcomingAppointments={appointments.filter(a => a.status === 'upcoming' || a.status === 'pending')}
               activePackages={packages}
               recentReports={reports}
               popularTreatments={treatmentServices.slice(0, 4)}
@@ -1020,6 +1106,7 @@ export function App() {
           setIsAuthenticated(true);
           triggerToast(t('toasts.loggedIn', { name: loggedInUser?.fullName || 'User' }));
         }}
+        onNewPatientAccountCreated={handleNewPatientAccountCreated}
       />
 
       <PaymentModal

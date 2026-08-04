@@ -125,9 +125,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <p className="font-bold text-slate-800 text-base leading-tight">{nextAppt.treatmentName}</p>
-                      <span className="shrink-0 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase rounded-full tracking-wider flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> {t('nextAppointment.confirmed')}
-                      </span>
+                      {nextAppt.status === 'pending' ? (
+                        <span className="shrink-0 px-2.5 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold uppercase rounded-full tracking-wider flex items-center gap-1">
+                          <Clock className="w-3 h-3" /> {t('nextAppointment.pendingConfirmation')}
+                        </span>
+                      ) : (
+                        <span className="shrink-0 px-2.5 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold uppercase rounded-full tracking-wider flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3" /> {t('nextAppointment.confirmed')}
+                        </span>
+                      )}
                     </div>
                     <p className="text-sm text-slate-600 font-semibold mt-0.5 truncate">{nextAppt.doctorName}</p>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-slate-500">
