@@ -350,6 +350,34 @@ export function App() {
   const handleAddScheduleItem = (item: ClinicalScheduleItem, appointment?: Appointment) => {
     setClinicalSchedule(prev => [item, ...prev]);
 
+    // Same gap as walk-ins had: a Coordinator booking a patient here has no
+    // guarantee that patient already has a ClinicalPatientRecord, so the
+    // Doctor's Patients module would never show them. Give them a baseline
+    // record; leave existing records alone.
+    setClinicalPatients(prev => {
+      if (prev.some(p => p.patientId === item.patientId)) return prev;
+      const newPatientRecord: ClinicalPatientRecord = {
+        id: `cp_${item.patientId}`,
+        patientId: item.patientId,
+        fullName: item.patientName,
+        preferredBranch: selectedBranch.name,
+        age: item.patientAge,
+        gender: item.patientGender,
+        avatarUrl: item.patientAvatar,
+        bloodGroup: 'Unknown',
+        allergies: item.allergyAlerts,
+        skinType: 'Not yet assessed',
+        medicalHistoryNotes: item.notes || '',
+        importantNotes: [],
+        previousVisits: [],
+        treatmentHistory: [],
+        reports: [],
+        activePackagesCount: 0,
+        registeredBranch: selectedBranch.name
+      };
+      return [newPatientRecord, ...prev];
+    });
+
     // A Coordinator-created booking is the same single-source-of-truth record
     // as a patient-initiated one -- mirror it into the patient-facing
     // appointments list (same id) so it shows up under "My Visits" too.

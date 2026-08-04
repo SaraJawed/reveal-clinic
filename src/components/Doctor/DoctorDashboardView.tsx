@@ -114,8 +114,13 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
 
       {/* Statistics Cards Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-        {/* Total Today */}
-        <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-2xs hover:shadow-md transition">
+        {/* Total Today -- links to the Patients module */}
+        <button
+          type="button"
+          id="dash-total-today-btn"
+          onClick={() => onNavigateTab('patients')}
+          className="text-left bg-white p-4 rounded-3xl border border-slate-100 shadow-2xs hover:shadow-md transition"
+        >
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">{t('dashboard.stats.totalLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#4F8EF7] flex items-center justify-center">
@@ -124,7 +129,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
           </div>
           <div className="text-2xl font-black text-slate-900">{totalToday}</div>
           <p className="text-[11px] text-slate-500 mt-1">{t('dashboard.stats.totalSub')}</p>
-        </div>
+        </button>
 
         {/* Checked In / Waiting */}
         <div className="bg-white p-4 rounded-3xl border border-amber-100/80 shadow-2xs hover:shadow-md transition bg-amber-50/20">

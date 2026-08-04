@@ -842,6 +842,106 @@ export const initialClinicalPatients: ClinicalPatientRecord[] = [
       }
     ],
     reports: []
+  },
+  {
+    id: 'patient_rec_4',
+    patientId: 'RC-50219',
+    fullName: 'Abdulrahman Al-Suwaidi',
+    age: 41,
+    gender: 'male',
+    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300',
+    bloodGroup: 'A+',
+    allergies: [],
+    skinType: 'Fitzpatrick Type III',
+    medicalHistoryNotes: 'Dense, coarse facial and neck hair follicle density. Requires 1064nm YAG laser setting for effective full beard & neck outline treatment.',
+    importantNotes: [
+      'Requires 1064nm YAG laser setting due to dense coarse hair follicle density.'
+    ],
+    registeredBranch: 'Reveal Olaya Medical Center (Riyadh)',
+    activePackagesCount: 1,
+    previousVisits: [
+      {
+        id: 'vis_601',
+        date: '2026-06-15',
+        doctorName: 'Dr. Fatima Al-Zahrani',
+        clinicBranch: 'Olaya Medical Center',
+        treatmentName: 'Lutronic Clarity II Laser Hair Removal (Session 2)',
+        clinicalNotes: 'Full Beard & Neck outline, session 2 of 5. Good tolerance, mild post-treatment erythema resolved within hours.',
+        prescriptions: []
+      }
+    ],
+    treatmentHistory: [
+      {
+        id: 'th_5',
+        treatmentName: 'Full Beard & Neck Laser Hair Removal (5-Session Package)',
+        startDate: '2026-04-20',
+        completedSessions: 2,
+        totalSessions: 5,
+        status: 'Active',
+        lastSessionDate: '2026-06-15'
+      }
+    ],
+    reports: []
+  },
+  {
+    id: 'patient_rec_5',
+    patientId: 'RC-88120',
+    fullName: 'Lama Al-Rashidi',
+    age: 35,
+    gender: 'female',
+    avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300',
+    bloodGroup: 'AB+',
+    allergies: [],
+    skinType: 'Fitzpatrick Type II',
+    medicalHistoryNotes: 'Mid-face volume loss consult. No prior dermal filler history at this clinic.',
+    importantNotes: [
+      'Prefers 27G cannula and micro-droplet bolus injection technique.'
+    ],
+    registeredBranch: 'Reveal Olaya Medical Center (Riyadh)',
+    activePackagesCount: 0,
+    previousVisits: [],
+    treatmentHistory: [],
+    reports: []
+  },
+  {
+    id: 'patient_rec_6',
+    patientId: 'RC-11092',
+    fullName: 'Jana Al-Amri',
+    age: 27,
+    gender: 'female',
+    avatarUrl: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=300',
+    bloodGroup: 'B+',
+    allergies: [],
+    skinType: 'Fitzpatrick Type III',
+    medicalHistoryNotes: 'Completed Sciton BBL photorejuvenation course. 7-day post-treatment check showed erythema fully resolved.',
+    importantNotes: [
+      'Instructed on daily SPF 50 broad-spectrum sunscreen post-laser.'
+    ],
+    registeredBranch: 'Reveal Olaya Medical Center (Riyadh)',
+    activePackagesCount: 0,
+    previousVisits: [
+      {
+        id: 'vis_602',
+        date: '2026-07-28',
+        doctorName: 'Dr. Fatima Al-Zahrani',
+        clinicBranch: 'Olaya Medical Center',
+        treatmentName: 'Sciton BBL Photorejuvenation',
+        clinicalNotes: 'Broad-band light photorejuvenation for sun damage and redness. Well tolerated, mild expected post-treatment erythema.',
+        prescriptions: []
+      }
+    ],
+    treatmentHistory: [
+      {
+        id: 'th_6',
+        treatmentName: 'Sciton BBL Photorejuvenation',
+        startDate: '2026-07-28',
+        completedSessions: 1,
+        totalSessions: 1,
+        status: 'Completed',
+        lastSessionDate: '2026-07-28'
+      }
+    ],
+    reports: []
   }
 ];
 
