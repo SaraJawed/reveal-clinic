@@ -3,7 +3,7 @@ import { Trans, useTranslation } from 'react-i18next';
 import { UserProfile, UserRole } from '../../types';
 import { mockStaffProfiles, HARDCODED_AVATARS, clinicBranches, initialUserProfile } from '../../data/mockData';
 import { registerPatientAccount, findRegisteredPatientAccount } from '../../utils/storage';
-import { X, Lock, Phone, ShieldCheck, Sparkles, RefreshCw, HeartPulse, UserCheck, Key, CheckCircle2, Camera, AlertTriangle, MapPin, User, Mail, Plus, Trash2, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { X, Lock, Phone, ShieldCheck, Sparkles, RefreshCw, Key, CheckCircle2, User, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -34,43 +34,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Expanded Patient Signup fields
-  const [fullName, setFullName] = useState('Noura Al-Qahtani');
-  const [email, setEmail] = useState('noura.alqahtani@example.com');
-  const [gender, setGender] = useState<UserProfile['gender']>('female');
-  const [dob, setDob] = useState('1992-06-14');
-  const [nationality, setNationality] = useState('Saudi Arabian');
-  const [address, setAddress] = useState('King Fahd Road, Olaya District, Riyadh 12211, Saudi Arabia');
-  const [secondaryContact, setSecondaryContact] = useState('+966 55 987 6543 (Husband - Faisal)');
-  const [bloodGroup, setBloodGroup] = useState('O+');
-  const [preferredClinicId, setPreferredClinicId] = useState('clinic_downtown');
-  const [hearAboutUs, setHearAboutUs] = useState('social_media');
-  const [avatarUrl, setAvatarUrl] = useState(HARDCODED_AVATARS[0].url);
-  const [showCustomAvatarInput, setShowCustomAvatarInput] = useState(false);
-  const [skinAllergies, setSkinAllergies] = useState<string[]>(['Latex (Mild)', 'Fragrance']);
-  const [newAllergyInput, setNewAllergyInput] = useState('');
-  const [medicalNotes, setMedicalNotes] = useState('Sensitive skin barrier. Prefers morning appointments.');
+  // Patient Signup fields -- kept minimal on purpose: everything else
+  // (email, gender, DOB, nationality, address, blood group, preferred
+  // clinic, allergies, medical notes, avatar) is filled in later from the
+  // patient's own Profile screen instead of at registration time.
+  const [firstName, setFirstName] = useState('Noura');
+  const [lastName, setLastName] = useState('Al-Qahtani');
   const [assignedPatientId] = useState(`RC-PT-${Math.floor(10000 + Math.random() * 90000)}`);
 
   const [acceptTerms, setAcceptTerms] = useState(true);
   const [showTermsModal, setShowTermsModal] = useState(false);
-  const [marketingPref, setMarketingPref] = useState(true);
 
   // OTP state
   const [otp, setOtp] = useState(['4', '8', '2', '1', '9', '0']);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successToast, setSuccessToast] = useState('');
-
-  const handleAddAllergy = () => {
-    if (!newAllergyInput.trim()) return;
-    setSkinAllergies([...skinAllergies, newAllergyInput.trim()]);
-    setNewAllergyInput('');
-  };
-
-  const handleRemoveAllergy = (index: number) => {
-    setSkinAllergies(skinAllergies.filter((_, i) => i !== index));
-  };
 
   if (!isOpen) return null;
 
@@ -83,64 +62,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  // Role switch handler
-  const handleRoleSelect = (role: UserRole) => {
-    setSelectedRole(role);
-    setErrorMsg('');
-    if (role === 'doctor') {
-      setPhone('+966 50 890 1234');
-      setIdNumber('DOC-8820');
-      setFullName('Dr. Fatima Al-Zahrani');
-      setEmail('dr.fatima.alzahrani@revealclinic.com');
-    } else if (role === 'nurse') {
-      setPhone('+966 50 776 5432');
-      setIdNumber('NUR-4109');
-      setFullName('Amal Al-Harbi, BSN, RN');
-      setEmail('amal.alharbi@revealclinic.com');
-    } else if (role === 'coordinator') {
-      setPhone('+966 50 443 2100');
-      setIdNumber('COORD-102');
-      setFullName('Yousef Al-Mutairi');
-      setEmail('yousef.almutairi@revealclinic.com');
-    } else {
-      setPhone('+966 50 234 5678');
-      setIdNumber('RC-99841');
-      setFullName('Noura Al-Qahtani');
-      setEmail('noura.alqahtani@example.com');
-    }
-  };
-
   const handleProceedWithRole = (role: UserRole) => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      let targetUser: UserProfile;
-
-      if (role === 'patient') {
-        const isExistingPatient = user && user.role === 'patient';
-        targetUser = {
-          ...initialUserProfile,
-          ...(isExistingPatient ? user : {} as UserProfile),
-          role: 'patient',
-          fullName: isExistingPatient ? (user.fullName || fullName) : (fullName || 'Noura Al-Qahtani'),
-          email: isExistingPatient ? (user.email || email) : (email || 'noura.alqahtani@example.com'),
-          phone: phone || (isExistingPatient ? user.phone : '') || '+966 50 123 4567',
-          patientId: 'RC-99841',
-          avatarUrl: (isExistingPatient && user.avatarUrl) ? user.avatarUrl : (avatarUrl || HARDCODED_AVATARS[0].url),
-          gender: (isExistingPatient && user.gender) ? user.gender : gender,
-          dateOfBirth: (isExistingPatient && user.dateOfBirth) ? user.dateOfBirth : dob,
-          nationality: (isExistingPatient && user.nationality) ? user.nationality : nationality,
-          address: (isExistingPatient && user.address) ? user.address : address,
-          secondaryContact: (isExistingPatient && user.secondaryContact) ? user.secondaryContact : secondaryContact,
-          bloodGroup: (isExistingPatient && user.bloodGroup) ? user.bloodGroup : bloodGroup,
-          preferredClinicId: (isExistingPatient && user.preferredClinicId) ? user.preferredClinicId : preferredClinicId,
-          skinAllergies: (isExistingPatient && user.skinAllergies) ? user.skinAllergies : skinAllergies,
-          medicalNotes: (isExistingPatient && user.medicalNotes) ? user.medicalNotes : medicalNotes
-        };
-      } else {
-        // doctor
-        targetUser = { ...mockStaffProfiles.doctor };
-      }
+      // Only ever invoked for 'doctor' (see call sites below).
+      const targetUser: UserProfile = { ...mockStaffProfiles.doctor };
 
       setSuccessToast(t('toasts.welcomeBack', { name: targetUser.fullName, portal: t(`portalNames.${role}`) }));
       setTimeout(() => {
@@ -284,6 +211,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+      // Registration only ever collects first/last name + phone -- everything
+      // else starts blank/neutral and is filled in later from Profile.
+      const fullName = `${firstName} ${lastName}`.trim();
       const newUser: UserProfile = selectedRole !== 'patient' && mockStaffProfiles[selectedRole]
         ? { ...mockStaffProfiles[selectedRole] }
         : {
@@ -291,22 +221,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             patientId: assignedPatientId,
             role: 'patient',
             fullName,
-            email,
+            email: '',
             phone,
-            gender,
-            dateOfBirth: dob,
-            nationality,
-            preferredClinicId,
-            hearAboutUs,
-            avatarUrl,
-            address,
-            secondaryContact,
-            bloodGroup,
-            skinAllergies,
-            medicalNotes,
+            gender: 'prefer_not_to_say',
+            dateOfBirth: '',
+            nationality: '',
+            preferredClinicId: clinicBranches[0]?.id || '',
+            avatarUrl: HARDCODED_AVATARS[0].url,
+            address: '',
+            secondaryContact: '',
+            bloodGroup: '',
+            skinAllergies: [],
+            medicalNotes: '',
             loyaltyPoints: 250,
             loyaltyTier: 'Silver',
-            referralCode: `${fullName.split(' ')[0].toUpperCase()}-GLOW-25`,
+            referralCode: `${(firstName || 'PATIENT').toUpperCase()}-GLOW-25`,
             accountCreated: new Date().toISOString().split('T')[0]
           };
 
@@ -595,65 +524,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 </p>
               </div>
 
-              {/* 1. PROFILE PICTURE / AVATAR SELECTION */}
-              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                    <Camera className="w-4 h-4" />
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-800">{t('signup.profilePicture.title')}</h4>
-                </div>
-
-                <div className="flex items-center gap-3 bg-white p-2.5 rounded-2xl border border-slate-200/80">
-                  <img
-                    src={avatarUrl}
-                    alt={t('signup.profilePicture.avatarAlt')}
-                    className="w-12 h-12 rounded-2xl object-cover ring-2 ring-blue-500/40 shadow-xs shrink-0"
-                  />
-                  <div className="flex-1">
-                    <p className="text-[11px] font-bold text-slate-700 mb-1">{t('signup.profilePicture.choosePreset')}</p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {HARDCODED_AVATARS.map((av) => (
-                        <button
-                          key={av.id}
-                          type="button"
-                          onClick={() => {
-                            setAvatarUrl(av.url);
-                            setShowCustomAvatarInput(false);
-                          }}
-                          className={`w-7 h-7 rounded-full overflow-hidden transition ring-2 ${
-                            avatarUrl === av.url ? 'ring-blue-600 ring-offset-1 scale-105' : 'ring-transparent opacity-70 hover:opacity-100'
-                          }`}
-                        >
-                          <img src={av.url} alt={av.label} className="w-full h-full object-cover" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomAvatarInput(!showCustomAvatarInput)}
-                    className="text-[11px] font-bold text-blue-600 hover:underline"
-                  >
-                    {showCustomAvatarInput ? t('signup.profilePicture.hideCustomUrl') : t('signup.profilePicture.showCustomUrl')}
-                  </button>
-                </div>
-
-                {showCustomAvatarInput && (
-                  <input
-                    type="url"
-                    value={avatarUrl}
-                    onChange={(e) => setAvatarUrl(e.target.value)}
-                    placeholder={t('signup.profilePicture.urlPlaceholder')}
-                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                  />
-                )}
-              </div>
-
-              {/* 2. CONTACT INFORMATION */}
+              {/* NAME & CONTACT -- deliberately the only info collected up front */}
               <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
@@ -662,222 +533,46 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   <h4 className="text-xs font-bold text-slate-800">{t('signup.contact.title')}</h4>
                 </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.firstName')}</label>
+                    <input
+                      type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.lastName')}</label>
+                    <input
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.fullName')}</label>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.phone')}</label>
                   <input
                     type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                     required
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.email')}</label>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.phone')}</label>
-                    <input
-                      type="text"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.address')}</label>
-                  <input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder={t('signup.contact.addressPlaceholder')}
-                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                    {t('signup.contact.secondaryContact')}
-                  </label>
-                  <input
-                    type="text"
-                    value={secondaryContact}
-                    onChange={(e) => setSecondaryContact(e.target.value)}
-                    placeholder={t('signup.contact.secondaryContactPlaceholder')}
-                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                  />
-                </div>
+                <p className="text-[10.5px] text-slate-400 leading-relaxed">
+                  {t('signup.contact.editLaterNote')}
+                </p>
               </div>
 
-              {/* 3. DEMOGRAPHICS & CLINIC */}
-              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-800">{t('signup.demographics.title')}</h4>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.demographics.gender')}</label>
-                    <select
-                      value={gender}
-                      onChange={(e) => setGender(e.target.value as any)}
-                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                    >
-                      <option value="female">{t('signup.demographics.genderOptions.female')}</option>
-                      <option value="male">{t('signup.demographics.genderOptions.male')}</option>
-                      <option value="other">{t('signup.demographics.genderOptions.other')}</option>
-                      <option value="prefer_not_to_say">{t('signup.demographics.genderOptions.preferNotToSay')}</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.demographics.dob')}</label>
-                    <input
-                      type="date"
-                      value={dob}
-                      onChange={(e) => setDob(e.target.value)}
-                      className="w-full px-1.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.demographics.bloodGroup')}</label>
-                    <select
-                      value={bloodGroup}
-                      onChange={(e) => setBloodGroup(e.target.value)}
-                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                    >
-                      <option value="O+">O+</option>
-                      <option value="O-">O-</option>
-                      <option value="A+">A+</option>
-                      <option value="A-">A-</option>
-                      <option value="B+">B+</option>
-                      <option value="B-">B-</option>
-                      <option value="AB+">AB+</option>
-                      <option value="AB-">AB-</option>
-                    </select>
-                  </div>
-
-                  <div className="col-span-2 sm:col-span-1">
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.demographics.nationality')}</label>
-                    <input
-                      type="text"
-                      value={nationality}
-                      onChange={(e) => setNationality(e.target.value)}
-                      placeholder={t('signup.demographics.nationalityPlaceholder')}
-                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                    />
-                  </div>
-
-                  <div className="col-span-2">
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.demographics.preferredClinic')}</label>
-                    <select
-                      value={preferredClinicId}
-                      onChange={(e) => setPreferredClinicId(e.target.value)}
-                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                    >
-                      {clinicBranches.map((b) => (
-                        <option key={b.id} value={b.id}>
-                          {b.name} ({b.city})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="col-span-2">
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.demographics.hearAboutUs')}</label>
-                    <select
-                      value={hearAboutUs}
-                      onChange={(e) => setHearAboutUs(e.target.value)}
-                      className="w-full px-2 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                    >
-                      <option value="social_media">{t('signup.demographics.hearAboutUsOptions.socialMedia')}</option>
-                      <option value="google_search">{t('signup.demographics.hearAboutUsOptions.googleSearch')}</option>
-                      <option value="friend_family_referral">{t('signup.demographics.hearAboutUsOptions.friendFamilyReferral')}</option>
-                      <option value="existing_patient_referral">{t('signup.demographics.hearAboutUsOptions.existingPatientReferral')}</option>
-                      <option value="doctor_referral">{t('signup.demographics.hearAboutUsOptions.doctorReferral')}</option>
-                      <option value="walked_past_clinic">{t('signup.demographics.hearAboutUsOptions.walkedPastClinic')}</option>
-                      <option value="advertisement">{t('signup.demographics.hearAboutUsOptions.advertisement')}</option>
-                      <option value="other">{t('signup.demographics.hearAboutUsOptions.other')}</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* 4. MEDICAL INFORMATION */}
-              <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                    <AlertTriangle className="w-4 h-4" />
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-800">{t('signup.medical.title')}</h4>
-                </div>
-
-                <div className="flex flex-wrap gap-1.5">
-                  {skinAllergies.map((allergy, idx) => (
-                    <span
-                      key={idx}
-                      className="bg-amber-50 text-amber-900 border border-amber-200 text-xs font-semibold px-2.5 py-1 rounded-full flex items-center gap-1"
-                    >
-                      {allergy}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveAllergy(idx)}
-                        className="text-amber-700 hover:text-rose-600 font-bold ml-1"
-                      >
-                        ×
-                      </button>
-                    </span>
-                  ))}
-                </div>
-
-                <div className="flex gap-1.5">
-                  <input
-                    type="text"
-                    value={newAllergyInput}
-                    onChange={(e) => setNewAllergyInput(e.target.value)}
-                    placeholder={t('signup.medical.addAllergyPlaceholder')}
-                    className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddAllergy}
-                    className="bg-slate-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs hover:bg-slate-900 transition shrink-0"
-                  >
-                    {t('signup.medical.add')}
-                  </button>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">
-                    {t('signup.medical.notesLabel')}
-                  </label>
-                  <textarea
-                    value={medicalNotes}
-                    onChange={(e) => setMedicalNotes(e.target.value)}
-                    rows={2}
-                    placeholder={t('signup.medical.notesPlaceholder')}
-                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
-                  />
-                </div>
-              </div>
-
-              {/* 5. PASSWORD & TERMS */}
+              {/* PASSWORD & TERMS */}
               <div className="bg-slate-50/70 rounded-2xl border border-slate-100 p-4 space-y-3">
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">

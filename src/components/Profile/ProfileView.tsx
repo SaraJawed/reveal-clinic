@@ -287,6 +287,33 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden disabled:opacity-80"
             />
           </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('form.gender')}</label>
+            <select
+              disabled={!isEditing}
+              value={formData.gender}
+              onChange={(e) => setFormData({ ...formData, gender: e.target.value as UserProfile['gender'] })}
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden disabled:opacity-80"
+            >
+              <option value="female">{t('form.genderOptions.female')}</option>
+              <option value="male">{t('form.genderOptions.male')}</option>
+              <option value="other">{t('form.genderOptions.other')}</option>
+              <option value="prefer_not_to_say">{t('form.genderOptions.preferNotToSay')}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('form.nationality')}</label>
+            <input
+              type="text"
+              disabled={!isEditing}
+              value={formData.nationality}
+              onChange={(e) => setFormData({ ...formData, nationality: e.target.value })}
+              placeholder={t('form.nationalityPlaceholder')}
+              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden disabled:opacity-80"
+            />
+          </div>
         </div>
 
         <div>
@@ -298,6 +325,22 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             onChange={(e) => setFormData({ ...formData, address: e.target.value })}
             className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden disabled:opacity-80"
           />
+        </div>
+
+        <div>
+          <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('form.preferredClinic')}</label>
+          <select
+            disabled={!isEditing}
+            value={formData.preferredClinicId}
+            onChange={(e) => setFormData({ ...formData, preferredClinicId: e.target.value })}
+            className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden disabled:opacity-80"
+          >
+            {branches.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name} ({b.city})
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Skin Allergies & Sensitivity Notes */}

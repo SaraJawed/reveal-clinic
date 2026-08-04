@@ -40,6 +40,16 @@
     "emailAddress": "Email Address",
     "dateOfBirth": "Date of Birth",
     "bloodGroup": "Blood Group",
+    "gender": "Gender",
+    "genderOptions": {
+      "female": "Female",
+      "male": "Male",
+      "other": "Other",
+      "preferNotToSay": "Prefer not to say"
+    },
+    "nationality": "Nationality",
+    "nationalityPlaceholder": "e.g. Saudi, Emirati",
+    "preferredClinic": "Preferred Clinic Location",
     "emergencyContact": "Emergency Secondary Contact",
     "residentialAddress": "Residential Address",
     "allergiesLabel": "Known Skin Allergies & Sensitivities",

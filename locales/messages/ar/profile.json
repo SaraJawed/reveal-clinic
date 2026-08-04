@@ -40,6 +40,16 @@
     "emailAddress": "البريد الإلكتروني",
     "dateOfBirth": "تاريخ الميلاد",
     "bloodGroup": "فصيلة الدم",
+    "gender": "الجنس",
+    "genderOptions": {
+      "female": "أنثى",
+      "male": "ذكر",
+      "other": "أخرى",
+      "preferNotToSay": "تفضّل عدم الإفصاح"
+    },
+    "nationality": "الجنسية",
+    "nationalityPlaceholder": "مثال: سعودي، إماراتي",
+    "preferredClinic": "موقع العيادة المفضّل",
     "emergencyContact": "جهة اتصال الطوارئ الثانوية",
     "residentialAddress": "عنوان السكن",
     "allergiesLabel": "الحساسيات الجلدية المعروفة",
