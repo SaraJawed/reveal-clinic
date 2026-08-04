@@ -19,6 +19,7 @@ import {
   ClinicalPatientRecord,
   TreatmentSession,
   StaffNotification,
+  StaffNotificationType,
   ClinicalAppointmentStatus,
   AppointmentStatus,
   WalkInPatient,
@@ -120,6 +121,38 @@ function clinicalStatusToAppointmentStatus(status: ClinicalAppointmentStatus): A
   }
 }
 
+// Which clinical status transitions raise a staff notification (so Doctor/
+// Nurse and Coordinator both see patient flow -- e.g. waiting area arrivals
+// and procedure starts -- as they happen), and what that notification says.
+const SCHEDULE_STATUS_NOTIFICATION: Partial<Record<ClinicalAppointmentStatus, {
+  type: StaffNotificationType;
+  title: string;
+  message: (patientName: string, doctorName: string) => string;
+  urgency?: 'normal' | 'high';
+}>> = {
+  checked_in: {
+    type: 'patient_checked_in',
+    title: 'Patient Checked In',
+    message: (patientName, doctorName) => `${patientName} has checked in and is waiting for ${doctorName}.`
+  },
+  in_consultation: {
+    type: 'patient_in_consultation',
+    title: 'Patient In Consultation',
+    message: (patientName, doctorName) => `${patientName} is now in consultation with ${doctorName}.`
+  },
+  procedure: {
+    type: 'patient_ready_for_procedure',
+    title: 'Patient In Procedure',
+    message: (patientName, doctorName) => `${patientName} is now in procedure with ${doctorName}.`,
+    urgency: 'high'
+  },
+  completed: {
+    type: 'patient_completed',
+    title: 'Session Completed',
+    message: (patientName, doctorName) => `${patientName}'s session with ${doctorName} is now completed.`
+  }
+};
+
 export function App() {
   // Application Lifecycle States
   const [showSplash, setShowSplash] = useState(true);
@@ -189,38 +222,7 @@ export function App() {
   const [packages, setPackages] = useState<ActiveUserPackage[]>(() => loadState('reveal_active_packages', initialActivePackages));
   const [reports] = useState<MedicalReport[]>(initialMedicalReports);
   const [payments, setPayments] = useState<PaymentRecord[]>(() => loadState('reveal_payments', initialPayments));
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => loadState('reveal_chat', [
-    {
-      id: 'msg_1',
-      sender: 'assistant',
-      text: 'Hello Noura! 👋 Welcome to Reveal Medical & Aesthetic Center. I am your AI Clinic Assistant. How can I assist with your skincare routine, doctor consultations, or treatment bookings today?',
-      timestamp: '10:00 AM'
-    },
-    {
-      id: 'msg_2',
-      sender: 'user',
-      text: 'Hi! Can you give me post-care advice for my recent HydraFacial & Glow Peel treatment?',
-      timestamp: '10:01 AM'
-    },
-    {
-      id: 'msg_3',
-      sender: 'assistant',
-      text: 'Certainly, Noura! Here are your personalized post-treatment care guidelines:\n\n✨ 1. Moisture Lock: Use a gentle, hyaluronic acid serum morning and night.\n☀️ 2. Sun Defense: Apply SPF 50+ broad-spectrum sunscreen before stepping outdoors.\n🧴 3. Avoid Exfoliants: Hold off on Retinol or AHA/BHA chemical peels for 5 days.\n💧 4. Stay Hydrated: Drink plenty of water to enhance skin radiance and healing.\n\nWould you like me to book your 2-week skin evaluation appointment with Dr. Fatima Al-Zahrani?',
-      timestamp: '10:01 AM'
-    },
-    {
-      id: 'msg_4',
-      sender: 'user',
-      text: 'Yes please! What times are available tomorrow at the Olaya Clinic in Riyadh?',
-      timestamp: '10:02 AM'
-    },
-    {
-      id: 'msg_5',
-      sender: 'assistant',
-      text: 'Dr. Fatima Al-Zahrani has 3 open consultation slots tomorrow at Reveal Olaya Medical Center (Riyadh):\n\n• 🗓️ 10:00 AM (Morning)\n• 🗓️ 02:30 PM (Afternoon)\n• 🗓️ 04:15 PM (Late Afternoon)\n\nTap "Book Doctor" at the top of this chat or reply with your preferred time to confirm!',
-      timestamp: '10:02 AM'
-    }
-  ]));
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>(() => loadState('reveal_chat', []));
   const [giftCards, setGiftCards] = useState<GiftCard[]>(() => loadState('reveal_giftcards', giftCardsList));
 
   // Staff & Coordinator Clinical Data States
@@ -388,11 +390,6 @@ export function App() {
     triggerToast(t('toasts.appointmentRescheduled', { date: newDate, timeSlot: newSlot }));
   };
 
-  const handleSubmitFeedback = (id: string, rating: number, comment: string) => {
-    setAppointments(prev => prev.map(a => a.id === id ? { ...a, feedbackRating: rating, feedbackComment: comment } : a));
-    triggerToast(t('toasts.feedbackThanks'));
-  };
-
   const mapToPaymentRecordMethod = (
     method: NonNullable<Appointment['paymentMethod']>
   ): PaymentRecord['paymentMethod'] => {
@@ -481,19 +478,20 @@ export function App() {
       text,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
+    const conversationHistory = chatMessages.map(m => ({ sender: m.sender, text: m.text }));
     setChatMessages(prev => [...prev, userMsg]);
 
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text })
+        body: JSON.stringify({ message: text, conversationHistory })
       });
       const data = await response.json();
       const botMsg: ChatMessage = {
         id: `msg_bot_${Date.now()}`,
         sender: 'assistant',
-        text: data.reply || "I am available to assist you with any questions about Reveal Clinic treatments or doctors.",
+        text: data.text || "I am available to assist you with any questions about Reveal Clinic treatments or doctors.",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setChatMessages(prev => [...prev, botMsg]);
@@ -523,12 +521,43 @@ export function App() {
     setClinicalSchedule(prev => prev.map(item => item.id === id ? { ...item, status } : item));
 
     // If this schedule item came from a patient booking (same id), sync the
-    // status back so the Patient Portal reflects Coordinator/Doctor updates -
-    // e.g. marking a visit Completed unlocks "Rate Your Visit" for the patient.
+    // status back so the Patient Portal reflects Coordinator/Doctor updates.
     const patientStatus = clinicalStatusToAppointmentStatus(status);
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: patientStatus } : a));
 
+    // Surface the change as a staff notification too, so a status update
+    // made by Coordinator/Nurse (e.g. moving a patient to "In Procedure")
+    // is visible to Doctor/Nurse and Coordinator alike, not just reflected
+    // silently on the schedule card.
+    const notifConfig = SCHEDULE_STATUS_NOTIFICATION[status];
+    const scheduleItem = clinicalSchedule.find(item => item.id === id);
+    if (notifConfig && scheduleItem) {
+      const newNotif: StaffNotification = {
+        id: `notif_${Date.now()}`,
+        type: notifConfig.type,
+        title: notifConfig.title,
+        message: notifConfig.message(scheduleItem.patientName, scheduleItem.doctorName),
+        timestamp: 'Just now',
+        read: false,
+        urgency: notifConfig.urgency || 'normal',
+        patientName: scheduleItem.patientName,
+        patientAvatar: scheduleItem.patientAvatar,
+        appointmentId: id
+      };
+      setStaffNotifications(prev => [newNotif, ...prev]);
+    }
+
     triggerToast(t('toasts.scheduleStatusUpdated', { status: status.replace('_', ' ') }));
+  };
+
+  // Clears a patient's outstanding balance once the front desk has taken
+  // payment, so the Patients module's "Take Payment" button flips to "Paid".
+  const handleMarkPatientPaymentReceived = (patientId: string) => {
+    setClinicalSchedule(prev => prev.map(item =>
+      item.patientId === patientId && item.paymentStatus === 'Pending Deposit'
+        ? { ...item, paymentStatus: 'Paid' }
+        : item
+    ));
   };
 
   const handleUpdateSessionStatus = (sessionId: string, newStatus: TreatmentSession['status']) => {
@@ -666,6 +695,7 @@ export function App() {
                 <CoordinatorPatientLookupView
                   schedule={clinicalSchedule}
                   onTriggerToast={triggerToast}
+                  onMarkPaymentReceived={handleMarkPatientPaymentReceived}
                 />
               )}
 
@@ -911,7 +941,6 @@ export function App() {
               onBookAppointment={handleBookAppointment}
               onCancelAppointment={handleCancelAppointment}
               onRescheduleAppointment={handleRescheduleAppointment}
-              onSubmitFeedback={handleSubmitFeedback}
               activeSubTab={appointmentsSubTab}
               onChangeSubTab={handleChangeAppointmentsSubTab}
             />
@@ -949,7 +978,8 @@ export function App() {
               onSendMessage={handleSendMessageToAI}
               onChangeTab={handleChangeTab}
               doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
-              selectedBranch={selectedBranch}
+              treatments={treatmentServices}
+              packages={treatmentPackages}
               onBookAppointment={handleBookAppointment}
             />
           )}
@@ -1031,7 +1061,8 @@ export function App() {
         isOpen={isFloatingChatOpen}
         onToggleOpen={() => setIsFloatingChatOpen(prev => !prev)}
         doctors={user.favoriteDoctors && user.favoriteDoctors.length > 0 ? user.favoriteDoctors : initialDoctors}
-        selectedBranch={selectedBranch}
+        treatments={treatmentServices}
+        packages={treatmentPackages}
         onBookAppointment={handleBookAppointment}
       />
 

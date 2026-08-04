@@ -181,6 +181,9 @@
     "status": {
       "inProgress": "In Progress",
       "scheduled": "Scheduled",
+      "checkedIn": "Checked In",
+      "readyForProcedure": "Ready for Procedure",
+      "pendingReview": "Pending Review",
       "completed": "Completed"
     },
     "list": {
@@ -194,8 +197,11 @@
       "sessionId": "Session #{{id}}",
       "suite": "Suite {{room}}",
       "patientLine": "Patient: {{name}} • Attending: {{doctor}}",
+      "checkInButton": "Mark Checked In",
+      "markReadyButton": "Mark Ready for Procedure",
       "startButton": "Start Procedure",
       "finishButton": "Finish & Save Session",
+      "approveButton": "Approve & Complete",
       "completedArchived": "Completed & Archived",
       "progressLabel": "Procedure Steps Completed",
       "gatewayStatus": "Gateway Payment Status ({{gateway}})",
@@ -269,6 +275,10 @@
     },
     "types": {
       "checkIn": "CHECK-IN",
+      "patientCheckedIn": "CHECKED IN",
+      "patientInConsultation": "IN CONSULTATION",
+      "patientInProcedure": "IN PROCEDURE",
+      "patientCompleted": "SESSION COMPLETED",
       "consumableRequest": "CONSUMABLE REQUEST",
       "emergency": "EMERGENCY",
       "cancellation": "CANCELLATION",

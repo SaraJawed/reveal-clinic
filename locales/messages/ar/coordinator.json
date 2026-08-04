@@ -15,7 +15,7 @@
       "pendingCheckIn": "بانتظار تسجيل الوصول",
       "pendingCheckInNote": "يُتوقع وصولهم قريبًا",
       "walkInQueue": "طابور الحضور المباشر",
-      "walkInQueueNote": "حالات حضور مباشر غير مجدولة"
+      "walkInQueueNote": "اضغط لعرض القائمة"
     },
     "quickActions": {
       "title": "لوحة الإجراءات السريعة للاستقبال",
@@ -79,8 +79,16 @@
     "status": {
       "checkedIn": "تم تسجيل الوصول",
       "scheduled": "مجدولة",
+      "inConsultation": "في الاستشارة",
+      "procedure": "في الإجراء",
       "completed": "مكتملة",
       "cancelled": "ملغاة"
+    },
+    "legend": {
+      "checkedIn": "تم تسجيل الوصول",
+      "inConsultation": "في الاستشارة",
+      "procedure": "في الإجراء",
+      "completed": "جلسة مكتملة"
     },
     "empty": {
       "title": "لا توجد مواعيد مطابقة",

@@ -8,6 +8,7 @@ import { PaymentOptionsSection } from '../Payments/PaymentOptionsSection';
 import { CardDetailsForm } from '../Payments/CardDetailsForm';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
 import { AvailableVouchersModal } from '../Vouchers/AvailableVouchersModal';
+import { getDoctorsForTreatment } from '../../utils/doctorMatching';
 
 type PaymentMethod = NonNullable<Appointment['paymentMethod']>;
 type BookingStep = 'details' | 'doctor_slot' | 'payment' | 'card_details' | 'confirmed';
@@ -144,6 +145,17 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
     if (!selectedPackage) return 0;
     return Math.max(0, selectedPackage.price - (packageVoucher?.discount || 0));
   };
+
+  // Prefer doctors whose specialty matches the treatment/package being
+  // booked (e.g. HydraGlow -> HydraFacial specialists, laser packages ->
+  // laser specialists), falling back to the full doctor list if none match.
+  const treatmentDoctors = selectedTreatment
+    ? getDoctorsForTreatment(doctors, [selectedTreatment.name, selectedTreatment.categoryName])
+    : doctors;
+
+  const packageDoctors = selectedPackage
+    ? getDoctorsForTreatment(doctors, [selectedPackage.name, selectedPackage.description, ...selectedPackage.includedTreatments])
+    : doctors;
 
   const handleConfirmTreatmentBooking = () => {
     if (!selectedTreatment || !treatmentDoctor || !treatmentSlot || !treatmentPaymentMethod) return;
@@ -395,7 +407,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
         {selectedTreatment && treatmentStep === 'doctor_slot' && (
           <div className="space-y-4">
             <DoctorSlotPicker
-              doctors={doctors}
+              doctors={treatmentDoctors}
               selectedDoctor={treatmentDoctor}
               onSelectDoctor={setTreatmentDoctor}
               selectedDate={treatmentDate}
@@ -611,7 +623,7 @@ export const ServicesView: React.FC<ServicesViewProps> = ({
         {selectedPackage && packageStep === 'doctor_slot' && (
           <div className="space-y-4">
             <DoctorSlotPicker
-              doctors={doctors}
+              doctors={packageDoctors}
               selectedDoctor={packageDoctor}
               onSelectDoctor={setPackageDoctor}
               selectedDate={packageDate}

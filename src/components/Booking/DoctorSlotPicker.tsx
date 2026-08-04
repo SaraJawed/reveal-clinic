@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Doctor } from '../../types';
-import { Star } from 'lucide-react';
 
 interface DoctorSlotPickerProps {
   doctors: Doctor[];
@@ -44,12 +43,7 @@ export const DoctorSlotPicker: React.FC<DoctorSlotPickerProps> = ({
             >
               <img src={doc.avatarUrl} alt={doc.name} className="w-11 h-11 rounded-xl object-cover shrink-0" />
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-1">
-                  <span className="font-bold text-slate-900 text-xs truncate">{doc.name}</span>
-                  <span className="flex items-center gap-0.5 text-[10px] font-bold text-amber-700 shrink-0">
-                    {doc.rating} <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-                  </span>
-                </div>
+                <span className="font-bold text-slate-900 text-xs truncate block">{doc.name}</span>
                 <p className="text-[11px] text-slate-500 truncate">{doc.specialty}</p>
               </div>
             </button>

@@ -1,28 +1,32 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Doctor, ClinicBranch, Appointment, AppointmentStatus } from '../../types';
-import { Star, Clock, CheckCircle2, Tag, X, ArrowRight, CalendarCheck } from 'lucide-react';
+import { Doctor, Appointment, AppointmentStatus } from '../../types';
+import { MatchedTreatment } from '../../utils/chatTreatmentMatch';
+import { Clock, CheckCircle2, Tag, X, ArrowRight, CalendarCheck, Sparkles, CalendarDays } from 'lucide-react';
 import { calculateVoucherDiscount } from '../../utils/vouchers';
 import { AvailableVouchersModal } from '../Vouchers/AvailableVouchersModal';
 import { CardDetailsForm } from '../Payments/CardDetailsForm';
 
 interface ChatBookingCardProps {
-  doctor: Doctor;
-  selectedBranch: ClinicBranch;
+  treatment: MatchedTreatment;
+  doctors: Doctor[];
   onBookAppointment: (appt: Appointment) => void;
   onDismiss: () => void;
 }
 
-type Step = 'suggestion' | 'slots' | 'payment' | 'card_details' | 'confirmed';
+type Step = 'doctor_select' | 'slots' | 'payment' | 'card_details' | 'confirmed';
 
 export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
-  doctor,
-  selectedBranch,
+  treatment,
+  doctors,
   onBookAppointment,
   onDismiss
 }) => {
   const { t } = useTranslation('chat');
-  const [step, setStep] = useState<Step>('suggestion');
+  const today = new Date().toISOString().split('T')[0];
+  const [step, setStep] = useState<Step>('doctor_select');
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(doctors.length === 1 ? doctors[0] : null);
+  const [selectedDate, setSelectedDate] = useState(today);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<Appointment['paymentMethod'] | null>(null);
   const [voucherInput, setVoucherInput] = useState('');
@@ -31,9 +35,8 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
   const [showVoucherList, setShowVoucherList] = useState(false);
   const [confirmedAppt, setConfirmedAppt] = useState<Appointment | null>(null);
 
-  const baseFee = doctor.consultationFee;
+  const baseFee = treatment.price;
   const finalFee = appliedVoucher ? Math.max(0, baseFee - appliedVoucher.discount) : baseFee;
-  const today = new Date().toISOString().split('T')[0];
 
   const applyVoucherCode = (rawCode: string) => {
     const code = rawCode.trim().toUpperCase();
@@ -57,22 +60,32 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
     setVoucherError('');
   };
 
+  const handleSelectDoctor = (doc: Doctor) => {
+    setSelectedDoctor(doc);
+    setStep('slots');
+  };
+
+  const handleSelectSlot = (slot: string) => {
+    setSelectedSlot(slot);
+    setStep('payment');
+  };
+
   const handleConfirm = () => {
-    if (!selectedSlot || !paymentMethod) return;
+    if (!selectedDoctor || !selectedSlot || !paymentMethod) return;
     const paid = paymentMethod === 'Pay Online' || paymentMethod === 'Buy Now Pay Later';
     const status: AppointmentStatus = paymentMethod === 'Pay at Clinic' ? 'pending' : 'upcoming';
 
     const newAppt: Appointment = {
       id: `apt_${Date.now()}`,
-      doctorId: doctor.id,
-      doctorName: doctor.name,
-      doctorSpecialty: doctor.specialty,
-      doctorAvatar: doctor.avatarUrl,
-      clinicId: doctor.clinicId,
-      clinicName: doctor.clinicName,
-      treatmentName: 'In-Clinic Consultation',
-      consultationType: 'In-Clinic Consultation',
-      date: today,
+      doctorId: selectedDoctor.id,
+      doctorName: selectedDoctor.name,
+      doctorSpecialty: selectedDoctor.specialty,
+      doctorAvatar: selectedDoctor.avatarUrl,
+      clinicId: selectedDoctor.clinicId,
+      clinicName: selectedDoctor.clinicName,
+      treatmentName: treatment.name,
+      consultationType: 'Procedure',
+      date: selectedDate,
       timeSlot: selectedSlot,
       status,
       fee: finalFee,
@@ -90,16 +103,26 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
 
   return (
     <div className="bg-white border border-blue-100 rounded-3xl shadow-md overflow-hidden max-w-[85%] sm:max-w-[75%] text-slate-800">
-      {/* Doctor header, shown at every step */}
+      {/* Header: shows the matched treatment until a doctor is picked, then switches to the doctor */}
       <div className="flex items-center gap-2.5 p-3.5 border-b border-slate-100 bg-blue-50/50">
-        <img
-          src={doctor.avatarUrl}
-          alt={doctor.name}
-          className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-500/20 shrink-0"
-        />
+        {selectedDoctor ? (
+          <img
+            src={selectedDoctor.avatarUrl}
+            alt={selectedDoctor.name}
+            className="w-10 h-10 rounded-xl object-cover ring-2 ring-blue-500/20 shrink-0"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+            <Sparkles className="w-5 h-5" />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
-          <div className="font-bold text-slate-900 text-xs truncate">{doctor.name}</div>
-          <div className="text-[10px] text-slate-500 truncate">{doctor.specialty}</div>
+          <div className="font-bold text-slate-900 text-xs truncate">
+            {selectedDoctor ? selectedDoctor.name : treatment.name}
+          </div>
+          <div className="text-[10px] text-slate-500 truncate">
+            {selectedDoctor ? selectedDoctor.specialty : treatment.categoryName}
+          </div>
         </div>
         {step !== 'confirmed' && (
           <button type="button" onClick={onDismiss} className="text-slate-400 hover:text-slate-600 shrink-0" title={t('chatBookingCard.dismissTitle')}>
@@ -109,59 +132,85 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
       </div>
 
       <div className="p-3.5 space-y-3">
-        {step === 'suggestion' && (
+        {step === 'doctor_select' && (
           <>
-            <div className="flex items-center gap-1.5 text-[11px] text-amber-700 font-bold">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {doctor.rating} ({t('chatBookingCard.reviewsCount', { count: doctor.reviewCount })})
-            </div>
             <p className="text-[11px] text-slate-500">
-              {selectedBranch.name} • {t('chatBookingCard.consultationFeeLabel')} <strong className="text-slate-800">{t('chatBookingCard.sarAmount', { amount: doctor.consultationFee })}</strong>
+              {t('chatBookingCard.suggestedDoctorsFor', { treatment: treatment.name })} • <strong className="text-slate-800">{t('chatBookingCard.sarAmount', { amount: treatment.price })}</strong>
             </p>
-            <button
-              type="button"
-              id="chat-booking-start-btn"
-              onClick={() => setStep('slots')}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs shadow-xs transition flex items-center justify-center gap-1.5"
-            >
-              {t('chatBookingCard.bookAppointment')} <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </>
-        )}
-
-        {step === 'slots' && (
-          <>
-            <div className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-blue-600" /> {t('chatBookingCard.availableSlotsToday')}
-            </div>
-            <div className="grid grid-cols-3 gap-1.5">
-              {doctor.availableTimeSlots.map((slot) => (
+            <div className="space-y-1.5">
+              {doctors.map((doc) => (
                 <button
-                  key={slot}
+                  key={doc.id}
                   type="button"
-                  onClick={() => {
-                    setSelectedSlot(slot);
-                    setStep('payment');
-                  }}
-                  className="py-2 px-1.5 rounded-lg text-[11px] font-bold border bg-slate-50 border-slate-200 text-slate-700 hover:bg-blue-50 hover:border-blue-300 transition"
+                  id={`chat-booking-doctor-${doc.id}-btn`}
+                  onClick={() => handleSelectDoctor(doc)}
+                  className="w-full flex items-center gap-2.5 p-2.5 rounded-2xl border text-left transition bg-white border-slate-200 hover:bg-blue-50 hover:border-blue-300"
                 >
-                  {slot}
+                  <img src={doc.avatarUrl} alt={doc.name} className="w-9 h-9 rounded-lg object-cover shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <span className="font-bold text-slate-900 text-xs truncate block">{doc.name}</span>
+                    <p className="text-[10px] text-slate-500 truncate">{doc.specialty}</p>
+                  </div>
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                 </button>
               ))}
             </div>
-            <button
-              type="button"
-              onClick={() => setStep('suggestion')}
-              className="w-full text-[11px] font-bold text-slate-500 hover:text-slate-700 py-1"
-            >
-              {t('common:buttons.back')}
-            </button>
           </>
         )}
 
-        {step === 'payment' && (
+        {step === 'slots' && selectedDoctor && (
+          <>
+            <p className="text-[11px] text-slate-500">
+              {t('chatBookingCard.treatmentFeeLabel', { treatment: treatment.name })} <strong className="text-slate-800">{t('chatBookingCard.sarAmount', { amount: treatment.price })}</strong>
+            </p>
+            <div>
+              <label className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5 mb-1.5">
+                <CalendarDays className="w-3.5 h-3.5 text-blue-600" /> {t('chatBookingCard.chooseDateLabel')}
+              </label>
+              <input
+                type="date"
+                value={selectedDate}
+                min={today}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  setSelectedSlot(null);
+                }}
+                className="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:bg-white focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <div className="text-[11px] font-bold text-slate-700 flex items-center gap-1.5 mb-1.5">
+                <Clock className="w-3.5 h-3.5 text-blue-600" /> {t('chatBookingCard.availableSlotsFor', { date: selectedDate })}
+              </div>
+              <div className="grid grid-cols-3 gap-1.5">
+                {selectedDoctor.availableTimeSlots.map((slot) => (
+                  <button
+                    key={slot}
+                    type="button"
+                    onClick={() => handleSelectSlot(slot)}
+                    className="py-2 px-1.5 rounded-lg text-[11px] font-bold border bg-slate-50 border-slate-200 text-slate-700 hover:bg-blue-50 hover:border-blue-300 transition"
+                  >
+                    {slot}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {doctors.length > 1 && (
+              <button
+                type="button"
+                onClick={() => setStep('doctor_select')}
+                className="w-full text-[11px] font-bold text-slate-500 hover:text-slate-700 py-1"
+              >
+                {t('common:buttons.back')}
+              </button>
+            )}
+          </>
+        )}
+
+        {step === 'payment' && selectedDoctor && (
           <>
             <div className="flex items-center justify-between text-[11px] text-slate-600 bg-slate-50 rounded-lg px-2.5 py-1.5">
-              <span>{t('chatBookingCard.dateAtSlot', { date: today, slot: selectedSlot })}</span>
+              <span>{t('chatBookingCard.dateAtSlot', { date: selectedDate, slot: selectedSlot })}</span>
               <span className="font-bold text-slate-900">{t('chatBookingCard.sarAmount', { amount: finalFee })}</span>
             </div>
 
@@ -307,14 +356,14 @@ export const ChatBookingCard: React.FC<ChatBookingCardProps> = ({
           />
         )}
 
-        {step === 'confirmed' && confirmedAppt && (
+        {step === 'confirmed' && confirmedAppt && selectedDoctor && (
           <div className="text-center space-y-2.5 py-1">
             <div className="w-11 h-11 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
               <CalendarCheck className="w-6 h-6" />
             </div>
             <p className="text-xs font-bold text-slate-900">{t('chatBookingCard.appointmentConfirmed')}</p>
             <p className="text-[11px] text-slate-500">
-              {t('chatBookingCard.confirmedDateWithDoctor', { date: today, slot: confirmedAppt.timeSlot, doctorName: doctor.name })}
+              {t('chatBookingCard.confirmedDateWithDoctor', { date: selectedDate, slot: confirmedAppt.timeSlot, doctorName: selectedDoctor.name })}
             </p>
             <p className="text-[11px] font-bold text-slate-700">
               {t('chatBookingCard.confirmedFeeMethod', { fee: confirmedAppt.fee, method: confirmedAppt.paymentMethod })}

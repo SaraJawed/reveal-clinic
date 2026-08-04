@@ -15,7 +15,7 @@
       "pendingCheckIn": "Pending Check-In",
       "pendingCheckInNote": "Expected arriving soon",
       "walkInQueue": "Walk-In Queue",
-      "walkInQueueNote": "Unscheduled walk-ins"
+      "walkInQueueNote": "Tap to view list"
     },
     "quickActions": {
       "title": "Reception Quick Action Hub",
@@ -79,8 +79,16 @@
     "status": {
       "checkedIn": "Checked In",
       "scheduled": "Scheduled",
+      "inConsultation": "In Consultation",
+      "procedure": "In Procedure",
       "completed": "Completed",
       "cancelled": "Cancelled"
+    },
+    "legend": {
+      "checkedIn": "Checked-In",
+      "inConsultation": "In-Consultation",
+      "procedure": "In-Procedure",
+      "completed": "Completed Session"
     },
     "empty": {
       "title": "No matching appointments found",

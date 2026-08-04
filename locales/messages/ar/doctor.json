@@ -181,6 +181,9 @@
     "status": {
       "inProgress": "قيد التنفيذ",
       "scheduled": "مجدولة",
+      "checkedIn": "تم تسجيل الوصول",
+      "readyForProcedure": "جاهز للإجراء",
+      "pendingReview": "بانتظار المراجعة",
       "completed": "مكتملة"
     },
     "list": {
@@ -194,8 +197,11 @@
       "sessionId": "الجلسة #{{id}}",
       "suite": "الجناح {{room}}",
       "patientLine": "المريض: {{name}} • الطبيب المعالج: {{doctor}}",
+      "checkInButton": "تسجيل الوصول",
+      "markReadyButton": "وضع علامة جاهز للإجراء",
       "startButton": "بدء الإجراء",
       "finishButton": "إنهاء وحفظ الجلسة",
+      "approveButton": "اعتماد وإكمال",
       "completedArchived": "اكتملت وأُرشفت",
       "progressLabel": "خطوات الإجراء المكتملة",
       "gatewayStatus": "حالة بوابة الدفع ({{gateway}})",
@@ -269,6 +275,10 @@
     },
     "types": {
       "checkIn": "تسجيل وصول",
+      "patientCheckedIn": "تم تسجيل الوصول",
+      "patientInConsultation": "في الاستشارة",
+      "patientInProcedure": "في الإجراء",
+      "patientCompleted": "اكتملت الجلسة",
       "consumableRequest": "طلب مستهلكات",
       "emergency": "طارئ",
       "cancellation": "إلغاء",

@@ -15,7 +15,6 @@
   },
   "doctorList": {
     "availableDoctors": "أطباء الجلدية والجراحون المتاحون ({{count}})",
-    "reviewCount": "({{count}} تقييم)",
     "yearsExp": "{{years}} سنوات خبرة",
     "consultationFeeLabel": "رسوم الاستشارة",
     "feeAmount": "{{amount}} ر.س",

@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { StaffNotification } from '../../types';
-import { Bell, UserCheck, CalendarPlus, XCircle, Clock } from 'lucide-react';
+import { Bell, UserCheck, CalendarPlus, XCircle, Clock, Activity, CheckCircle2 } from 'lucide-react';
 import { NotificationCenter, NotificationCenterCategory } from '../Notifications/NotificationCenter';
 
 interface CoordinatorNotificationsViewProps {
@@ -32,7 +32,13 @@ const getBadge = (notif: StaffNotification) => {
   switch (notif.type) {
     case 'patient_checked_in':
     case 'check_in':
-      return { icon: UserCheck, className: 'bg-emerald-100 text-emerald-800 border-emerald-200' };
+      return { icon: UserCheck, className: 'bg-amber-100 text-amber-800 border-amber-200' };
+    case 'patient_in_consultation':
+      return { icon: Activity, className: 'bg-blue-100 text-[#4F8EF7] border-blue-200' };
+    case 'patient_ready_for_procedure':
+      return { icon: Activity, className: 'bg-purple-100 text-purple-700 border-purple-200' };
+    case 'patient_completed':
+      return { icon: CheckCircle2, className: 'bg-emerald-100 text-emerald-800 border-emerald-200' };
     case 'new_appointment':
       return { icon: CalendarPlus, className: 'bg-blue-100 text-[#4F8EF7] border-blue-200' };
     case 'cancellation':

@@ -24,9 +24,11 @@ import {
   X,
   Building,
   Sparkles,
-  Phone
+  Phone,
+  Activity
 } from 'lucide-react';
 import { initialDoctors, treatmentServices } from '../../data/mockData';
+import { CLINICAL_STATUS_BADGE_CLASS, CLINICAL_STATUS_DOT_CLASS, CLINICAL_STATUS_CARD_CLASS } from '../../utils/clinicalStatus';
 
 interface CoordinatorAppointmentsViewProps {
   schedule: ClinicalScheduleItem[];
@@ -95,43 +97,29 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   });
 
   const getStatusBadge = (status: ClinicalAppointmentStatus) => {
-    switch (status) {
-      case 'checked_in':
-      case 'in_consultation':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black flex items-center gap-1">
-            <UserCheck className="w-3 h-3 text-emerald-600" />
-            {t('appointments.status.checkedIn')}
-          </span>
-        );
-      case 'scheduled':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-blue-100 text-[#4F8EF7] text-[10px] font-black flex items-center gap-1">
-            <Clock className="w-3 h-3 text-[#4F8EF7]" />
-            {t('appointments.status.scheduled')}
-          </span>
-        );
-      case 'completed':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-[10px] font-black flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-slate-500" />
-            {t('appointments.status.completed')}
-          </span>
-        );
-      case 'cancelled':
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-red-100 text-red-700 text-[10px] font-black flex items-center gap-1">
-            <XCircle className="w-3 h-3 text-red-600" />
-            {t('appointments.status.cancelled')}
-          </span>
-        );
-      default:
-        return (
-          <span className="px-2.5 py-1 rounded-full bg-purple-100 text-purple-800 text-[10px] font-black">
-            {status}
-          </span>
-        );
-    }
+    const badgeClass = CLINICAL_STATUS_BADGE_CLASS[status];
+    const icons: Record<ClinicalAppointmentStatus, React.ReactNode> = {
+      scheduled: <Clock className="w-3 h-3" />,
+      checked_in: <UserCheck className="w-3 h-3" />,
+      in_consultation: <Activity className="w-3 h-3" />,
+      procedure: <Activity className="w-3 h-3" />,
+      completed: <CheckCircle2 className="w-3 h-3" />,
+      cancelled: <XCircle className="w-3 h-3" />
+    };
+    const labels: Record<ClinicalAppointmentStatus, string> = {
+      scheduled: t('appointments.status.scheduled'),
+      checked_in: t('appointments.status.checkedIn'),
+      in_consultation: t('appointments.status.inConsultation'),
+      procedure: t('appointments.status.procedure'),
+      completed: t('appointments.status.completed'),
+      cancelled: t('appointments.status.cancelled')
+    };
+    return (
+      <span className={`px-2.5 py-1 rounded-full border text-[10px] font-black flex items-center gap-1 ${badgeClass}`}>
+        {icons[status]}
+        {labels[status]}
+      </span>
+    );
   };
 
   const handleConfirmCancel = () => {
@@ -278,6 +266,19 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
             </button>
           ))}
         </div>
+
+        {/* Status Color Legend */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 pt-1">
+          {(['checked_in', 'in_consultation', 'procedure', 'completed'] as const).map((status) => (
+            <span key={status} className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
+              <span className={`w-2.5 h-2.5 rounded-full ${CLINICAL_STATUS_DOT_CLASS[status]}`} />
+              {status === 'checked_in' && t('appointments.legend.checkedIn')}
+              {status === 'in_consultation' && t('appointments.legend.inConsultation')}
+              {status === 'procedure' && t('appointments.legend.procedure')}
+              {status === 'completed' && t('appointments.legend.completed')}
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Appointment Cards List */}
@@ -292,7 +293,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
           filteredSchedule.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-3xl border border-slate-100 p-4 sm:p-5 shadow-2xs hover:shadow-md transition-all space-y-3"
+              className={`rounded-3xl border p-4 sm:p-5 shadow-2xs hover:shadow-md transition-all space-y-3 ${CLINICAL_STATUS_CARD_CLASS[item.status]}`}
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 {/* Patient Info */}
@@ -332,7 +333,22 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                   {t('appointments.card.reason')} <span className="font-semibold text-slate-700">{item.visitReason}</span>
                 </div>
 
-                <div className="flex items-center gap-2 ml-auto">
+                <div className="flex items-center gap-2 ml-auto flex-wrap">
+                  {item.status !== 'cancelled' && item.status !== 'completed' && (
+                    <select
+                      id={`appointments-status-select-${item.id}`}
+                      value={item.status}
+                      onChange={(e) => onUpdateStatus(item.id, e.target.value as ClinicalAppointmentStatus)}
+                      className="px-2.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-bold text-slate-700 outline-hidden"
+                    >
+                      <option value="scheduled">{t('appointments.status.scheduled')}</option>
+                      <option value="checked_in">{t('appointments.status.checkedIn')}</option>
+                      <option value="in_consultation">{t('appointments.status.inConsultation')}</option>
+                      <option value="procedure">{t('appointments.status.procedure')}</option>
+                      <option value="completed">{t('appointments.status.completed')}</option>
+                    </select>
+                  )}
+
                   {item.status !== 'cancelled' && item.status !== 'completed' && (
                     <button
                       onClick={() => {

@@ -6,6 +6,7 @@ import {
   Doctor,
   UserProfile
 } from '../../types';
+import { CLINICAL_STATUS_BADGE_CLASS, CLINICAL_STATUS_CARD_CLASS } from '../../utils/clinicalStatus';
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -68,12 +69,12 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
 
   // Status mapping
   const statusOptions: Array<{ value: ClinicalAppointmentStatus; label: string; badgeClass: string }> = [
-    { value: 'scheduled', label: t('schedule.status.scheduled'), badgeClass: 'bg-slate-100 text-slate-700 border-slate-200' },
-    { value: 'checked_in', label: t('schedule.status.checkedIn'), badgeClass: 'bg-amber-100 text-amber-800 border-amber-200' },
-    { value: 'in_consultation', label: t('schedule.status.inConsultation'), badgeClass: 'bg-blue-100 text-[#4F8EF7] border-blue-200' },
-    { value: 'procedure', label: t('schedule.status.procedure'), badgeClass: 'bg-purple-100 text-purple-700 border-purple-200' },
-    { value: 'completed', label: t('schedule.status.completed'), badgeClass: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-    { value: 'cancelled', label: t('schedule.status.cancelled'), badgeClass: 'bg-rose-100 text-rose-700 border-rose-200' }
+    { value: 'scheduled', label: t('schedule.status.scheduled'), badgeClass: CLINICAL_STATUS_BADGE_CLASS.scheduled },
+    { value: 'checked_in', label: t('schedule.status.checkedIn'), badgeClass: CLINICAL_STATUS_BADGE_CLASS.checked_in },
+    { value: 'in_consultation', label: t('schedule.status.inConsultation'), badgeClass: CLINICAL_STATUS_BADGE_CLASS.in_consultation },
+    { value: 'procedure', label: t('schedule.status.procedure'), badgeClass: CLINICAL_STATUS_BADGE_CLASS.procedure },
+    { value: 'completed', label: t('schedule.status.completed'), badgeClass: CLINICAL_STATUS_BADGE_CLASS.completed },
+    { value: 'cancelled', label: t('schedule.status.cancelled'), badgeClass: CLINICAL_STATUS_BADGE_CLASS.cancelled }
   ];
 
   // Filtering
@@ -227,7 +228,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
               {filteredSchedule.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white border border-slate-100 rounded-3xl p-4 md:p-5 shadow-2xs hover:shadow-md transition space-y-3"
+                  className={`border rounded-3xl p-4 md:p-5 shadow-2xs hover:shadow-md transition space-y-3 ${CLINICAL_STATUS_CARD_CLASS[item.status]}`}
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     {/* Time Slot & Queue Number */}
@@ -322,7 +323,7 @@ export const DoctorScheduleView: React.FC<DoctorScheduleViewProps> = ({
                       <div
                         key={item.id}
                         onClick={() => setSelectedAppointment(item)}
-                        className="p-2 bg-white rounded-xl border border-slate-200/70 shadow-2xs text-[11px] cursor-pointer hover:border-[#4F8EF7] transition"
+                        className={`p-2 rounded-xl border shadow-2xs text-[11px] cursor-pointer hover:border-[#4F8EF7] transition ${CLINICAL_STATUS_CARD_CLASS[item.status]}`}
                       >
                         <div className="font-extrabold text-[#4F8EF7] text-[10px]">{item.timeSlot}</div>
                         <div className="font-bold text-slate-900 truncate">{item.patientName}</div>

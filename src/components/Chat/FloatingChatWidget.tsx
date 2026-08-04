@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ChatMessage, TabType, Doctor, ClinicBranch, Appointment } from '../../types';
+import { ChatMessage, TabType, Doctor, Appointment, TreatmentService, TreatmentPackage } from '../../types';
 import { Bot, Send, Sparkles, X, RefreshCw, MessageSquare, ArrowLeft } from 'lucide-react';
 import { ChatBookingCard } from './ChatBookingCard';
-import { findDoctorInLatestExchange } from '../../utils/chatDoctorMatch';
+import { findTreatmentSuggestionInLatestUserMessage, ChatTreatmentSuggestion } from '../../utils/chatTreatmentMatch';
 
 interface FloatingChatWidgetProps {
   messages: ChatMessage[];
@@ -12,7 +12,8 @@ interface FloatingChatWidgetProps {
   isOpen: boolean;
   onToggleOpen: () => void;
   doctors: Doctor[];
-  selectedBranch: ClinicBranch;
+  treatments: TreatmentService[];
+  packages: TreatmentPackage[];
   onBookAppointment: (appt: Appointment) => void;
 }
 
@@ -23,13 +24,14 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
   isOpen,
   onToggleOpen,
   doctors,
-  selectedBranch,
+  treatments,
+  packages,
   onBookAppointment
 }) => {
   const { t } = useTranslation('chat');
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [bookingCardDoctor, setBookingCardDoctor] = useState<Doctor | null>(null);
+  const [bookingSuggestion, setBookingSuggestion] = useState<ChatTreatmentSuggestion | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const quickPrompts = [
@@ -47,14 +49,14 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
     if (isOpen) {
       scrollToBottom();
     }
-  }, [isOpen, messages, loading, bookingCardDoctor]);
+  }, [isOpen, messages, loading, bookingSuggestion]);
 
   useEffect(() => {
-    const match = findDoctorInLatestExchange(messages, doctors);
+    const match = findTreatmentSuggestionInLatestUserMessage(messages, treatments, packages, doctors);
     if (match) {
-      setBookingCardDoctor(match);
+      setBookingSuggestion(match);
     }
-  }, [messages, doctors]);
+  }, [messages, doctors, treatments, packages]);
 
   const handleSend = async (textToSend?: string) => {
     const text = textToSend || inputText;
@@ -207,17 +209,17 @@ export const FloatingChatWidget: React.FC<FloatingChatWidgetProps> = ({
               </div>
             )}
 
-            {bookingCardDoctor && (
+            {bookingSuggestion && (
               <div className="flex items-start gap-3 justify-start">
                 <div className="w-8 h-8 rounded-2xl bg-slate-900 text-sky-400 flex items-center justify-center shrink-0 mt-0.5 shadow-xs">
                   <Bot className="w-4 h-4" />
                 </div>
                 <ChatBookingCard
-                  key={bookingCardDoctor.id}
-                  doctor={bookingCardDoctor}
-                  selectedBranch={selectedBranch}
+                  key={bookingSuggestion.treatment.id}
+                  treatment={bookingSuggestion.treatment}
+                  doctors={bookingSuggestion.doctors}
                   onBookAppointment={onBookAppointment}
-                  onDismiss={() => setBookingCardDoctor(null)}
+                  onDismiss={() => setBookingSuggestion(null)}
                 />
               </div>
             )}

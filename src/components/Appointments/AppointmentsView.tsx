@@ -6,7 +6,6 @@ import {
   Filter,
   Calendar as CalendarIcon,
   Clock,
-  Star,
   MapPin,
   CheckCircle2,
   XCircle,
@@ -14,7 +13,6 @@ import {
   User,
   ShieldCheck,
   ChevronRight,
-  MessageSquare,
   Sparkles,
   Award,
   Tag,
@@ -34,7 +32,6 @@ interface AppointmentsViewProps {
   onBookAppointment: (newAppt: Appointment) => void;
   onCancelAppointment: (id: string) => void;
   onRescheduleAppointment: (id: string, newDate: string, newSlot: string) => void;
-  onSubmitFeedback: (id: string, rating: number, comment: string) => void;
   activeSubTab: 'book' | 'history';
   onChangeSubTab: (tab: 'book' | 'history') => void;
 }
@@ -48,7 +45,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   onBookAppointment,
   onCancelAppointment,
   onRescheduleAppointment,
-  onSubmitFeedback,
   activeSubTab,
   onChangeSubTab: setActiveSubTab
 }) => {
@@ -72,14 +68,10 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
   const [voucherError, setVoucherError] = useState('');
   const [showVoucherList, setShowVoucherList] = useState(false);
 
-  // Reschedule / Feedback Modals
+  // Reschedule Modal
   const [rescheduleAppt, setRescheduleAppt] = useState<Appointment | null>(null);
   const [rescheduleDate, setRescheduleDate] = useState('2026-07-30');
   const [rescheduleSlot, setRescheduleSlot] = useState('02:00 PM');
-
-  const [feedbackAppt, setFeedbackAppt] = useState<Appointment | null>(null);
-  const [starRating, setStarRating] = useState(5);
-  const [feedbackComment, setFeedbackComment] = useState('');
 
   // Each filter maps to keywords found in the doctors' actual specialty text
   // rather than matching the filter label itself, since specialty wording
@@ -209,12 +201,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
     setRescheduleAppt(null);
   };
 
-  const handleConfirmFeedback = () => {
-    if (!feedbackAppt) return;
-    onSubmitFeedback(feedbackAppt.id, starRating, feedbackComment);
-    setFeedbackAppt(null);
-  };
-
   return (
     <div className="space-y-6 pb-24 md:pb-8">
       {/* Header & Sub-Tabs */}
@@ -301,12 +287,7 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     className="w-16 h-16 rounded-2xl object-cover ring-2 ring-blue-500/20 shrink-0"
                   />
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between gap-1">
-                      <h3 className="font-bold text-slate-900 text-sm truncate">{doc.name}</h3>
-                      <span className="flex items-center gap-1 bg-amber-50 text-amber-700 text-[11px] font-bold px-2 py-0.5 rounded-full border border-amber-200 shrink-0">
-                        {doc.rating} <Star className="w-3 h-3 fill-amber-400 text-amber-400" /> {t('doctorList.reviewCount', { count: doc.reviewCount })}
-                      </span>
-                    </div>
+                    <h3 className="font-bold text-slate-900 text-sm truncate">{doc.name}</h3>
                     <div className="text-xs font-bold text-blue-600 truncate">{doc.title}</div>
                     <div className="text-[11px] text-slate-500 font-medium truncate mt-0.5">
                       {doc.specialty} • {t('doctorList.yearsExp', { years: doc.experienceYears })}
@@ -426,23 +407,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
                     </div>
                   )}
 
-                  {appt.status === 'completed' && (
-                    <div>
-                      {appt.feedbackRating ? (
-                        <div className="flex items-center gap-1 text-amber-500 font-bold">
-                          <Star className="w-4 h-4 fill-amber-400" /> {t('history.ratedOutOf5', { rating: appt.feedbackRating })}
-                        </div>
-                      ) : (
-                        <button
-                          id={`appointments-feedback-${appt.id}-btn`}
-                          onClick={() => setFeedbackAppt(appt)}
-                          className="bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200 px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1"
-                        >
-                          <MessageSquare className="w-3.5 h-3.5" /> {t('history.rateVisit')}
-                        </button>
-                      )}
-                    </div>
-                  )}
                 </div>
               </div>
             ))
@@ -882,43 +846,6 @@ export const AppointmentsView: React.FC<AppointmentsViewProps> = ({
             className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
           >
             {t('rescheduleSheet.confirmButton')}
-          </button>
-        </div>
-      </BottomSheet>
-
-      {/* DOCTOR FEEDBACK SHEET */}
-      <BottomSheet
-        isOpen={!!feedbackAppt}
-        onClose={() => setFeedbackAppt(null)}
-        title={t('feedbackSheet.title')}
-        subtitle={feedbackAppt ? t('feedbackSheet.subtitle', { name: feedbackAppt.doctorName }) : ''}
-      >
-        <div className="space-y-4 text-center">
-          <div className="flex items-center justify-center gap-2">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <button
-                key={star}
-                type="button"
-                onClick={() => setStarRating(star)}
-                className="p-1"
-              >
-                <Star className={`w-8 h-8 ${star <= starRating ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
-              </button>
-            ))}
-          </div>
-          <textarea
-            value={feedbackComment}
-            onChange={(e) => setFeedbackComment(e.target.value)}
-            placeholder={t('feedbackSheet.placeholder')}
-            rows={3}
-            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold outline-hidden text-left"
-          />
-          <button
-            id="appointments-submit-feedback-btn"
-            onClick={handleConfirmFeedback}
-            className="w-full bg-blue-600 text-white font-bold py-3 rounded-2xl text-xs shadow-md"
-          >
-            {t('feedbackSheet.submitButton')}
           </button>
         </div>
       </BottomSheet>

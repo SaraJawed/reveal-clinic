@@ -15,7 +15,6 @@
   },
   "doctorList": {
     "availableDoctors": "Available Dermatologists & Surgeons ({{count}})",
-    "reviewCount": "({{count}} Reviews)",
     "yearsExp": "{{years}} yrs exp",
     "consultationFeeLabel": "Consultation Fee",
     "feeAmount": "SAR {{amount}}",

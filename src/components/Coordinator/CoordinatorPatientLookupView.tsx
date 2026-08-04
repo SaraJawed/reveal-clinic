@@ -21,6 +21,7 @@ import { initialClinicalPatients } from '../../data/mockData';
 interface CoordinatorPatientLookupViewProps {
   schedule: ClinicalScheduleItem[];
   onTriggerToast: (msg: string) => void;
+  onMarkPaymentReceived: (patientId: string) => void;
 }
 
 interface ReceiptItem {
@@ -79,7 +80,8 @@ function buildPatientList(schedule: ClinicalScheduleItem[]): PatientListEntry[] 
 
 export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupViewProps> = ({
   schedule,
-  onTriggerToast
+  onTriggerToast,
+  onMarkPaymentReceived
 }) => {
   const { t } = useTranslation('coordinator');
 
@@ -123,6 +125,7 @@ export const CoordinatorPatientLookupView: React.FC<CoordinatorPatientLookupView
       transactionRef: `tx_rc_${Math.floor(100000 + Math.random() * 900000)}`
     };
 
+    onMarkPaymentReceived(paymentTarget.patientId);
     setPaymentSuccessReceipt(newReceipt);
     setPaymentTarget(null);
     onTriggerToast(t('patientLookup.paymentModal.toastProcessed', { amount: amt, name: paymentTarget.patientName }));

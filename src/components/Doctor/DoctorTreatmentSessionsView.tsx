@@ -17,8 +17,28 @@ import {
   Sparkles,
   Sliders,
   Send,
-  FileText
+  FileText,
+  MapPin,
+  UserCheck,
+  ClipboardCheck
 } from 'lucide-react';
+
+// Covers every TreatmentSession status so nothing falls through to a raw,
+// untranslated i18n key -- badge/card colors follow the same palette used
+// for ClinicalAppointmentStatus elsewhere in the app (amber = waiting,
+// blue = prep/consultation, purple = active procedure, emerald = done).
+const SESSION_STATUS_CONFIG: Record<TreatmentSession['status'], {
+  labelKey: string;
+  badgeClass: string;
+  cardClass: string;
+}> = {
+  'Scheduled': { labelKey: 'scheduled', badgeClass: 'bg-slate-100 text-slate-700', cardClass: 'bg-white border-slate-100' },
+  'Checked In': { labelKey: 'checkedIn', badgeClass: 'bg-amber-100 text-amber-800', cardClass: 'bg-amber-50/50 border-amber-100' },
+  'Ready for Procedure': { labelKey: 'readyForProcedure', badgeClass: 'bg-blue-100 text-[#4F8EF7]', cardClass: 'bg-blue-50/50 border-blue-100' },
+  'In Progress': { labelKey: 'inProgress', badgeClass: 'bg-purple-600 text-white animate-pulse', cardClass: 'bg-purple-50/50 border-purple-100' },
+  'Pending Review': { labelKey: 'pendingReview', badgeClass: 'bg-amber-100 text-amber-800', cardClass: 'bg-amber-50/40 border-amber-100' },
+  'Completed': { labelKey: 'completed', badgeClass: 'bg-emerald-100 text-emerald-700', cardClass: 'bg-emerald-50/40 border-emerald-100' }
+};
 
 interface DoctorTreatmentSessionsViewProps {
   sessions: TreatmentSession[];
@@ -41,13 +61,6 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
   const [showRequestItemModal, setShowRequestItemModal] = useState(false);
   const [requestItemName, setRequestItemName] = useState('');
   const [requestUrgency, setRequestUrgency] = useState<'Normal' | 'High' | 'Immediate'>('Normal');
-
-  // Status display key mapping (underlying values stay unchanged for state/logic)
-  const sessionStatusKeys: Record<string, string> = {
-    'In Progress': 'inProgress',
-    'Scheduled': 'scheduled',
-    'Completed': 'completed'
-  };
 
   const filteredSessions = sessions.filter((s) => {
     if (statusFilter !== 'all' && s.status !== statusFilter) return false;
@@ -84,7 +97,7 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 statusFilter === st ? 'bg-white text-purple-700 shadow-2xs' : 'text-slate-600'
               }`}
             >
-              {st === 'all' ? t('sessions.filters.all') : t(`sessions.status.${sessionStatusKeys[st]}`)}
+              {st === 'all' ? t('sessions.filters.all') : t(`sessions.status.${SESSION_STATUS_CONFIG[st as TreatmentSession['status']].labelKey}`)}
             </button>
           ))}
         </div>
@@ -98,27 +111,21 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
 
           <div className="grid grid-cols-1 gap-4">
             {filteredSessions.map((session) => {
+              const statusConfig = SESSION_STATUS_CONFIG[session.status];
               return (
                 <div
                   key={session.id}
                   onClick={() => setSelectedSessionId(session.id)}
-                  className="p-5 rounded-3xl border transition cursor-pointer flex flex-col justify-between gap-4 bg-white border-slate-100 hover:border-purple-500/50 hover:shadow-md"
+                  className={`p-5 rounded-3xl border transition cursor-pointer flex flex-col justify-between gap-4 hover:shadow-md ${statusConfig.cardClass}`}
                 >
                   <div className="space-y-2 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-0.5 rounded-full bg-purple-50 text-purple-700 text-[10px] font-extrabold uppercase border border-purple-100">
-                        {t('sessions.list.roomBadge', { number: session.roomNumber })}
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-1 text-slate-500 text-[11px] font-bold truncate min-w-0">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span className="truncate">{session.roomNumber}</span>
                       </span>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
-                          session.status === 'In Progress'
-                            ? 'bg-purple-600 text-white animate-pulse'
-                            : session.status === 'Completed'
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-blue-100 text-blue-700'
-                        }`}
-                      >
-                        {t(`sessions.status.${sessionStatusKeys[session.status] || session.status}`)}
+                      <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${statusConfig.badgeClass}`}>
+                        {t(`sessions.status.${statusConfig.labelKey}`)}
                       </span>
                     </div>
 
@@ -135,9 +142,17 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     </div>
                   </div>
 
-                  <div className="border-t border-slate-50 pt-3 flex items-center justify-between text-[11px] font-semibold text-slate-400">
-                    <span>{t('sessions.list.progressLabel')}</span>
-                    <span className="text-purple-700 font-bold">{session.progressPercent}%</span>
+                  <div className="border-t border-slate-100 pt-3 space-y-1.5">
+                    <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+                      <span>{t('sessions.list.progressLabel')}</span>
+                      <span className="text-purple-700 font-bold">{session.progressPercent}%</span>
+                    </div>
+                    <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                      <div
+                        className="bg-gradient-to-r from-purple-600 to-[#4F8EF7] h-full rounded-full transition-all duration-500"
+                        style={{ width: `${session.progressPercent}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               );
@@ -161,12 +176,16 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
             <div className="bg-white border border-slate-100 rounded-3xl p-5 md:p-6 shadow-md space-y-4">
               <div className="flex flex-col justify-between gap-4 border-b border-slate-100 pb-4">
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-extrabold uppercase">
                       {t('sessions.detail.sessionId', { id: selectedSession.id })}
                     </span>
-                    <span className="text-xs font-bold text-slate-400">
-                      {t('sessions.detail.suite', { room: selectedSession.roomNumber })}
+                    <span className="flex items-center gap-1 text-xs font-bold text-slate-400">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      {selectedSession.roomNumber}
+                    </span>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${SESSION_STATUS_CONFIG[selectedSession.status].badgeClass}`}>
+                      {t(`sessions.status.${SESSION_STATUS_CONFIG[selectedSession.status].labelKey}`)}
                     </span>
                   </div>
                   <h2 className="font-black text-slate-900 text-lg sm:text-xl mt-1">
@@ -180,6 +199,26 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                 {/* Status Action Button */}
                 <div className="flex items-center gap-2 shrink-0">
                   {selectedSession.status === 'Scheduled' && (
+                    <button
+                      type="button"
+                      onClick={() => onUpdateSessionStatus(selectedSession.id, 'Checked In')}
+                      className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-2xl text-xs font-bold transition flex items-center gap-2 shadow-md shadow-amber-500/20"
+                    >
+                      <UserCheck className="w-4 h-4" />
+                      <span>{t('sessions.detail.checkInButton')}</span>
+                    </button>
+                  )}
+                  {selectedSession.status === 'Checked In' && (
+                    <button
+                      type="button"
+                      onClick={() => onUpdateSessionStatus(selectedSession.id, 'Ready for Procedure')}
+                      className="px-4 py-2.5 bg-[#4F8EF7] hover:bg-blue-600 text-white rounded-2xl text-xs font-bold transition flex items-center gap-2 shadow-md shadow-blue-500/20"
+                    >
+                      <ClipboardCheck className="w-4 h-4" />
+                      <span>{t('sessions.detail.markReadyButton')}</span>
+                    </button>
+                  )}
+                  {selectedSession.status === 'Ready for Procedure' && (
                     <button
                       type="button"
                       onClick={() => onUpdateSessionStatus(selectedSession.id, 'In Progress')}
@@ -197,6 +236,16 @@ export const DoctorTreatmentSessionsView: React.FC<DoctorTreatmentSessionsViewPr
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       <span>{t('sessions.detail.finishButton')}</span>
+                    </button>
+                  )}
+                  {selectedSession.status === 'Pending Review' && (
+                    <button
+                      type="button"
+                      onClick={() => onUpdateSessionStatus(selectedSession.id, 'Completed')}
+                      className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-bold transition flex items-center gap-2 shadow-md shadow-emerald-500/20"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{t('sessions.detail.approveButton')}</span>
                     </button>
                   )}
                   {selectedSession.status === 'Completed' && (

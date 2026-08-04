@@ -7,6 +7,7 @@ import {
   StaffNotification,
   StaffTabType
 } from '../../types';
+import { CLINICAL_STATUS_CARD_CLASS } from '../../utils/clinicalStatus';
 import {
   Calendar,
   Clock,
@@ -173,7 +174,7 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
         <div className="lg:col-span-2 space-y-6">
           {/* Current Active Patient Card */}
           {currentScheduleItem && (
-            <div className="bg-white border border-slate-100 rounded-3xl p-5 md:p-6 shadow-md relative">
+            <div className={`border rounded-3xl p-5 md:p-6 shadow-md relative ${CLINICAL_STATUS_CARD_CLASS[currentScheduleItem.status]}`}>
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />

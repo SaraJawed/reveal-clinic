@@ -5,10 +5,13 @@ export type CoordinatorTabType = 'dashboard' | 'appointments' | 'checkin' | 'pat
 export interface WalkInPatient {
   id: string;
   patientName: string;
+  patientFileNo?: string;
   patientPhone: string;
   assignedDoctorId: string;
   assignedDoctorName: string;
   requestedService: string;
+  requestedDate?: string;
+  requestedTimeSlot?: string;
   arrivalTime: string;
   estimatedWaitMinutes: number;
   status: 'Waiting' | 'In Consultation' | 'Completed' | 'Cancelled';
@@ -31,6 +34,7 @@ export interface UserProfile {
   dateOfBirth: string;
   nationality: string;
   preferredClinicId: string;
+  hearAboutUs?: string;
   avatarUrl: string;
   address: string;
   secondaryContact: string;
@@ -389,7 +393,9 @@ export type StaffNotificationType =
   | 'rescheduled'
   | 'followup_reminder'
   | 'patient_checked_in'
+  | 'patient_in_consultation'
   | 'patient_ready_for_procedure'
+  | 'patient_completed'
   | 'check_in'
   | 'emergency'
   | 'consumable_request';
