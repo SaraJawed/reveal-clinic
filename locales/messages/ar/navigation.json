@@ -108,15 +108,6 @@
     "patients": "المرضى",
     "profile": "الملف الشخصي"
   },
-  "pwaInstallBanner": {
-    "offlineNotice": "أنت تتصفح حاليًا في <strong>وضع عدم الاتصال</strong>. المواعيد والتقارير المخزّنة متاحة للعرض.",
-    "reconnect": "إعادة الاتصال",
-    "installAppTitle": "تثبيت تطبيق عيادة ريفيل",
-    "pwaBadge": "تطبيق ويب",
-    "installStepsIOS": "اضغط على أيقونة المشاركة، ثم \"إضافة إلى الشاشة الرئيسية\" لتسجيل الوصول والاطلاع على التقارير دون اتصال.",
-    "installStepsDefault": "أضف التطبيق إلى شاشتك الرئيسية لتسجيل وصول رقمي سريع وتقارير طبية دون اتصال.",
-    "installButton": "تثبيت"
-  },
   "notificationCenter": {
     "markAllAsRead": "تمييز الكل كمقروء ({{count}})",
     "noNotificationsFound": "لا توجد إشعارات",

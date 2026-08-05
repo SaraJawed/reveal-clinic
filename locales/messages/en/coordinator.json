@@ -309,8 +309,6 @@
       "title": "Security & Authentication",
       "changePassword": "Change Password",
       "changePasswordNote": "Update reception login password",
-      "offlineMode": "PWA Offline Mode",
-      "offlineModeStatus": "Enabled & Cached",
       "active": "Active"
     },
     "language": {

@@ -108,15 +108,6 @@
     "patients": "Patients",
     "profile": "Profile"
   },
-  "pwaInstallBanner": {
-    "offlineNotice": "You are currently browsing in <strong>Offline Mode</strong>. Cached appointments and reports are available.",
-    "reconnect": "Reconnect",
-    "installAppTitle": "Install Reveal Clinic App",
-    "pwaBadge": "PWA",
-    "installStepsIOS": "Tap the Share icon, then \"Add to Home Screen\" for offline check-in & reports.",
-    "installStepsDefault": "Add to your home screen for quick digital check-in & offline medical reports.",
-    "installButton": "Install"
-  },
   "notificationCenter": {
     "markAllAsRead": "Mark All as Read ({{count}})",
     "noNotificationsFound": "No Notifications Found",

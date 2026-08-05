@@ -47,7 +47,7 @@ Domain types live in `src/types.ts`, organized into: shared/patient-facing types
 
 ### PWA lifecycle screens
 
-App boot order in `App.tsx` is gated by sequential state checks before rendering any shell: `showSplash` → `SplashScreen`, then `!hasOnboarded` → `OnboardingScreen`, then `!isAuthenticated || showAuthModal` → full-screen `AuthModal`. Only after all three pass does the role-based shell render. `PWAInstallBanner` and `Snackbar` (toast, driven by `snackbarMessage` + `triggerToast()`) are cross-cutting UI rendered inside every shell.
+App boot order in `App.tsx` is gated by sequential state checks before rendering any shell: `showSplash` → `SplashScreen`, then `!hasOnboarded` → `OnboardingScreen`, then `!isAuthenticated || showAuthModal` → full-screen `AuthModal`. Only after all three pass does the role-based shell render. `Snackbar` (toast, driven by `snackbarMessage` + `triggerToast()`) is cross-cutting UI rendered inside every shell.
 
 ### Styling
 

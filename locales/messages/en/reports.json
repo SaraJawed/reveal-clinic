@@ -19,7 +19,7 @@
     "summaryHeading": "CLINICAL SUMMARY & NOTES:",
     "prescriptionsHeading": "PRESCRIPTIONS & RECOMMENDATIONS:",
     "prescriptionLine": "- {{medication}}: {{dosage}} ({{instructions}})",
-    "signatureNote": "This document is digitally signed and encrypted by Reveal Clinic PWA Portal.",
+    "signatureNote": "This document is digitally signed and encrypted by Reveal Clinic.",
     "defaultFileName": "Reveal_Medical_Report.pdf"
   }
 }

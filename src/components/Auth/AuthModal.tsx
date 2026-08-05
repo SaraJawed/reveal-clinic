@@ -40,6 +40,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   // patient's own Profile screen instead of at registration time.
   const [firstName, setFirstName] = useState('Noura');
   const [lastName, setLastName] = useState('Al-Qahtani');
+  const [hearAboutUs, setHearAboutUs] = useState('social_media');
   const [assignedPatientId] = useState(`RC-PT-${Math.floor(10000 + Math.random() * 90000)}`);
 
   const [acceptTerms, setAcceptTerms] = useState(true);
@@ -227,6 +228,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             dateOfBirth: '',
             nationality: '',
             preferredClinicId: clinicBranches[0]?.id || '',
+            hearAboutUs,
             avatarUrl: HARDCODED_AVATARS[0].url,
             address: '',
             secondaryContact: '',
@@ -565,6 +567,24 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                     className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
                     required
                   />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">{t('signup.contact.hearAboutUs')}</label>
+                  <select
+                    value={hearAboutUs}
+                    onChange={(e) => setHearAboutUs(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold outline-hidden focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10"
+                  >
+                    <option value="social_media">{t('signup.contact.hearAboutUsOptions.socialMedia')}</option>
+                    <option value="google_search">{t('signup.contact.hearAboutUsOptions.googleSearch')}</option>
+                    <option value="friend_family_referral">{t('signup.contact.hearAboutUsOptions.friendFamilyReferral')}</option>
+                    <option value="existing_patient_referral">{t('signup.contact.hearAboutUsOptions.existingPatientReferral')}</option>
+                    <option value="doctor_referral">{t('signup.contact.hearAboutUsOptions.doctorReferral')}</option>
+                    <option value="walked_past_clinic">{t('signup.contact.hearAboutUsOptions.walkedPastClinic')}</option>
+                    <option value="advertisement">{t('signup.contact.hearAboutUsOptions.advertisement')}</option>
+                    <option value="other">{t('signup.contact.hearAboutUsOptions.other')}</option>
+                  </select>
                 </div>
 
                 <p className="text-[10.5px] text-slate-400 leading-relaxed">

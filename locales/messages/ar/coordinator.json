@@ -309,8 +309,6 @@
       "title": "الأمان والمصادقة",
       "changePassword": "تغيير كلمة المرور",
       "changePasswordNote": "تحديث كلمة مرور تسجيل الدخول للاستقبال",
-      "offlineMode": "وضع العمل دون اتصال (PWA)",
-      "offlineModeStatus": "مفعّل ومخزَّن مؤقتًا",
       "active": "نشط"
     },
     "language": {
