@@ -330,7 +330,8 @@ export function App() {
       allergyAlerts: [],
       visitReason: walkIn.requestedService,
       notes: walkIn.notes,
-      paymentStatus: 'Pending Deposit'
+      paymentStatus: 'Pending Deposit',
+      fee: newPatient.requestedServiceFee ?? 0
     };
     setClinicalSchedule(prev => [scheduleItem, ...prev]);
 
@@ -465,6 +466,7 @@ export function App() {
       visitReason: newAppt.treatmentName,
       notes: newAppt.notes,
       paymentStatus: newAppt.paid ? 'Paid' : 'Pending Deposit',
+      fee: newAppt.fee,
     };
     setClinicalSchedule(prev => [scheduleItem, ...prev]);
 

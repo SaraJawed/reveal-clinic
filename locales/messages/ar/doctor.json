@@ -16,8 +16,9 @@
     "stats": {
       "totalLabel": "إجمالي اليوم",
       "totalSub": "المواعيد المجدولة",
-      "checkedInLabel": "تم تسجيل الوصول",
-      "checkedInSub": "جاهز في الاستقبال / الجناح",
+      "incomeLabel": "دخل اليوم",
+      "incomeValue": "{{amount}} ر.س",
+      "incomeSub": "محصّل من الزيارات المدفوعة",
       "activeLabel": "العناصر المطلوبة",
       "activeSub": "اضغط لعرض التفاصيل",
       "completedLabel": "مكتمل",

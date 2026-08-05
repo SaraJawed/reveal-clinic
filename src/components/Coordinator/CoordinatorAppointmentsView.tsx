@@ -176,6 +176,7 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
       vitalSigns: { bp: '120/80', pulse: 70 },
       notes: bookNotes,
       paymentStatus: 'Paid',
+      fee: selectedService.price,
       queueNumber: Math.floor(10 + Math.random() * 20)
     };
 

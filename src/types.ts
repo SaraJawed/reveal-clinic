@@ -12,6 +12,7 @@ export interface WalkInPatient {
   assignedDoctorId: string;
   assignedDoctorName: string;
   requestedService: string;
+  requestedServiceFee?: number;
   requestedDate?: string;
   requestedTimeSlot?: string;
   arrivalTime: string;
@@ -269,6 +270,7 @@ export interface ClinicalScheduleItem {
   };
   notes?: string;
   paymentStatus?: 'Paid' | 'Pending Deposit' | 'Covered by Package';
+  fee: number;
   queueNumber?: number;
 }
 

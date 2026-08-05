@@ -90,6 +90,7 @@ export const CoordinatorDashboardView: React.FC<CoordinatorDashboardViewProps> =
       assignedDoctorId: walkInDoctorId,
       assignedDoctorName: selectedDoctor?.name || walkInDoctorId,
       requestedService: selectedService?.name || walkInServiceId,
+      requestedServiceFee: selectedService?.price ?? 0,
       requestedDate: walkInDate,
       requestedTimeSlot: walkInTimeSlot,
       arrivalTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),

@@ -11,7 +11,7 @@ import { CLINICAL_STATUS_CARD_CLASS } from '../../utils/clinicalStatus';
 import {
   Calendar,
   Clock,
-  UserCheck,
+  Banknote,
   CheckCircle2,
   AlertCircle,
   Play,
@@ -60,6 +60,11 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
   const totalToday = schedule.length;
   const checkedInCount = schedule.filter(s => s.status === 'checked_in').length;
   const completedCount = schedule.filter(s => s.status === 'completed').length;
+  // Revenue actually collected today, not just booked -- pending deposits and
+  // package-covered sessions don't count as fresh income.
+  const todayIncome = schedule
+    .filter(s => s.paymentStatus === 'Paid')
+    .reduce((sum, s) => sum + (s.fee || 0), 0);
   const requestedItems = sessions.flatMap(s => (s.itemsRequested || []).map(item => ({ item, session: s })));
 
   // All currently active patients (checked in, in consultation, or in
@@ -136,16 +141,16 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
           <p className="text-[11px] text-slate-500 mt-1">{t('dashboard.stats.totalSub')}</p>
         </button>
 
-        {/* Checked In / Waiting */}
+        {/* Today's Income */}
         <div className="bg-white p-4 rounded-3xl border border-amber-100/80 shadow-2xs hover:shadow-md transition bg-amber-50/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">{t('dashboard.stats.checkedInLabel')}</span>
+            <span className="text-[11px] font-bold text-amber-700 uppercase tracking-wider">{t('dashboard.stats.incomeLabel')}</span>
             <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-              <UserCheck className="w-4 h-4" />
+              <Banknote className="w-4 h-4" />
             </div>
           </div>
-          <div className="text-2xl font-black text-amber-800">{checkedInCount}</div>
-          <p className="text-[11px] text-amber-700/80 mt-1 font-medium">{t('dashboard.stats.checkedInSub')}</p>
+          <div className="text-2xl font-black text-amber-800">{t('dashboard.stats.incomeValue', { amount: todayIncome })}</div>
+          <p className="text-[11px] text-amber-700/80 mt-1 font-medium">{t('dashboard.stats.incomeSub')}</p>
         </div>
 
         {/* Requested Items */}

@@ -16,8 +16,9 @@
     "stats": {
       "totalLabel": "Today's Total",
       "totalSub": "Scheduled appointments",
-      "checkedInLabel": "Checked-In",
-      "checkedInSub": "Ready in lobby / pod",
+      "incomeLabel": "Today's Income",
+      "incomeValue": "SAR {{amount}}",
+      "incomeSub": "Collected from paid visits",
       "activeLabel": "Requested Items",
       "activeSub": "Tap to view details",
       "completedLabel": "Completed",

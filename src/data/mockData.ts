@@ -566,6 +566,7 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     vitalSigns: { bp: '118/76', pulse: 72, skinType: 'Fitzpatrick Type II' },
     notes: 'Patient completed digital check-in. Pre-treatment photos captured in app.',
     paymentStatus: 'Paid',
+    fee: 850,
     queueNumber: 1
   },
   {
@@ -589,6 +590,7 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     vitalSigns: { bp: '122/80', pulse: 68, skinType: 'Fitzpatrick Type I' },
     notes: 'Numbing ointment skipped per patient request. Ice pack requested.',
     paymentStatus: 'Covered by Package',
+    fee: 1200,
     queueNumber: 2
   },
   {
@@ -612,6 +614,7 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     vitalSigns: { skinType: 'Fitzpatrick Type III' },
     notes: 'Requires 1064nm YAG laser setting due to dense coarse hair follicle density.',
     paymentStatus: 'Covered by Package',
+    fee: 650,
     queueNumber: 3
   },
   {
@@ -635,6 +638,7 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     vitalSigns: { bp: '124/82', pulse: 75 },
     notes: 'Centrifuge tube kit prepped by Nurse Amal. Top-up numb cream applied at 1:00 PM.',
     paymentStatus: 'Paid',
+    fee: 900,
     queueNumber: 4
   },
   {
@@ -658,6 +662,7 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     vitalSigns: { bp: '116/74', pulse: 70, skinType: 'Fitzpatrick Type II' },
     notes: '27G Cannula requested. Micro-droplet bolus technique.',
     paymentStatus: 'Pending Deposit',
+    fee: 1400,
     queueNumber: 5
   },
   {
@@ -680,6 +685,7 @@ export const initialClinicalSchedule: ClinicalScheduleItem[] = [
     visitReason: '7-day post Sciton BBL redness check.',
     notes: 'Erythema completely resolved. Patient instructed on daily SPF 50 sunscreen.',
     paymentStatus: 'Paid',
+    fee: 150,
     queueNumber: 6
   }
 ];
