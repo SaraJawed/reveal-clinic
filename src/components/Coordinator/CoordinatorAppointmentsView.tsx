@@ -5,7 +5,8 @@ import {
   ClinicalAppointmentStatus,
   Doctor,
   TreatmentService,
-  Appointment
+  Appointment,
+  Gender
 } from '../../types';
 import {
   Calendar,
@@ -29,6 +30,7 @@ import {
 } from 'lucide-react';
 import { initialDoctors, treatmentServices } from '../../data/mockData';
 import { CLINICAL_STATUS_BADGE_CLASS, CLINICAL_STATUS_DOT_CLASS, CLINICAL_STATUS_CARD_CLASS } from '../../utils/clinicalStatus';
+import { findPatientIdByName } from '../../utils/patientMatching';
 
 interface CoordinatorAppointmentsViewProps {
   schedule: ClinicalScheduleItem[];
@@ -71,6 +73,8 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
   const [bookPatientName, setBookPatientName] = useState('');
   const [bookPatientFileNo, setBookPatientFileNo] = useState('RC-88120');
   const [bookPatientPhone, setBookPatientPhone] = useState('+966 55 345 6789');
+  const [bookPatientAge, setBookPatientAge] = useState('');
+  const [bookPatientGender, setBookPatientGender] = useState<Gender>('female');
   const [bookDoctorId, setBookDoctorId] = useState('doc_1');
   const [bookServiceId, setBookServiceId] = useState(treatmentServices[0].id);
   const [bookDate, setBookDate] = useState('Today');
@@ -144,12 +148,19 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
     const selectedService = treatmentServices.find(s => s.id === bookServiceId) || treatmentServices[0];
     const sharedId = `cs_${Date.now().toString().slice(-4)}`;
 
+    // If no File # was entered, try to match a returning patient by name
+    // first, so re-booking someone who forgot their file number doesn't
+    // create a second, duplicate patient record.
+    const resolvedPatientId = bookPatientFileNo
+      || findPatientIdByName(schedule, bookPatientName)
+      || `RC-${Math.floor(10000 + Math.random() * 90000)}`;
+
     const newItem: ClinicalScheduleItem = {
       id: sharedId,
-      patientId: bookPatientFileNo || `RC-${Math.floor(10000 + Math.random() * 90000)}`,
+      patientId: resolvedPatientId,
       patientName: bookPatientName,
-      patientAge: 30,
-      patientGender: 'female',
+      patientAge: bookPatientAge ? Number(bookPatientAge) : 0,
+      patientGender: bookPatientGender,
       patientAvatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=300',
       doctorId: selectedDoc.id,
       doctorName: selectedDoc.name,
@@ -194,6 +205,8 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
     onTriggerToast(t('appointments.bookModal.toastBooked', { name: bookPatientName }));
     setShowBookModal(false);
     setBookPatientName('');
+    setBookPatientAge('');
+    setBookPatientGender('female');
     setBookNotes('');
   };
 
@@ -431,6 +444,34 @@ export const CoordinatorAppointmentsView: React.FC<CoordinatorAppointmentsViewPr
                   onChange={(e) => setBookPatientPhone(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.age')}</label>
+                  <input
+                    type="number"
+                    min={0}
+                    max={120}
+                    placeholder={t('appointments.bookModal.agePlaceholder')}
+                    value={bookPatientAge}
+                    onChange={(e) => setBookPatientAge(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">{t('appointments.bookModal.gender')}</label>
+                  <select
+                    value={bookPatientGender}
+                    onChange={(e) => setBookPatientGender(e.target.value as Gender)}
+                    className="w-full px-3.5 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-[#4F8EF7]"
+                  >
+                    <option value="female">{t('appointments.bookModal.genderOptions.female')}</option>
+                    <option value="male">{t('appointments.bookModal.genderOptions.male')}</option>
+                    <option value="other">{t('appointments.bookModal.genderOptions.other')}</option>
+                    <option value="prefer_not_to_say">{t('appointments.bookModal.genderOptions.preferNotToSay')}</option>
+                  </select>
+                </div>
               </div>
 
               <div>

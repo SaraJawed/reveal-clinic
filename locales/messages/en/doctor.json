@@ -29,7 +29,10 @@
       "context": "For {{patientName}} — {{treatmentName}}"
     },
     "currentPatient": {
-      "title": "Current Patient Focus",
+      "title": "Current Patient",
+      "moreWaiting": "+{{count}} more waiting",
+      "emptyTitle": "No Active Patients Right Now",
+      "emptySubtitle": "Patients who are checked in, in consultation, or in procedure will appear here.",
       "ageGender": "({{age}}y, {{gender}})",
       "viewMedicalFile": "View Medical File",
       "treatmentSession": "Treatment Session",

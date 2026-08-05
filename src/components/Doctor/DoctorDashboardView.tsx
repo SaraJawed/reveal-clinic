@@ -62,14 +62,19 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
   const completedCount = schedule.filter(s => s.status === 'completed').length;
   const requestedItems = sessions.flatMap(s => (s.itemsRequested || []).map(item => ({ item, session: s })));
 
-  // Active current patient
-  const currentScheduleItem = schedule.find(
-    s => s.status === 'in_consultation' || s.status === 'procedure' || s.status === 'checked_in'
-  ) || schedule[0];
-
-  const activeSession = sessions.find(
-    s => s.appointmentId === currentScheduleItem?.id || s.status === 'In Progress'
-  );
+  // All currently active patients (checked in, in consultation, or in
+  // procedure), ranked so whoever's actually being seen right now comes
+  // first, then whoever's been waiting longest. The dashboard focuses on
+  // just the top of this queue -- once they're marked complete, they drop
+  // out of the list and the next one surfaces automatically.
+  const STATUS_PRIORITY: Record<string, number> = { in_consultation: 0, procedure: 0, checked_in: 1 };
+  const activeScheduleItems = schedule
+    .filter(s => s.status === 'in_consultation' || s.status === 'procedure' || s.status === 'checked_in')
+    .sort((a, b) => {
+      const priorityDiff = STATUS_PRIORITY[a.status] - STATUS_PRIORITY[b.status];
+      return priorityDiff !== 0 ? priorityDiff : (a.queueNumber ?? 0) - (b.queueNumber ?? 0);
+    });
+  const currentActiveItem = activeScheduleItems[0];
 
   const upcomingAppointments = schedule.filter(
     s => s.status === 'scheduled' || s.status === 'checked_in'
@@ -177,110 +182,124 @@ export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column (2 Cols): Current Patient Card & Timeline */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Current Active Patient Card */}
-          {currentScheduleItem && (
-            <div className={`border rounded-3xl p-5 md:p-6 shadow-md relative ${CLINICAL_STATUS_CARD_CLASS[currentScheduleItem.status]}`}>
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <h2 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider">
-                    {t('dashboard.currentPatient.title')}
-                  </h2>
-                </div>
-              </div>
+          {/* Current Patient -- the top of the active queue. Marking them
+              complete drops them out and the next one takes their place. */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <h2 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider">
+                {t('dashboard.currentPatient.title')}
+              </h2>
+              {activeScheduleItems.length > 1 && (
+                <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold normal-case tracking-normal">
+                  {t('dashboard.currentPatient.moreWaiting', { count: activeScheduleItems.length - 1 })}
+                </span>
+              )}
+            </div>
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <img
-                  src={currentScheduleItem.patientAvatar}
-                  alt={currentScheduleItem.patientName}
-                  className="w-16 h-16 rounded-2xl object-cover ring-2 ring-blue-100 shrink-0"
-                />
-                <div className="flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-black text-slate-900 text-lg">
-                      {currentScheduleItem.patientName}
-                    </h3>
-                    <span className="text-xs text-slate-400 font-semibold">
-                      {t('dashboard.currentPatient.ageGender', { age: currentScheduleItem.patientAge, gender: currentScheduleItem.patientGender })}
-                    </span>
+            {!currentActiveItem ? (
+              <div className="bg-white border border-slate-100 rounded-3xl p-6 text-center">
+                <p className="text-xs font-bold text-slate-600">{t('dashboard.currentPatient.emptyTitle')}</p>
+                <p className="text-[11px] text-slate-400 mt-1">{t('dashboard.currentPatient.emptySubtitle')}</p>
+              </div>
+            ) : (
+              (() => {
+                const item = currentActiveItem;
+                return (
+                <div key={item.id} className={`border rounded-3xl p-5 md:p-6 shadow-md relative ${CLINICAL_STATUS_CARD_CLASS[item.status]}`}>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <img
+                      src={item.patientAvatar}
+                      alt={item.patientName}
+                      className="w-16 h-16 rounded-2xl object-cover ring-2 ring-blue-100 shrink-0"
+                    />
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-black text-slate-900 text-lg">
+                          {item.patientName}
+                        </h3>
+                        <span className="text-xs text-slate-400 font-semibold">
+                          {t('dashboard.currentPatient.ageGender', { age: item.patientAge, gender: item.patientGender })}
+                        </span>
+                      </div>
+
+                      <p className="text-xs font-bold text-[#4F8EF7] flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5" />
+                        <span>{item.treatmentName}</span>
+                      </p>
+
+                      <p className="text-xs text-slate-500 font-medium">
+                        {t('dashboard.currentPatient.scheduledReason', { time: item.timeSlot, reason: item.visitReason })}
+                      </p>
+                    </div>
+
+                    <div className="shrink-0 flex sm:flex-col gap-2 w-full sm:w-auto">
+                      <button
+                        type="button"
+                        id={`dash-open-patient-records-${item.id}-btn`}
+                        onClick={() => onNavigateTab('patients')}
+                        className="flex-1 sm:flex-initial px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
+                      >
+                        <FileText className="w-3.5 h-3.5 text-sky-300" />
+                        <span>{t('dashboard.currentPatient.viewMedicalFile')}</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        id={`dash-open-session-${item.id}-btn`}
+                        onClick={() => onNavigateTab('sessions')}
+                        className="flex-1 sm:flex-initial px-3.5 py-2 bg-[#4F8EF7] hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
+                      >
+                        <Activity className="w-3.5 h-3.5" />
+                        <span>{t('dashboard.currentPatient.treatmentSession')}</span>
+                      </button>
+                    </div>
                   </div>
 
-                  <p className="text-xs font-bold text-[#4F8EF7] flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>{currentScheduleItem.treatmentName}</span>
-                  </p>
-
-                  <p className="text-xs text-slate-500 font-medium">
-                    {t('dashboard.currentPatient.scheduledReason', { time: currentScheduleItem.timeSlot, reason: currentScheduleItem.visitReason })}
-                  </p>
+                  {/* Status Change Buttons */}
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                    <span className="text-slate-500 font-medium">{t('dashboard.currentPatient.updateStatusLabel')}</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => onUpdateScheduleStatus(item.id, 'in_consultation')}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                          item.status === 'in_consultation'
+                            ? 'bg-[#4F8EF7] text-white shadow-xs'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {t('dashboard.currentPatient.statusInConsultation')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onUpdateScheduleStatus(item.id, 'procedure')}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                          item.status === 'procedure'
+                            ? 'bg-purple-600 text-white shadow-xs'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {t('dashboard.currentPatient.statusInProcedure')}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onUpdateScheduleStatus(item.id, 'completed')}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                          item.status === 'completed'
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
+                      >
+                        {t('dashboard.currentPatient.statusComplete')}
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="shrink-0 flex sm:flex-col gap-2 w-full sm:w-auto">
-                  <button
-                    type="button"
-                    id="dash-open-patient-records-btn"
-                    onClick={() => onNavigateTab('patients')}
-                    className="flex-1 sm:flex-initial px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5"
-                  >
-                    <FileText className="w-3.5 h-3.5 text-sky-300" />
-                    <span>{t('dashboard.currentPatient.viewMedicalFile')}</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    id="dash-open-session-btn"
-                    onClick={() => onNavigateTab('sessions')}
-                    className="flex-1 sm:flex-initial px-3.5 py-2 bg-[#4F8EF7] hover:bg-blue-600 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-xs"
-                  >
-                    <Activity className="w-3.5 h-3.5" />
-                    <span>{t('dashboard.currentPatient.treatmentSession')}</span>
-                  </button>
-                </div>
-              </div>
-
-
-
-              {/* Status Change Buttons */}
-              <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-                <span className="text-slate-500 font-medium">{t('dashboard.currentPatient.updateStatusLabel')}</span>
-                <div className="flex flex-wrap gap-1.5">
-                  <button
-                    type="button"
-                    onClick={() => onUpdateScheduleStatus(currentScheduleItem.id, 'in_consultation')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                      currentScheduleItem.status === 'in_consultation'
-                        ? 'bg-[#4F8EF7] text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {t('dashboard.currentPatient.statusInConsultation')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onUpdateScheduleStatus(currentScheduleItem.id, 'procedure')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                      currentScheduleItem.status === 'procedure'
-                        ? 'bg-purple-600 text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {t('dashboard.currentPatient.statusInProcedure')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onUpdateScheduleStatus(currentScheduleItem.id, 'completed')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                      currentScheduleItem.status === 'completed'
-                        ? 'bg-emerald-600 text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
-                  >
-                    {t('dashboard.currentPatient.statusComplete')}
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+                );
+              })()
+            )}
+          </div>
         </div>
 
         {/* Right Column (1 Col): Quick Actions + Clinical Alerts */}

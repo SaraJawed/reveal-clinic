@@ -118,6 +118,15 @@
       "patientFileNoPlaceholder": "e.g. RC-88120",
       "mobileContact": "Mobile Contact",
       "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "age": "Age",
+      "agePlaceholder": "e.g. 34",
+      "gender": "Gender",
+      "genderOptions": {
+        "female": "Female",
+        "male": "Male",
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say"
+      },
       "selectService": "Select Service / Treatment",
       "selectDoctor": "Select Attending Doctor",
       "date": "Date",

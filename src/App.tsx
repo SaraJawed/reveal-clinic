@@ -44,6 +44,7 @@ import {
   HARDCODED_AVATARS
 } from './data/mockData';
 import { loadState, saveState } from './utils/storage';
+import { findPatientIdByName } from './utils/patientMatching';
 
 // Navigation Components (Patient)
 import { TopBar } from './components/Navigation/TopBar';
@@ -118,6 +119,26 @@ function clinicalStatusToAppointmentStatus(status: ClinicalAppointmentStatus): A
     case 'checked_in':
     default:
       return 'upcoming';
+  }
+}
+
+// Same idea, but for a walk-in's own (much simpler) status vocabulary --
+// walk-ins are mirrored into clinicalSchedule under their own id, so a
+// status change made there needs to sync back to walkInQueue too, or the
+// Walk-In Queue modal and the "Checked-In" count go stale forever.
+function clinicalStatusToWalkInStatus(status: ClinicalAppointmentStatus): WalkInPatient['status'] {
+  switch (status) {
+    case 'completed':
+      return 'Completed';
+    case 'cancelled':
+      return 'Cancelled';
+    case 'in_consultation':
+    case 'procedure':
+      return 'In Consultation';
+    case 'scheduled':
+    case 'checked_in':
+    default:
+      return 'Waiting';
   }
 }
 
@@ -285,7 +306,11 @@ export function App() {
     // previously never entered the clinicalSchedule/clinicalPatients data the
     // Doctor's Schedule and Patients modules read from -- so a checked-in
     // walk-in was invisible to the doctor. Mirror them into both here too.
-    const patientKey = newPatient.patientFileNo?.trim() || `WI-${walkIn.id.slice(-6)}`;
+    // If staff didn't enter a File #, try to match a returning patient by
+    // name first, so repeat walk-ins don't get a duplicate patient record.
+    const patientKey = newPatient.patientFileNo?.trim()
+      || findPatientIdByName(clinicalSchedule, newPatient.patientName)
+      || `WI-${walkIn.id.slice(-6)}`;
     const scheduleItem: ClinicalScheduleItem = {
       id: walkIn.id,
       patientId: patientKey,
@@ -645,6 +670,12 @@ export function App() {
     const patientStatus = clinicalStatusToAppointmentStatus(status);
     setAppointments(prev => prev.map(a => a.id === id ? { ...a, status: patientStatus } : a));
 
+    // Same for a walk-in (also mirrored into clinicalSchedule under its own
+    // id) -- otherwise the Walk-In Queue modal and "Checked-In" count never
+    // learn the walk-in has moved on or been completed.
+    const walkInStatus = clinicalStatusToWalkInStatus(status);
+    setWalkInQueue(prev => prev.map(w => w.id === id ? { ...w, status: walkInStatus } : w));
+
     // Surface the change as a staff notification too, so a status update
     // made by Coordinator/Nurse (e.g. moving a patient to "In Procedure")
     // is visible to Doctor/Nurse and Coordinator alike, not just reflected
@@ -805,6 +836,7 @@ export function App() {
                 <CoordinatorCheckInView
                   schedule={clinicalSchedule}
                   onConfirmCheckIn={(id) => handleUpdateScheduleStatus(id, 'checked_in')}
+                  onUpdateStatus={handleUpdateScheduleStatus}
                   onTriggerToast={triggerToast}
                 />
               )}

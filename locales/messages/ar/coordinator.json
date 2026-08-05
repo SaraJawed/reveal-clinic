@@ -118,6 +118,15 @@
       "patientFileNoPlaceholder": "مثال: RC-88120",
       "mobileContact": "رقم التواصل",
       "mobileContactPlaceholder": "+966 5X XXX XXXX",
+      "age": "العمر",
+      "agePlaceholder": "مثال: 34",
+      "gender": "الجنس",
+      "genderOptions": {
+        "female": "أنثى",
+        "male": "ذكر",
+        "other": "أخرى",
+        "preferNotToSay": "تفضّل عدم الإفصاح"
+      },
       "selectService": "اختر الخدمة / العلاج",
       "selectDoctor": "اختر الطبيب المعالج",
       "date": "التاريخ",

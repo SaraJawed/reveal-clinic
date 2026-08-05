@@ -29,7 +29,10 @@
       "context": "لـ {{patientName}} — {{treatmentName}}"
     },
     "currentPatient": {
-      "title": "تركيز المريض الحالي",
+      "title": "المريض الحالي",
+      "moreWaiting": "+{{count}} في الانتظار",
+      "emptyTitle": "لا يوجد مرضى نشطون حاليًا",
+      "emptySubtitle": "سيظهر هنا المرضى الذين تم تسجيل حضورهم أو في الاستشارة أو في الإجراء.",
       "ageGender": "({{age}} سنة، {{gender}})",
       "viewMedicalFile": "عرض الملف الطبي",
       "treatmentSession": "جلسة العلاج",

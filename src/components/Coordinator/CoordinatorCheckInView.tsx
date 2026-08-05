@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ClinicalScheduleItem } from '../../types';
+import { ClinicalScheduleItem, ClinicalAppointmentStatus } from '../../types';
+import { CLINICAL_STATUS_CARD_CLASS } from '../../utils/clinicalStatus';
 import {
   QrCode,
   Search,
@@ -19,12 +20,14 @@ import {
 interface CoordinatorCheckInViewProps {
   schedule: ClinicalScheduleItem[];
   onConfirmCheckIn: (id: string) => void;
+  onUpdateStatus: (id: string, newStatus: ClinicalAppointmentStatus) => void;
   onTriggerToast: (msg: string) => void;
 }
 
 export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
   schedule,
   onConfirmCheckIn,
+  onUpdateStatus,
   onTriggerToast
 }) => {
   const { t } = useTranslation('coordinator');
@@ -252,7 +255,7 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
             {waitingQueue.map((item, idx) => (
               <div
                 key={item.id}
-                className="p-3.5 bg-slate-50 border border-slate-100 rounded-2xl space-y-2 flex flex-col justify-between"
+                className={`p-3.5 border rounded-2xl space-y-2 flex flex-col justify-between ${CLINICAL_STATUS_CARD_CLASS[item.status]}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="w-7 h-7 rounded-lg bg-slate-900 text-white font-black text-xs flex items-center justify-center">
@@ -273,6 +276,18 @@ export const CoordinatorCheckInView: React.FC<CoordinatorCheckInViewProps> = ({
                   <span className="text-slate-400 font-bold">{t('checkin.queue.suite', { roomNumber: item.roomNumber })}</span>
                   <span className="text-[#4F8EF7] font-black">{item.timeSlot}</span>
                 </div>
+
+                <select
+                  id={`checkin-status-select-${item.id}`}
+                  value={item.status}
+                  onChange={(e) => onUpdateStatus(item.id, e.target.value as ClinicalAppointmentStatus)}
+                  className="w-full px-2 py-1.5 rounded-xl bg-white border border-slate-200 text-[11px] font-bold text-slate-700 outline-hidden"
+                >
+                  <option value="checked_in">{t('appointments.status.checkedIn')}</option>
+                  <option value="in_consultation">{t('appointments.status.inConsultation')}</option>
+                  <option value="procedure">{t('appointments.status.procedure')}</option>
+                  <option value="completed">{t('appointments.status.completed')}</option>
+                </select>
               </div>
             ))}
           </div>
