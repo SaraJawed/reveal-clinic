@@ -44,7 +44,7 @@ import {
   HARDCODED_AVATARS
 } from './data/mockData';
 import { loadState, saveState } from './utils/storage';
-import { findPatientIdByName } from './utils/patientMatching';
+import { findPatientIdByName, mergeScheduleOnlyPatients } from './utils/patientMatching';
 
 // Navigation Components (Patient)
 import { TopBar } from './components/Navigation/TopBar';
@@ -953,14 +953,43 @@ export function App() {
 
             {staffActiveTab === 'patients' && (
               <DoctorPatientsView
-                patients={clinicalPatients}
+                patients={mergeScheduleOnlyPatients(clinicalPatients, clinicalSchedule)}
                 onAddClinicalNote={(patientId, note) => {
-                  setClinicalPatients(prev => prev.map(p => p.id === patientId ? {
-                    ...p,
-                    medicalHistoryNotes: p.medicalHistoryNotes
-                      ? `${p.medicalHistoryNotes}\n\n[${new Date().toLocaleDateString()}] ${note}`
-                      : `[${new Date().toLocaleDateString()}] ${note}`
-                  } : p));
+                  setClinicalPatients(prev => {
+                    const timestampedNote = `[${new Date().toLocaleDateString()}] ${note}`;
+                    if (prev.some(p => p.id === patientId)) {
+                      return prev.map(p => p.id === patientId ? {
+                        ...p,
+                        medicalHistoryNotes: p.medicalHistoryNotes
+                          ? `${p.medicalHistoryNotes}\n\n${timestampedNote}`
+                          : timestampedNote
+                      } : p);
+                    }
+                    // This patient only existed via the schedule-derived safety
+                    // net (no real record yet) -- promote them to one now that
+                    // a doctor has actually documented something.
+                    const scheduleItem = clinicalSchedule.find(s => `cp_${s.patientId}` === patientId);
+                    if (!scheduleItem) return prev;
+                    const newRecord: ClinicalPatientRecord = {
+                      id: patientId,
+                      patientId: scheduleItem.patientId,
+                      fullName: scheduleItem.patientName,
+                      age: scheduleItem.patientAge,
+                      gender: scheduleItem.patientGender,
+                      avatarUrl: scheduleItem.patientAvatar,
+                      bloodGroup: 'Unknown',
+                      allergies: scheduleItem.allergyAlerts,
+                      skinType: 'Not yet assessed',
+                      medicalHistoryNotes: timestampedNote,
+                      importantNotes: [],
+                      previousVisits: [],
+                      treatmentHistory: [],
+                      reports: [],
+                      activePackagesCount: 0,
+                      registeredBranch: ''
+                    };
+                    return [newRecord, ...prev];
+                  });
                   triggerToast(t('toasts.clinicalNoteAdded'));
                 }}
               />
